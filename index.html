@@ -103,7 +103,7 @@ nav .ni.ac{color:var(--gold)}
     <div class="fr"><div class="fg"><label>核心睡眠 (min)</label><input type="number" id="cs" placeholder="351"></div><div class="fg"><label>深度睡眠 (min)</label><input type="number" id="ds" placeholder="44"></div></div>
     <div class="fr"><div class="fg"><label>入睡时间</label><input type="time" id="bt"></div><div class="fg"><label>起床时间</label><input type="time" id="wt"></div></div>
     <div class="fr"><div class="fg"><label>❤️ 心率 (bpm)</label><input type="number" id="hr" placeholder="74"></div><div class="fg"><label>📈 HRV (ms)</label><input type="number" id="hv" placeholder="可选"></div><div class="fg"><label>⚖️ 体重 (kg)</label><input type="number" id="bw" placeholder="84.0" step="0.1"></div></div>
-    <div class="fr"><div class="fg"><label>📱 睡前刷手机 (min)</label><input type="number" id="sv" placeholder="30"></div><div class="fg"><label>📱 睡前刷手机 (min)</label><input type="number" id="sv" placeholder="30"></div></div>
+    <div class="fg"><label>📱 睡前刷手机 (min)</label><input type="number" id="sv" placeholder="30"></div>
 	    <div class="tr"><div class="tb" id="ba" onclick="tg2('calm')">静心</div><div class="tb" id="bp" onclick="tg2('practice')">练习</div></div>
 	    <div class="fg" id="ctg" style="display:none"><label>🔍 触发原因</label><select id="ct"><option value="">选择...</option><option value="睡前惯性">睡前惯性</option><option value="无聊">无聊</option><option value="焦虑">焦虑</option><option value="主动">主动</option></select></div>
     <div class="fg"><label>😰 焦虑 (1-10)</label><input type="number" id="ax" placeholder="5" min="0" max="10"></div>
@@ -220,6 +220,7 @@ function tui(id,v){
   else if(v===false){el.classList.add('off');el.textContent=id==='bb'?'拳击 ❌':id==='bf'?'断食 ❌':id==='bp'?'练习 ❌':'静心 ❌'}
   else el.textContent=id==='bb'?'拳击':id==='bf'?'断食':id==='bp'?'练习':'静心';
 }
+function ld(){uw();ld3();rd();rh();rs2();rt();}
 function ts(id){document.getElementById(id).classList.toggle('hidden')}
 
 function sv(s){
@@ -325,9 +326,9 @@ function rh(){
   var svDays=wd2.filter(function(d){return typeof d.shortVideo=='number'}).length;
   var svAvg=svDays?Math.round(svTotal/svDays):'--';
   var bedTimes=wd2.filter(function(d){return d.bedtime}).map(function(d){return d.bedtime});
-  var avgBed='--',bedLate=0;if(bedTimes.length){
-    var bm=0;bedTimes.forEach(function(t){var p=t.split(':');var m=parseInt(p[0])*60+parseInt(p[1]);if(m>1440-60)m-=1440;bm+=m;if(m>30)bedLate++});
-    bm/=bedTimes.length;if(bm<0)bm+=1440;avgBed=Math.floor(bm/60)+':'+('0'+(bm%60)).slice(-2);if(bm>=30)avgBed+=' ⚠️';
+  var avgBed='--';if(bedTimes.length){
+    var bm=0;bedTimes.forEach(function(t){var p=t.split(':');var m=parseInt(p[0])*60+parseInt(p[1]);if(m<720)m+=1440;bm+=m;});
+    bm/=bedTimes.length;var dh=Math.floor(bm/60);var dm=Math.floor(bm%60);if(dh>=24)dh-=24;avgBed=dh+':'+('0'+dm).slice(-2);if(bm>=1470)avgBed+=' ⚠️';
   }
   var deeps=wd2.filter(function(d){return typeof d.deepSleep=='number'}).map(function(d){return d.deepSleep});
   var avgDeep=deeps.length?Math.round(deeps.reduce(function(a,b){return a+b})/deeps.length):'--';
