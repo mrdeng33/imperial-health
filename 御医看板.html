@@ -80,11 +80,8 @@ nav .ni .ne{display:block;font-size:20px;margin-bottom:1px}
 nav .ni.ac{color:var(--gold)}
 .toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:var(--green);color:var(--bg);padding:10px 24px;border-radius:24px;font-size:14px;font-weight:600;z-index:200;opacity:0;transition:opacity .15s;pointer-events:none}
 .toast.show{opacity:1}
-.bar-row{display:flex;align-items:center;gap:6px;margin-bottom:3px;font-size:10px}
-.bar-row .br-l{width:34px;color:var(--muted);text-align:right;flex-shrink:0}
-.bar-row .br-bg{flex:1;height:14px;background:var(--card2);border-radius:3px;overflow:hidden}
-.bar-row .br-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2));border-radius:3px;transition:width .3s}
-.bar-row .br-v{width:48px;color:var(--text);text-align:left;flex-shrink:0;font-weight:500}
+.chart-wrap{position:relative;width:100%;height:180px}
+.chart-wrap canvas{width:100%!important;height:100%!important}
 </style>
 </head>
 <body>
@@ -145,10 +142,10 @@ nav .ni.ac{color:var(--gold)}
 <!-- Tab: Dashboard -->
 <div class="tab-panel" id="tab-dashboard">
   <div class="sg" id="tstats"></div>
-  <div class="cb"><div class="ct">⚖️ 体重趋势 · 15天</div><div id="chW"></div></div>
-  <div class="cb"><div class="ct">🌙 睡眠时长 · 7天</div><div id="chS"></div></div>
-  <div class="cb"><div class="ct">💤 深睡趋势 · 7天</div><div id="chD"></div></div>
-  <div class="cb"><div class="ct">❤️ 静息心率 · 7天</div><div id="chH"></div></div>
+  <div class="cb"><div class="ct">⚖️ 体重趋势 · 15天</div><div class="chart-wrap"><canvas id="chW"></canvas></div></div>
+  <div class="cb"><div class="ct">🌙 睡眠时长 · 7天</div><div class="chart-wrap"><canvas id="chS"></canvas></div></div>
+  <div class="cb"><div class="ct">💤 深睡趋势 · 7天</div><div class="chart-wrap"><canvas id="chD"></canvas></div></div>
+  <div class="cb"><div class="ct">❤️ 静息心率 · 7天</div><div class="chart-wrap"><canvas id="chH"></canvas></div></div>
 </div>
 
 <!-- Tab: Supplements -->
@@ -243,16 +240,39 @@ function rd(){
     '<div class="sc"><div class="v">'+(t.boxing===true?'✅':t.boxing===false?'❌':'—')+'</div><div class="l">拳击</div></div>'+
     '<div class="sc"><div class="v">'+(t.anxiety||'—')+'</div><div class="l">焦虑 /10</div></div>';
   var ln=function(d,n){var a=d.filter(function(x){return x.date}).sort(function(a,b){return a.date.localeCompare(b.date)});return a.slice(-n)};
-  rb2('chW',ln(data,15).filter(function(x){return x.weight}).map(function(x){return {l:x.date.slice(5),v:x.weight}}),70,88,'kg');
-  rb2('chS',ln(data,7).filter(function(x){return x.sleepTotal}).map(function(x){return {l:x.date.slice(5),v:x.sleepTotal}}),4,9,'h');
-  rb2('chD',ln(data,7).filter(function(x){return x.deepSleep}).map(function(x){return {l:x.date.slice(5),v:x.deepSleep}}),0,60,'min');
-  rb2('chH',ln(data,7).filter(function(x){return x.heartRate}).map(function(x){return {l:x.date.slice(5),v:x.heartRate}}),50,100,'bpm');
+  drawLine('chW',ln(data,15).filter(function(x){return x.weight}).map(function(x){return {l:x.date.slice(5),v:x.weight}}),70,88,'kg');
+  drawLine('chS',ln(data,7).filter(function(x){return x.sleepTotal}).map(function(x){return {l:x.date.slice(5),v:x.sleepTotal}}),4,9,'h');
+  drawLine('chD',ln(data,7).filter(function(x){return x.deepSleep}).map(function(x){return {l:x.date.slice(5),v:x.deepSleep}}),0,60,'min');
+  drawLine('chH',ln(data,7).filter(function(x){return x.heartRate}).map(function(x){return {l:x.date.slice(5),v:x.heartRate}}),50,100,'bpm');
 }
-function rb2(id,pts,min,max,unit){
-  var el=document.getElementById(id);if(!el||!pts.length)return;
-  var h='';pts.forEach(function(p){var pct=Math.round((p.v-min)/(max-min)*100);
-    h+='<div class="bar-row"><span class="br-l">'+p.l+'</span><div class="br-bg"><div class="br-fill" style="width:'+pct+'%"></div></div><span class="br-v">'+p.v+unit+'</span></div>';
-  });el.innerHTML=h;
+function drawLine(id,pts,min,max,unit){
+  var c=document.getElementById(id);if(!c||!pts.length)return;
+  var dpr=window.devicePixelRatio||1,W=c.parentElement.clientWidth,H=180;
+  c.width=W*dpr;c.height=H*dpr;c.style.width=W+'px';c.style.height=H+'px';
+  var ctx=c.getContext('2d');ctx.scale(dpr,dpr);
+  var pad={t:16,r:12,b:28,l:36},w=W-pad.l-pad.r,h=H-pad.t-pad.b;
+  // Grid
+  ctx.strokeStyle='rgba(148,163,184,.08)';ctx.lineWidth=1;
+  for(var i=0;i<=4;i++){var y=pad.t+h*i/4;ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(W-pad.r,y);ctx.stroke()}
+  // Y labels
+  ctx.fillStyle='#94a3b8';ctx.font='9px -apple-system,sans-serif';ctx.textAlign='right';
+  for(var i=0;i<=4;i++){var yv=Math.round(min+(max-min)*i/4);ctx.fillText(yv+unit,pad.l-4,pad.t+h*(4-i)/4+3)}
+  // X labels (show every other)
+  ctx.textAlign='center';
+  for(var i=0;i<pts.length;i+=Math.max(1,Math.floor(pts.length/5))){
+    var x=pad.l+w*i/(pts.length-1);ctx.fillText(pts[i].l,x,H-pad.b+14);
+  }
+  // Line
+  ctx.beginPath();ctx.strokeStyle='#c9a96e';ctx.lineWidth=2;ctx.lineJoin='round';ctx.lineCap='round';
+  var sx=function(i){return pad.l+w*i/(pts.length-1)};var sy=function(v){return pad.t+h*(1-(v-min)/(max-min))};
+  ctx.moveTo(sx(0),sy(pts[0].v));
+  for(var i=1;i<pts.length;i++){var cx=(sx(i)+sx(i-1))/2;ctx.bezierCurveTo(sx(i-1)+w/(pts.length-1)/3,sy(pts[i-1].v),sx(i)-w/(pts.length-1)/3,sy(pts[i].v),sx(i),sy(pts[i].v))}
+  ctx.stroke();
+  // Fill
+  ctx.lineTo(sx(pts.length-1),pad.t+h);ctx.lineTo(sx(0),pad.t+h);ctx.closePath();
+  ctx.fillStyle='rgba(201,169,110,.06)';ctx.fill();
+  // Points
+  for(var i=0;i<pts.length;i++){ctx.beginPath();ctx.arc(sx(i),sy(pts[i].v),3,0,Math.PI*2);ctx.fillStyle='#c9a96e';ctx.fill()}
 }
 
 // ── Supps ──
