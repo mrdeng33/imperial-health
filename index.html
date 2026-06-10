@@ -98,7 +98,7 @@ nav .ni.ac{color:var(--gold)}
     <div class="fr"><div class="fg"><label>核心睡眠 (min)</label><input type="number" id="cs" placeholder="351"></div><div class="fg"><label>深度睡眠 (min)</label><input type="number" id="ds" placeholder="44"></div></div>
     <div class="fr"><div class="fg"><label>入睡时间</label><input type="time" id="bt"></div><div class="fg"><label>起床时间</label><input type="time" id="wt"></div></div>
     <div class="fr"><div class="fg"><label>❤️ 心率 (bpm)</label><input type="number" id="hr" placeholder="74"></div><div class="fg"><label>📈 HRV (ms)</label><input type="number" id="hv" placeholder="可选"></div><div class="fg"><label>⚖️ 体重 (kg)</label><input type="number" id="bw" placeholder="84.0" step="0.1"></div></div>
-    <div class="fr"><div class="fg"><label>📱 睡前刷手机 (min)</label><input type="number" id="sv" placeholder="30"></div><div class="fg"><label>🔒 内守 第</label><input type="number" id="ab" placeholder="天"></div></div>
+    <div class="fr"><div class="fg"><label>📱 睡前刷手机 (min)</label><input type="number" id="sv" placeholder="30"></div><div class="fg"><label>🧘 静心 第</label><input type="number" id="ab" placeholder="天"></div></div>
     <div class="fg"><label>😰 焦虑 (1-10)</label><input type="number" id="ax" placeholder="5" min="0" max="10"></div>
     <div class="fg"><label>💬 感受</label><input type="text" id="fl" placeholder="一句话概括今天的状态..."></div>
     <div style="font-size:11px;color:var(--muted);padding:4px 0">自动计算: 总睡眠 = (核心+深睡+REM) ÷ 60</div>
@@ -301,8 +301,8 @@ function rh(){
     '<div class="hc"><div class="ri"><canvas id="rBx"></canvas></div><div class="ht">拳击 '+bc+'/3</div><div class="hs">本周</div></div>'+
     '<div class="hc"><div class="ri"><canvas id="rFs"></canvas></div><div class="ht">断食 '+fc+'/7</div><div class="hs">目标5天</div></div>'+
     '<div class="hc"><div class="ri"><canvas id="rSv"></canvas></div><div class="ht">睡前刷手机 '+svc+'/'+td3+'天</div><div class="hs">睡前≤30min</div></div>'+
-    '<div class="hc"><div class="ri"><canvas id="rAb"></canvas></div><div class="ht">内守 '+abs+'/30</div><div class="hs">连续天数</div></div>';
-  var dh='';wd2.slice().reverse().forEach(function(d){var wd3=new Date(d.date).getDay(),bx2=d.boxing===true?'🥊':d.boxing===false?'❌':'-',fs2=d.fasting===true?'✅':d.fasting?'⚠️':'-',sv2=typeof d.shortVideo=='number'?d.shortVideo+'min':'-',ab2=typeof d.abstinence=='number'?'🔒'+d.abstinence+'天':'-';dh+='<div style="padding:5px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;font-size:12px"><span>'+d.date.slice(5)+' 周'+'日一二三四五六'[wd3]+'</span><span>'+bx2+'|'+fs2+'|📱'+sv2+'|'+ab2+'</span></div>'});
+    '<div class="hc"><div class="ri"><canvas id="rAb"></canvas></div><div class="ht">静心 '+abs+'/30</div><div class="hs">连续天数</div></div>';
+  var dh='';wd2.slice().reverse().forEach(function(d){var wd3=new Date(d.date).getDay(),bx2=d.boxing===true?'🥊':d.boxing===false?'❌':'-',fs2=d.fasting===true?'✅':d.fasting?'⚠️':'-',sv2=typeof d.shortVideo=='number'?d.shortVideo+'min':'-',ab2=typeof d.abstinence=='number'?'🧘'+d.abstinence+'天':'-';dh+='<div style="padding:5px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;font-size:12px"><span>'+d.date.slice(5)+' 周'+'日一二三四五六'[wd3]+'</span><span>'+bx2+'|'+fs2+'|📱'+sv2+'|'+ab2+'</span></div>'});
   document.getElementById('wd').innerHTML=dh||'暂无数据';
   setTimeout(function(){dr('rBx',bc,3,'#f87171');dr('rFs',fc,7,'#fbbf24');dr('rSv',svc,td3,'#4ade80');dr('rAb',abs,30,'#94a3b8')},100);
 }
