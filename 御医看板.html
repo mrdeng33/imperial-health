@@ -297,7 +297,7 @@ nav .nav-item.active .nav-emoji{transform:scale(1.1)}
 
   <!-- 提交按钮 -->
   <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border);text-align:center">
-    <button class="save-btn" onclick="submitToImperial()" style="background:linear-gradient(135deg,#c9a96e,#e0556a);font-size:16px">
+    <button id="btnSubmit" class="save-btn" style="background:linear-gradient(135deg,#c9a96e,#e0556a);font-size:16px">
       📡 提交到御医团队
     </button>
     <div style="font-size:10px;color:var(--muted);margin-top:8px" id="submitStatus">数据直连 GitHub · 免 VPN · 提交后刷新看板即可</div>
@@ -543,6 +543,7 @@ function switchTab(tab,el){
 const GH='https://api.github.com/repos/mrdeng33/imperial-health';
 function getToken(){return localStorage.getItem('gh_token')||''}
 async function submitToImperial(){
+  alert('按钮已触发！token='+(getToken()?'已设置':'未设置'));
   const token=getToken();
   if(!token){st.textContent='⚠️ 请先在上方输入 GitHub Token';st.style.color='var(--amber)';return}
   const date=document.getElementById('entryDate').value;
@@ -594,6 +595,7 @@ function saveToken(){
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000);}
 function resetData(){if(confirm('确定清空所有数据？')){localStorage.removeItem(STORAGE_KEY);localStorage.removeItem(SUPP_STORAGE);location.reload()}}
 init();
+document.getElementById('btnSubmit')?.addEventListener('click',submitToImperial);
 </script>
 </body>
 </html>
