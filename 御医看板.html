@@ -288,11 +288,11 @@ nav .nav-item.active .nav-emoji{transform:scale(1.1)}
   </div>
 
   <!-- Token Setup -->
-  <div id="tokenSetup" style="display:none;margin-top:20px;padding:12px;background:var(--card);border-radius:var(--radius)">
-    <div style="font-size:12px;color:var(--gold);margin-bottom:8px">🔑 首次设置：粘贴 GitHub Token</div>
+  <div id="tokenSetup" style="margin-top:20px;padding:12px;background:var(--card);border-radius:var(--radius)">
+    <div style="font-size:12px;color:var(--gold);margin-bottom:8px">🔑 输入 GitHub Token（仅存手机，一次设置）</div>
     <input type="password" id="tokenInput" placeholder="ghp_..." style="margin-bottom:8px;font-size:13px">
     <button class="save-btn small" onclick="saveToken()">保存 Token</button>
-    <div style="font-size:10px;color:var(--muted);margin-top:6px">Token 仅存手机本地，不上传。<br>去 GitHub → Settings → Developer settings → Personal access tokens → 生成一个勾选 repo 的 Token</div>
+    <div style="font-size:10px;color:var(--muted);margin-top:6px" id="tokenStatus"></div>
   </div>
 
   <!-- 提交按钮 -->
@@ -544,7 +544,7 @@ const GH='https://api.github.com/repos/mrdeng33/imperial-health';
 function getToken(){return localStorage.getItem('gh_token')||''}
 async function submitToImperial(){
   const token=getToken();
-  if(!token){showTokenSetup();return}
+  if(!token){st.textContent='⚠️ 请先在上方输入 GitHub Token';st.style.color='var(--amber)';return}
   const date=document.getElementById('entryDate').value;
   const entry={date};
   'awakeTime,coreSleep,deepSleep,remSleep,heartRate,hrv,weight,shortVideo,abstinence,anxiety,feeling,bedtime,wakeTime,lunch,dinner,preBoxingFood,fastingStart,fastingEnd,trainingDur,trainingCal,trainingMaxHR,trainingAvgHR'.split(',').forEach(f=>{
@@ -569,16 +569,26 @@ async function submitToImperial(){
     else{const e=await r2.json();st.textContent='❌ '+(e.message||'失败');st.style.color='var(--red)'}
   }catch(e){st.textContent='❌ '+e.message;st.style.color='var(--red')}
 }
-function showTokenSetup(){
-  document.getElementById('submitStatus').textContent='⚠️ 首次使用：输入 GitHub Token';
-  document.getElementById('submitStatus').style.color='var(--amber)';
-  document.getElementById('tokenSetup').style.display='block';
-}
 function saveToken(){
   const v=document.getElementById('tokenInput').value.trim();
-  if(v.startsWith('ghp_')){localStorage.setItem('gh_token',v);document.getElementById('tokenSetup').style.display='none';showToast('✅ Token 已保存')}
-  else{alert('Token 格式不对，应以 ghp_ 开头')}
+  if(v.startsWith('ghp_')){
+    localStorage.setItem('gh_token',v);
+    document.getElementById('tokenStatus').textContent='✅ Token 已保存';
+    document.getElementById('tokenStatus').style.color='var(--green)';
+    showToast('✅ Token 已保存');
+  }else if(v){
+    alert('Token 格式不对，应以 ghp_ 开头');
+  }
 }
+// On load: restore saved token
+(function(){
+  const t=getToken();
+  if(t){
+    document.getElementById('tokenInput').value=t;
+    document.getElementById('tokenStatus').textContent='✅ 已配置（'+t.slice(0,7)+'...）';
+    document.getElementById('tokenStatus').style.color='var(--green)';
+  }
+})();
 
 // ── Toast ──
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000);}
