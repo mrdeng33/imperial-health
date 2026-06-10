@@ -287,12 +287,20 @@ nav .nav-item.active .nav-emoji{transform:scale(1.1)}
     <button class="save-btn small" onclick="saveSection('training')">保存训练</button>
   </div>
 
+  <!-- Token Setup -->
+  <div id="tokenSetup" style="display:none;margin-top:20px;padding:12px;background:var(--card);border-radius:var(--radius)">
+    <div style="font-size:12px;color:var(--gold);margin-bottom:8px">🔑 首次设置：粘贴 GitHub Token</div>
+    <input type="password" id="tokenInput" placeholder="ghp_..." style="margin-bottom:8px;font-size:13px">
+    <button class="save-btn small" onclick="saveToken()">保存 Token</button>
+    <div style="font-size:10px;color:var(--muted);margin-top:6px">Token 仅存手机本地，不上传。<br>去 GitHub → Settings → Developer settings → Personal access tokens → 生成一个勾选 repo 的 Token</div>
+  </div>
+
   <!-- 提交按钮 -->
   <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border);text-align:center">
     <button class="save-btn" onclick="submitToImperial()" style="background:linear-gradient(135deg,#c9a96e,#e0556a);font-size:16px">
-      📋 复制并贴给御医团队
+      📡 提交到御医团队
     </button>
-    <div style="font-size:10px;color:var(--muted);margin-top:8px" id="submitStatus">复制后切回 Claude Code 对话粘贴发送</div>
+    <div style="font-size:10px;color:var(--muted);margin-top:8px" id="submitStatus">数据直连 GitHub · 免 VPN · 提交后刷新看板即可</div>
   </div>
 </div>
 
@@ -531,45 +539,45 @@ function switchTab(tab,el){
   if(tab==='team')renderTeam();
 }
 
-// ── Submit: copy to clipboard ──
+// ── Submit: GitHub API (token in localStorage) ──
+const GH='https://api.github.com/repos/mrdeng33/imperial-health';
+function getToken(){return localStorage.getItem('gh_token')||''}
 async function submitToImperial(){
+  const token=getToken();
+  if(!token){showTokenSetup();return}
   const date=document.getElementById('entryDate').value;
   const entry={date};
   'awakeTime,coreSleep,deepSleep,remSleep,heartRate,hrv,weight,shortVideo,abstinence,anxiety,feeling,bedtime,wakeTime,lunch,dinner,preBoxingFood,fastingStart,fastingEnd,trainingDur,trainingCal,trainingMaxHR,trainingAvgHR'.split(',').forEach(f=>{
     const el=document.getElementById(f);if(el&&el.value!=='')entry[f]=isNaN(el.value)?el.value:parseFloat(el.value)||parseInt(el.value)||el.value;
   });
   entry.boxing=boxingVal;entry.fasting=fastingVal;
-
-  // 生成摘要文本
-  const wd='日一二三四五六'[new Date(date).getDay()];
-  let lines=[`华佗晨检 ${date.slice(5)} 周${wd}`];
-  if(entry.awakeTime||entry.coreSleep||entry.deepSleep||entry.remSleep||entry.bedtime||entry.wakeTime){
-    lines.push(`睡眠：清醒${entry.awakeTime||'?'}min REM${entry.remSleep||'?'}min 核心${entry.coreSleep||'?'}min 深睡${entry.deepSleep||'?'}min${entry.bedtime?' 入睡'+entry.bedtime:''}${entry.wakeTime?' 起床'+entry.wakeTime:''}`);
-  }
-  if(entry.heartRate||entry.weight)lines.push(`${entry.heartRate?'心率'+entry.heartRate+'bpm ':''}${entry.weight?'体重'+entry.weight+'kg':''}`.trim());
-  lines.push(`拳击${entry.boxing===true?'✅':entry.boxing===false?'❌':'?'} 断食${entry.fasting===true?'✅':entry.fasting===false?'❌':'?'}`);
-  if(entry.shortVideo!==undefined)lines.push(`睡前刷手机${entry.shortVideo}min`);
-  if(entry.abstinence!==undefined)lines.push(`内守第${entry.abstinence}天`);
-  if(entry.anxiety!==undefined)lines.push(`焦虑${entry.anxiety}/10`);
-  if(entry.trainingDur||entry.trainingCal)lines.push(`训练：${entry.trainingDur||'?'}min ${entry.trainingCal||'?'}kcal 最高${entry.trainingMaxHR||'?'}bpm`);
-  if(entry.lunch)lines.push(`午餐：${entry.lunch}`);
-  if(entry.dinner)lines.push(`晚餐：${entry.dinner}`);
-  if(entry.feeling)lines.push(`感受：${entry.feeling}`);
-
-  const text=lines.join('\n');
   const st=document.getElementById('submitStatus');
+  st.textContent='⏳ 正在提交...';st.style.color='var(--amber)';
+  const H={Authorization:'token '+token,'Content-Type':'application/json',Accept:'application/vnd.github+json'};
   try{
-    await navigator.clipboard.writeText(text);
-    st.textContent='✅ 已复制！贴到 Claude Code 对话即可';st.style.color='var(--green)';
-    showToast('✅ 已复制，贴过来吧');
-  }catch(e){
-    // Fallback for browsers without clipboard API
-    const ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';
-    document.body.appendChild(ta);ta.select();
-    try{document.execCommand('copy');st.textContent='✅ 已复制！';st.style.color='var(--green)'}
-    catch(e2){st.textContent='❌ 复制失败，请手动截图';st.style.color='var(--red)'}
-    document.body.removeChild(ta);
-  }
+    const r1=await fetch(GH+'/contents/data.json',{headers:{...H},cache:'no-store'});
+    if(!r1.ok)throw new Error('读取失败 HTTP '+r1.status);
+    const f=await r1.json();
+    const data=JSON.parse(atob(f.content));
+    const idx=data.findIndex(d=>d.date===date);
+    if(idx>=0)data[idx]={...data[idx],...entry};else data.push(entry);
+    data.sort((a,b)=>a.date.localeCompare(b.date));
+    const json=JSON.stringify(data,null,2);
+    const b64=btoa(String.fromCharCode(...new TextEncoder().encode(json)));
+    const r2=await fetch(GH+'/contents/data.json',{method:'PUT',headers:H,body:JSON.stringify({message:'📱 '+date,content:b64,sha:f.sha})});
+    if(r2.ok){st.textContent='✅ 已提交！';st.style.color='var(--green)';showToast('✅ 已提交到御医')}
+    else{const e=await r2.json();st.textContent='❌ '+(e.message||'失败');st.style.color='var(--red)'}
+  }catch(e){st.textContent='❌ '+e.message;st.style.color='var(--red')}
+}
+function showTokenSetup(){
+  document.getElementById('submitStatus').textContent='⚠️ 首次使用：输入 GitHub Token';
+  document.getElementById('submitStatus').style.color='var(--amber)';
+  document.getElementById('tokenSetup').style.display='block';
+}
+function saveToken(){
+  const v=document.getElementById('tokenInput').value.trim();
+  if(v.startsWith('ghp_')){localStorage.setItem('gh_token',v);document.getElementById('tokenSetup').style.display='none';showToast('✅ Token 已保存')}
+  else{alert('Token 格式不对，应以 ghp_ 开头')}
 }
 
 // ── Toast ──
