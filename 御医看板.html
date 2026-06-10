@@ -354,9 +354,8 @@ async function subm(){
     var idx=data.findIndex(function(d){return d.date===date});
     if(idx>=0)data[idx]=Object.assign(data[idx],entry);else data.push(entry);
     data.sort(function(a,b){return a.date.localeCompare(b.date)});
-    var json=JSON.stringify(data,null,2),bytes=new TextEncoder().encode(json),bin='';
-    for(var i=0;i<bytes.length;i++)bin+=String.fromCharCode(bytes[i]);
-    var b64=btoa(bin);
+    var json=JSON.stringify(data,null,2);
+    var b64=await new Promise(function(ok){var r=new FileReader();r.onload=function(){ok(r.result.split(',')[1])};r.readAsDataURL(new Blob([json],{type:'text/plain;charset=UTF-8'}))});
     var r2=await fetch(GH+'/contents/data.json',{method:'PUT',headers:H,body:JSON.stringify({message:'📱 '+date,content:b64,sha:f.sha})});
     if(r2.ok){st.textContent='✅ 已提交！';st.style.color='var(--green)';st2('✅ 已提交到御医')}
     else{var e2=await r2.json();st.textContent='❌ '+(e2.message||'失败');st.style.color='var(--red)'}
