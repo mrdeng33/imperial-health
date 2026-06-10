@@ -181,6 +181,9 @@ nav{
   display:flex;z-index:100;padding:var(--space-sm) 0 env(safe-area-inset-bottom,8px);
   backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)
 }
+@media(min-width:431px){
+  nav{max-width:100%;left:0;transform:none;padding:var(--space-md) 16px env(safe-area-inset-bottom,8px)}
+}
 nav .nav-item{
   flex:1;text-align:center;color:var(--muted);font-size:10px;
   padding:var(--space-xs) 0;cursor:pointer;
