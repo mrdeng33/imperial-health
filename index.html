@@ -129,11 +129,11 @@ nav .ni.ac{color:var(--gold)}
     <button class="btn sm" onclick="sv('training')">💾 保存训练</button>
   </div>
 
-  <div style="margin-top:20px;padding:12px;background:var(--card);border-radius:var(--r)">
-    <div style="font-size:12px;color:var(--gold);margin-bottom:8px">🔑 GitHub Token（仅存手机，一次设置）</div>
-    <input type="password" id="ti" placeholder="ghp_..." style="margin-bottom:8px;font-size:13px">
-    <button class="btn sm" onclick="stk()">保存 Token</button>
-    <div style="font-size:10px;color:var(--muted);margin-top:6px" id="ts2"></div>
+  <div style="margin-top:20px;padding:10px 12px;background:var(--card);border-radius:var(--r);cursor:pointer" id="tokBox" onclick="if(document.getElementById('ti').style.display==='none'){document.getElementById('ti').style.display='block';document.getElementById('stkb').style.display='block'}">
+    <div style="font-size:11px;color:var(--gold)" id="tokLabel">🔑 Token 未配置 · 点击设置</div>
+    <input type="password" id="ti" placeholder="ghp_..." style="margin-top:8px;font-size:13px">
+    <button class="btn sm" id="stkb" onclick="event.stopPropagation();stk()">保存 Token</button>
+    <div style="font-size:10px;color:var(--muted);margin-top:4px" id="ts2"></div>
   </div>
   <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);text-align:center">
     <button id="bs" class="btn" style="background:linear-gradient(135deg,#c9a96e,#e0556a);font-size:16px">📡 提交到御医团队</button>
@@ -199,7 +199,7 @@ async function init(){
   document.getElementById('hd').textContent=new Date().toLocaleDateString('zh-CN',{year:'numeric',month:'long',day:'numeric',weekday:'long'});
   document.getElementById('ed').value=td();uw();ld3();rd();rs2();rh();rt();
   document.getElementById('tb').style.display=document.getElementById('ed').value===td()?'inline':'none';
-  var t=tk();if(t){document.getElementById('ti').value=t;document.getElementById('ts2').textContent='✅ 已配置（'+t.slice(0,7)+'...）';document.getElementById('ts2').style.color='var(--green)'}
+  var t=tk();if(t){document.getElementById('ti').value=t;document.getElementById('ti').style.display='none';document.getElementById('stkb').style.display='none';document.getElementById('ts2').textContent='✅ '+t.slice(0,7)+'...';document.getElementById('ts2').style.color='var(--green)';document.getElementById('tokLabel').textContent='🔑 Token 已配置 · 点击修改'}
 }
 function uw(){var d=new Date(document.getElementById('ed').value);document.getElementById('ew').textContent='星期'+['日','一','二','三','四','五','六'][d.getDay()]}
 function ld3(){
@@ -374,7 +374,8 @@ function rt(){
 }
 
 // Token
-function stk(){var v=document.getElementById('ti').value.trim();if(v.slice(0,4)==='ghp_'){localStorage.setItem('gt',v);document.getElementById('ts2').textContent='✅ Token 已保存';document.getElementById('ts2').style.color='var(--green)';st2('✅ Token 已保存')}else if(v){alert('Token 格式不对，应以 ghp_ 开头')}}
+function stk(){var v=document.getElementById('ti').value.trim();if(v.slice(0,4)==='ghp_'){localStorage.setItem('gt',v);document.getElementById('ts2').textContent='✅ 已保存';document.getElementById('ts2').style.color='var(--green)';document.getElementById('ti').style.display='none';document.getElementById('stkb').style.display='none';document.getElementById('tokLabel').textContent='🔑 Token 已配置 · 点击修改';st2('✅ Token 已保存')}else if(v){alert('Token 格式不对，应以 ghp_ 开头')}}
+function showTok(){var el=document.getElementById('ti');el.style.display='block';document.getElementById('stkb').style.display='block';el.focus()}
 
 // Submit
 async function subm(){
@@ -409,7 +410,7 @@ function sw(tab,el){
 }
 
 // Boot
-(function(){var t=tk();if(t){document.getElementById('ti').value=t;document.getElementById('ts2').textContent='✅ 已配置（'+t.slice(0,7)+'...）';document.getElementById('ts2').style.color='var(--green)'}})();
+(function(){var t=tk();if(t){document.getElementById('ti').value=t;document.getElementById('ti').style.display='none';document.getElementById('stkb').style.display='none';document.getElementById('ts2').textContent='✅ '+t.slice(0,7)+'...';document.getElementById('ts2').style.color='var(--green)';document.getElementById('tokLabel').textContent='🔑 Token 已配置 · 点击修改'}})();
 init();
 document.getElementById('bs').addEventListener('click',subm);
 </script>
