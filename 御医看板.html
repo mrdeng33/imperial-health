@@ -5,607 +5,352 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#0F172A">
+<meta name="theme-color" content="#0f1117">
 <title>御医看板</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;500;600&display=swap');
 :root{
-  --bg:#0f1117; --card:rgba(26,29,40,.7); --card2:#1a1d28;
-  --gold:#c9a96e; --gold2:#b8944e; --text:#e2e8f0; --muted:#94a3b8;
-  --red:#f87171; --green:#4ade80; --amber:#fbbf24;
-  --border:rgba(201,169,110,.12); --radius:14px; --radius-sm:10px;
-  --fs-xs:11px; --fs-sm:13px; --fs-base:15px; --fs-lg:18px; --fs-xl:24px;
-  --space-xs:4px; --space-sm:8px; --space-md:12px; --space-lg:16px; --space-xl:20px;
-  --transition:180ms ease-out;
+  --bg:#0f1117;--card:rgba(26,29,40,.7);--card2:#1a1d28;--gold:#c9a96e;--gold2:#b8944e;
+  --text:#e2e8f0;--muted:#94a3b8;--red:#f87171;--green:#4ade80;--amber:#fbbf24;
+  --border:rgba(201,169,110,.15);--r:14px;--rs:10px;
 }
 *{margin:0;padding:0;box-sizing:border-box}
-body{
-  font-family:'Fira Sans',-apple-system,BlinkMacSystemFont,'SF Pro Display','PingFang SC',sans-serif;
-  background:var(--bg);color:var(--text);max-width:100%;margin:0 auto;
-  min-height:100dvh;padding:0 0 96px;-webkit-tap-highlight-color:transparent;
-  -webkit-font-smoothing:antialiased;user-select:none
-}
-
-/* Phone folded: cap at 430px */
-@media(max-width:430px){
-  body{max-width:430px;padding:0 0 96px}
-}
-
-/* Foldable / tablet unfolded */
-@media(min-width:431px){
-  body{max-width:100%;padding:0 16px 72px}
-  .stat-grid{grid-template-columns:repeat(6,1fr)}
-  .habit-grid{grid-template-columns:repeat(4,1fr);max-width:480px;margin:0 auto}
-  .chart-box canvas{height:220px!important}
-  .tab-panel{padding:20px 8px}
-  .form-row{gap:12px}
-  nav{max-width:100%}
-  nav .nav-item{font-size:12px}
-  nav .nav-emoji{font-size:22px}
-}
-
-/* Header */
-header{padding:var(--space-xl) var(--space-xl) var(--space-md);text-align:center;border-bottom:1px solid var(--border);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
-header h1{font-size:var(--fs-lg);font-weight:600;letter-spacing:.02em;color:var(--gold);display:flex;align-items:center;justify-content:center;gap:var(--space-sm)}
-header .date{font-size:var(--fs-xs);color:var(--muted);margin-top:var(--space-xs)}
-
-/* Tab panels */
-.tab-panel{display:none;padding:var(--space-lg)}
-.tab-panel.active{display:block;animation:fadeIn var(--transition)}
-@keyframes fadeIn{from{opacity:.6;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
-
-/* Section */
-.section-label{
-  font-size:var(--fs-sm);color:var(--gold);margin:var(--space-lg) 0 var(--space-sm);
-  padding-bottom:var(--space-sm);border-bottom:1px solid var(--border);
-  letter-spacing:.03em;cursor:pointer;display:flex;justify-content:space-between;align-items:center;
-  transition:color var(--transition)
-}
-.section-label:active{color:var(--gold2)}
-.section-label .arrow{font-size:10px;transition:transform var(--transition)}
-.section-body{overflow:hidden;transition:max-height .3s ease-out}
-.section-body.hidden{max-height:0!important}
-
-/* Form */
-.form-group{margin-bottom:var(--space-md)}
-.form-group label{display:block;font-size:var(--fs-xs);color:var(--muted);margin-bottom:var(--space-xs);letter-spacing:.03em;font-weight:500;text-transform:uppercase}
-.form-row{display:flex;gap:var(--space-sm)}
-.form-row .form-group{flex:1}
-input,select,textarea{
-  width:100%;background:var(--card);border:1px solid var(--border);
-  color:var(--text);padding:10px var(--space-md);border-radius:var(--radius-sm);
-  font-size:var(--fs-base);font-family:inherit;outline:none;
-  transition:border-color var(--transition),box-shadow var(--transition)
-}
-input:focus,select:focus,textarea:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,169,110,.1)}
-input::placeholder,textarea::placeholder{color:rgba(148,163,184,.4)}
-textarea{resize:vertical;min-height:52px}
-select{
-  -webkit-appearance:none;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M6 8L1 3h10z' fill='%2394a3b8'/%3E%3C/svg%3E");
-  background-repeat:no-repeat;background-position:right 12px center;padding-right:32px
-}
-
-/* Toggle buttons */
-.toggle-row{display:flex;gap:var(--space-sm)}
-.toggle-btn{
-  flex:1;padding:11px;text-align:center;border-radius:var(--radius-sm);
-  border:1px solid var(--border);background:var(--card);color:var(--muted);
-  font-size:var(--fs-sm);font-family:inherit;cursor:pointer;
-  transition:all var(--transition)
-}
-.toggle-btn:active{transform:scale(.97)}
-.toggle-btn.on{background:rgba(74,222,128,.15);color:var(--green);border-color:rgba(74,222,128,.3)}
-.toggle-btn.off{background:rgba(248,113,113,.15);color:var(--red);border-color:rgba(248,113,113,.3)}
-
-/* Save button */
-.save-btn{
-  width:100%;padding:13px;background:linear-gradient(135deg,var(--gold),var(--gold2));
-  color:var(--bg);border:none;border-radius:var(--radius);font-size:var(--fs-base);
-  font-weight:600;font-family:inherit;cursor:pointer;letter-spacing:.02em;
-  transition:opacity var(--transition),transform var(--transition);margin-top:var(--space-sm)
-}
-.save-btn:active{opacity:.85;transform:scale(.98)}
-.save-btn.small{font-size:var(--fs-sm);padding:11px}
-
-/* Badge */
-.today-badge{font-size:10px;padding:2px 8px;border-radius:20px;background:rgba(74,222,128,.12);color:var(--green);font-weight:500}
-
-/* Stats grid */
-.stat-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:var(--space-sm);margin-bottom:var(--space-sm)}
-.stat-card{
-  background:var(--card);border-radius:var(--radius);padding:var(--space-md);
-  text-align:center;border:1px solid var(--border);
-  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
-  transition:border-color var(--transition)
-}
-.stat-card .value{font-size:var(--fs-xl);font-weight:600;letter-spacing:-.01em;transition:color var(--transition)}
-.stat-card .label{font-size:var(--fs-xs);color:var(--muted);margin-top:2px;letter-spacing:.03em}
-.stat-card.good .value{color:var(--green)}.stat-card.warn .value{color:var(--amber)}.stat-card.bad .value{color:var(--red)}
-
-/* Charts */
-.chart-box{
-  background:var(--card);border-radius:var(--radius);padding:var(--space-md);
-  margin-bottom:var(--space-sm);border:1px solid var(--border);
-  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)
-}
-.chart-box .chart-title{font-size:var(--fs-xs);color:var(--gold);margin-bottom:var(--space-sm);letter-spacing:.03em;font-weight:500;text-transform:uppercase}
-.chart-box canvas{width:100%!important;height:200px!important}
-
-/* Timeline */
-.timeline{position:relative;padding-left:28px}
-.timeline::before{content:'';position:absolute;left:9px;top:6px;bottom:6px;width:1.5px;background:rgba(201,169,110,.3)}
-.tl-item{position:relative;margin-bottom:var(--space-xl);padding-left:12px}
-.tl-item::before{content:'';position:absolute;left:-22px;top:6px;width:10px;height:10px;border-radius:50%;background:var(--gold);border:2px solid var(--bg)}
-.tl-item .tl-time{font-size:var(--fs-xs);color:var(--gold);margin-bottom:2px;font-weight:500;letter-spacing:.03em;text-transform:uppercase}
-.tl-item .tl-content{font-size:var(--fs-sm);line-height:1.7}
-.tl-check{
-  cursor:pointer;font-size:var(--fs-xs);color:var(--muted);margin-top:var(--space-xs);
-  display:inline-block;padding:4px 10px;border-radius:6px;border:1px solid var(--border);
-  transition:all var(--transition)
-}
-.tl-check:active{transform:scale(.95)}
-.tl-check.done{color:var(--green);border-color:rgba(74,222,128,.3);background:rgba(74,222,128,.08)}
-
-/* Habit rings */
-.habit-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:var(--space-sm)}
-.habit-card{
-  background:var(--card);border-radius:var(--radius);padding:var(--space-md) var(--space-sm);
-  text-align:center;border:1px solid var(--border);
-  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)
-}
-.habit-card .ring{width:60px;height:60px;margin:0 auto var(--space-xs)}
-.habit-card .ring canvas{width:100%!important;height:100%!important}
-.habit-card .h-title{font-size:var(--fs-xs);color:var(--text);font-weight:500}
-.habit-card .h-sub{font-size:10px;color:var(--muted);margin-top:1px}
-
-/* Team prescriptions */
-.rx-card{
-  background:var(--card);border-radius:var(--radius);padding:var(--space-lg);
-  margin-bottom:var(--space-md);border:1px solid var(--border);
-  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
-  transition:border-color var(--transition)
-}
-.rx-card:hover{border-color:rgba(201,169,110,.25)}
-.rx-card .rx-header{display:flex;align-items:center;gap:10px;margin-bottom:var(--space-md)}
-.rx-card .rx-avatar{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;background:var(--card2)}
-.rx-card .rx-name{font-size:var(--fs-sm);font-weight:600;color:var(--gold)}
-.rx-card .rx-body{font-size:var(--fs-sm);line-height:1.8;color:var(--text)}
-.rx-card .rx-line{padding:2px 0;padding-left:var(--space-md);position:relative}
-.rx-card .rx-line::before{content:'';position:absolute;left:0;top:12px;width:4px;height:4px;border-radius:50%;background:var(--gold);opacity:.5}
-
-/* Nav */
-nav{
-  position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;
-  background:rgba(15,23,42,.92);border-top:1px solid var(--border);
-  display:flex;z-index:100;padding:var(--space-sm) 0 env(safe-area-inset-bottom,8px);
-  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)
-}
-@media(min-width:431px){
-  nav{max-width:100%;left:0;transform:none;padding:var(--space-md) 16px env(safe-area-inset-bottom,8px)}
-}
-nav .nav-item{
-  flex:1;text-align:center;color:var(--muted);font-size:10px;
-  padding:var(--space-xs) 0;cursor:pointer;
-  transition:color var(--transition),transform var(--transition)
-}
-nav .nav-item:active{transform:scale(.94)}
-nav .nav-item .nav-emoji{display:block;font-size:20px;margin-bottom:2px;transition:transform var(--transition)}
-nav .nav-item.active{color:var(--gold)}
-nav .nav-item.active .nav-emoji{transform:scale(1.1)}
-
-/* Toast */
-.toast{
-  position:fixed;top:20px;left:50%;transform:translateX(-50%);background:var(--green);
-  color:var(--bg);padding:10px 24px;border-radius:24px;font-size:var(--fs-sm);font-weight:600;
-  z-index:200;opacity:0;transition:opacity var(--transition);pointer-events:none
-}
+body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Noto Sans SC',sans-serif;background:var(--bg);color:var(--text);max-width:430px;margin:0 auto;min-height:100dvh;padding-bottom:96px;-webkit-tap-highlight-color:transparent;-webkit-font-smoothing:antialiased;user-select:none}
+@media(min-width:431px){body{max-width:100%;padding:0 16px 80px}.stat-grid{grid-template-columns:repeat(6,1fr)!important}nav{max-width:100%!important;left:0!important;transform:none!important}}
+header{padding:20px;text-align:center;border-bottom:1px solid var(--border)}
+header h1{font-size:18px;font-weight:600;color:var(--gold)}
+header .date{font-size:11px;color:var(--muted);margin-top:4px}
+.tab-panel{display:none;padding:16px}
+.tab-panel.active{display:block}
+.sl{font-size:13px;color:var(--gold);margin:16px 0 8px;padding-bottom:6px;border-bottom:1px solid var(--border);cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+.sl .ar{font-size:10px;transition:transform .2s}
+.sb{overflow:hidden;transition:max-height .3s}
+.sb.hidden{max-height:0!important}
+.fg{margin-bottom:10px}
+.fg label{display:block;font-size:11px;color:var(--muted);margin-bottom:4px;font-weight:500}
+.fr{display:flex;gap:8px}
+.fr .fg{flex:1}
+input,select,textarea{width:100%;background:var(--card);border:1px solid var(--border);color:var(--text);padding:9px 10px;border-radius:var(--rs);font-size:15px;font-family:inherit;outline:none;transition:border-color .15s}
+input:focus,select:focus,textarea:focus{border-color:var(--gold)}
+textarea{resize:vertical;min-height:50px}
+select{-webkit-appearance:none;background:var(--card) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M6 8L1 3h10z' fill='%2394a3b8'/%3E%3C/svg%3E") no-repeat right 10px center;padding-right:28px}
+.tr{display:flex;gap:8px}
+.tb{flex:1;padding:10px;text-align:center;border-radius:var(--rs);border:1px solid var(--border);background:var(--card);color:var(--muted);font-size:14px;cursor:pointer;transition:all .15s}
+.tb:active{transform:scale(.97)}
+.tb.on{background:rgba(74,222,128,.15);color:var(--green);border-color:rgba(74,222,128,.3)}
+.tb.off{background:rgba(248,113,113,.15);color:var(--red);border-color:rgba(248,113,113,.3)}
+.btn{width:100%;padding:13px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--bg);border:none;border-radius:var(--r);font-size:16px;font-weight:600;cursor:pointer;margin-top:8px}
+.btn:active{opacity:.85;transform:scale(.98)}
+.btn.sm{font-size:14px;padding:10px}
+.sg{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px}
+.sc{background:var(--card);border-radius:var(--r);padding:13px;text-align:center;border:1px solid var(--border)}
+.sc .v{font-size:24px;font-weight:700}
+.sc .l{font-size:10px;color:var(--muted);margin-top:2px}
+.sc.g .v{color:var(--green)}.sc.w .v{color:var(--amber)}.sc.b .v{color:var(--red)}
+.cb{background:var(--card);border-radius:var(--r);padding:12px;margin-bottom:8px;border:1px solid var(--border)}
+.cb .ct{font-size:11px;color:var(--gold);margin-bottom:8px;font-weight:500}
+.tl{position:relative;padding-left:28px}
+.tl::before{content:'';position:absolute;left:9px;top:4px;bottom:4px;width:1.5px;background:rgba(201,169,110,.3)}
+.tli{position:relative;margin-bottom:16px;padding-left:12px}
+.tli::before{content:'';position:absolute;left:-22px;top:6px;width:10px;height:10px;border-radius:50%;background:var(--gold);border:2px solid var(--bg)}
+.tli .tt{font-size:11px;color:var(--gold);margin-bottom:2px;font-weight:500}
+.tli .tc{font-size:13px;line-height:1.7}
+.sr{display:flex;align-items:center;gap:8px;margin-bottom:5px;cursor:pointer;padding:3px 0}
+.sr:active{opacity:.7}
+.sb2{width:18px;height:18px;border-radius:5px;border:1.5px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.sr.d .sb2{border-color:var(--green);background:rgba(74,222,128,.15)}
+.sr.d .sb2::after{content:'✓';font-size:10px;color:var(--green);font-weight:700}
+.sr.d .sl2{text-decoration:line-through;color:var(--muted)}
+.sr .sl2{font-size:13px}
+.hg{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px}
+.hc{background:var(--card);border-radius:var(--r);padding:14px 8px;text-align:center;border:1px solid var(--border)}
+.hc .ri{width:60px;height:60px;margin:0 auto 6px}
+.hc .ri canvas{width:100%!important;height:100%!important}
+.hc .ht{font-size:12px;color:var(--text);font-weight:500}
+.hc .hs{font-size:10px;color:var(--muted);margin-top:1px}
+.rc{background:var(--card);border-radius:var(--r);padding:14px;margin-bottom:10px;border:1px solid var(--border)}
+.rc .rh{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.rc .ra{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;background:var(--card2)}
+.rc .rn{font-size:14px;font-weight:600;color:var(--gold)}
+.rc .rb{font-size:13px;line-height:1.8}
+.rc .rl{padding:2px 0 2px 12px;position:relative}
+.rc .rl::before{content:'';position:absolute;left:0;top:11px;width:4px;height:4px;border-radius:50%;background:var(--gold);opacity:.5}
+nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:rgba(15,17,23,.92);border-top:1px solid var(--border);display:flex;z-index:100;padding:6px 0 env(safe-area-inset-bottom,6px);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+nav .ni{flex:1;text-align:center;color:var(--muted);font-size:10px;padding:4px 0;cursor:pointer;transition:all .15s}
+nav .ni .ne{display:block;font-size:20px;margin-bottom:1px}
+nav .ni.ac{color:var(--gold)}
+.toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:var(--green);color:var(--bg);padding:10px 24px;border-radius:24px;font-size:14px;font-weight:600;z-index:200;opacity:0;transition:opacity .15s;pointer-events:none}
 .toast.show{opacity:1}
-
-/* Supplement checkbox */
-.supp-row{display:flex;align-items:center;gap:10px;margin-bottom:6px;cursor:pointer;padding:4px 0;transition:opacity var(--transition)}
-.supp-row:active{opacity:.7}
-.supp-row .supp-icon{font-size:16px;width:22px;text-align:center;flex-shrink:0;transition:transform var(--transition)}
-.supp-row.done .supp-icon{transform:scale(1.15)}
-.supp-row .supp-label{font-size:var(--fs-sm);transition:color var(--transition),text-decoration var(--transition)}
-.supp-row.done .supp-label{text-decoration:line-through;color:var(--muted)}
-.supp-checkbox{width:20px;height:20px;border-radius:6px;border:1.5px solid var(--border);flex-shrink:0;transition:all var(--transition);display:flex;align-items:center;justify-content:center}
-.supp-row.done .supp-checkbox{border-color:var(--green);background:rgba(74,222,128,.15)}
-.supp-row.done .supp-checkbox::after{content:'✓';font-size:11px;color:var(--green);font-weight:700}
+.bar-row{display:flex;align-items:center;gap:6px;margin-bottom:3px;font-size:10px}
+.bar-row .br-l{width:34px;color:var(--muted);text-align:right;flex-shrink:0}
+.bar-row .br-bg{flex:1;height:14px;background:var(--card2);border-radius:3px;overflow:hidden}
+.bar-row .br-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2));border-radius:3px;transition:width .3s}
+.bar-row .br-v{width:48px;color:var(--text);text-align:left;flex-shrink:0;font-weight:500}
 </style>
 </head>
 <body>
 
-<header>
-  <h1>🏯 御医看板</h1>
-  <div class="date" id="headerDate"></div>
-</header>
+<header><h1>🏯 御医看板</h1><div class="date" id="hd"></div></header>
 
-<!-- ── Tab 1: Entry ── -->
-<div class="tab-panel active" id="tab-entry" style="padding-bottom:var(--space-xl)">
-  <div style="display:flex;align-items:center;gap:10px;margin-bottom:var(--space-md)">
-    <input type="date" id="entryDate" style="width:auto;font-size:var(--fs-sm);padding:8px 12px" onchange="loadDayData()">
-    <span style="font-size:var(--fs-xs);color:var(--muted)" id="entryWeekday"></span>
-    <span class="today-badge" id="todayBadge" style="display:none">今天</span>
+<!-- Tab: Entry -->
+<div class="tab-panel active" id="tab-entry">
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+    <input type="date" id="ed" style="width:auto;font-size:13px;padding:7px 10px" onchange="ld()">
+    <span style="font-size:12px;color:var(--muted)" id="ew"></span>
+    <span style="font-size:10px;padding:2px 8px;border-radius:20px;background:rgba(74,222,128,.12);color:var(--green);font-weight:500;display:none" id="tb">今天</span>
   </div>
 
-  <div class="section-label" onclick="toggleSection('sec-morning')">☀️ 晨检数据 <span class="arrow">▾</span></div>
-  <div class="section-body" id="sec-morning">
-    <div class="form-row">
-      <div class="form-group"><label>清醒时间 (min)</label><input type="number" id="awakeTime" placeholder="33" inputmode="numeric"></div>
-      <div class="form-group"><label>快速动眼 REM (min)</label><input type="number" id="remSleep" placeholder="66" inputmode="numeric"></div>
-    </div>
-    <div class="form-row">
-      <div class="form-group"><label>核心睡眠 (min)</label><input type="number" id="coreSleep" placeholder="351" inputmode="numeric"></div>
-      <div class="form-group"><label>深度睡眠 (min)</label><input type="number" id="deepSleep" placeholder="44" inputmode="numeric"></div>
-    </div>
-    <div class="form-row">
-      <div class="form-group"><label>入睡时间</label><input type="time" id="bedtime"></div>
-      <div class="form-group"><label>起床时间</label><input type="time" id="wakeTime"></div>
-    </div>
-    <div class="form-row">
-      <div class="form-group"><label>❤️ 心率 (bpm)</label><input type="number" id="heartRate" placeholder="74" inputmode="numeric"></div>
-      <div class="form-group"><label>📈 HRV (ms)</label><input type="number" id="hrv" placeholder="可选" inputmode="numeric"></div>
-      <div class="form-group"><label>⚖️ 体重 (kg)</label><input type="number" id="weight" placeholder="84.0" step="0.1" inputmode="decimal"></div>
-    </div>
-    <div class="form-row">
-      <div class="form-group"><label>📱 睡前刷手机 (min)</label><input type="number" id="shortVideo" placeholder="30" inputmode="numeric"></div>
-      <div class="form-group"><label>🔒 内守 第</label><input type="number" id="abstinence" placeholder="天" inputmode="numeric"></div>
-    </div>
-    <div class="form-group"><label>😰 焦虑 (1-10)</label><input type="number" id="anxiety" placeholder="5" min="0" max="10" inputmode="numeric"></div>
-    <div class="form-group"><label>💬 感受</label><input type="text" id="feeling" placeholder="一句话概括今天的状态..."></div>
-    <div style="font-size:var(--fs-xs);color:var(--muted);padding:4px 0">自动计算: 总睡眠 = (核心+深睡+REM) ÷ 60</div>
-    <button class="save-btn small" onclick="saveSection('morning')">保存晨检</button>
+  <div class="sl" onclick="ts('sm')">☀️ 晨检数据 <span class="ar">▾</span></div>
+  <div class="sb" id="sm">
+    <div class="fr"><div class="fg"><label>清醒时间 (min)</label><input type="number" id="aw" placeholder="33" inputmode="numeric"></div><div class="fg"><label>快速动眼 REM (min)</label><input type="number" id="rs" placeholder="66" inputmode="numeric"></div></div>
+    <div class="fr"><div class="fg"><label>核心睡眠 (min)</label><input type="number" id="cs" placeholder="351" inputmode="numeric"></div><div class="fg"><label>深度睡眠 (min)</label><input type="number" id="ds" placeholder="44" inputmode="numeric"></div></div>
+    <div class="fr"><div class="fg"><label>入睡时间</label><input type="time" id="bt"></div><div class="fg"><label>起床时间</label><input type="time" id="wt"></div></div>
+    <div class="fr"><div class="fg"><label>❤️ 心率 (bpm)</label><input type="number" id="hr" placeholder="74" inputmode="numeric"></div><div class="fg"><label>📈 HRV (ms)</label><input type="number" id="hv" placeholder="可选" inputmode="numeric"></div><div class="fg"><label>⚖️ 体重 (kg)</label><input type="number" id="bw" placeholder="84.0" step="0.1" inputmode="decimal"></div></div>
+    <div class="fr"><div class="fg"><label>📱 睡前刷手机 (min)</label><input type="number" id="sv" placeholder="30" inputmode="numeric"></div><div class="fg"><label>🔒 内守 第</label><input type="number" id="ab" placeholder="天" inputmode="numeric"></div></div>
+    <div class="fg"><label>😰 焦虑 (1-10)</label><input type="number" id="ax" placeholder="5" min="0" max="10" inputmode="numeric"></div>
+    <div class="fg"><label>💬 感受</label><input type="text" id="fl" placeholder="一句话概括今天的状态..."></div>
+    <div style="font-size:11px;color:var(--muted);padding:4px 0">自动计算: 总睡眠 = (核心+深睡+REM) ÷ 60</div>
+    <button class="btn sm" onclick="sv('morning')">💾 保存晨检</button>
   </div>
 
-  <div class="section-label" onclick="toggleSection('sec-diet')">🍽️ 饮食记录 <span class="arrow">▾</span></div>
-  <div class="section-body" id="sec-diet">
-    <div class="form-group"><label>🍌 拳击前（如有）</label><input type="text" id="preBoxingFood" placeholder="半根香蕉 + 黑咖啡"></div>
-    <div class="form-group"><label>🍱 午餐</label><textarea id="lunch" placeholder="牛丸牛杂粿条 ~570kcal 34g蛋白" rows="2"></textarea></div>
-    <div class="form-group"><label>🍲 晚餐</label><textarea id="dinner" placeholder="沙姜鸡套餐 ~620kcal 60g蛋白" rows="2"></textarea></div>
-    <div style="display:flex;gap:8px">
-      <div class="form-group" style="flex:1"><label>🕐 开窗</label><input type="time" id="fastingStart"></div>
-      <div class="form-group" style="flex:1"><label>🔒 关窗</label><input type="time" id="fastingEnd"></div>
-    </div>
-    <button class="save-btn small" onclick="saveSection('diet')">保存饮食</button>
+  <div class="sl" onclick="ts('sd')">🍽️ 饮食记录 <span class="ar">▾</span></div>
+  <div class="sb" id="sd">
+    <div class="fg"><label>🍌 拳击前（如有）</label><input type="text" id="pb" placeholder="半根香蕉 + 黑咖啡"></div>
+    <div class="fg"><label>🍱 午餐</label><textarea id="lu" placeholder="牛丸牛杂粿条 ~570kcal 34g蛋白" rows="2"></textarea></div>
+    <div class="fg"><label>🍲 晚餐</label><textarea id="di" placeholder="沙姜鸡套餐 ~620kcal 60g蛋白" rows="2"></textarea></div>
+    <div style="display:flex;gap:8px"><div class="fg" style="flex:1"><label>🕐 开窗</label><input type="time" id="fs"></div><div class="fg" style="flex:1"><label>🔒 关窗</label><input type="time" id="fe"></div></div>
+    <button class="btn sm" onclick="sv('diet')">💾 保存饮食</button>
   </div>
 
-  <div class="section-label" onclick="toggleSection('sec-training')">🥊 训练记录 <span class="arrow">▾</span></div>
-  <div class="section-body" id="sec-training">
-    <div class="toggle-row">
-      <div class="toggle-btn" id="btnBoxing" onclick="toggleBtn('boxing')">拳击</div>
-      <div class="toggle-btn" id="btnFasting" onclick="toggleBtn('fasting')">断食</div>
-    </div>
-    <div class="form-row" style="margin-top:var(--space-md)">
-      <div class="form-group"><label>时长 (min)</label><input type="number" id="trainingDur" placeholder="60" inputmode="numeric"></div>
-      <div class="form-group"><label>热量 (kcal)</label><input type="number" id="trainingCal" placeholder="600" inputmode="numeric"></div>
-    </div>
-    <div class="form-row">
-      <div class="form-group"><label>最高心率</label><input type="number" id="trainingMaxHR" placeholder="171" inputmode="numeric"></div>
-      <div class="form-group"><label>平均心率</label><input type="number" id="trainingAvgHR" placeholder="118" inputmode="numeric"></div>
-    </div>
-    <button class="save-btn small" onclick="saveSection('training')">保存训练</button>
+  <div class="sl" onclick="ts('st')">🥊 训练记录 <span class="ar">▾</span></div>
+  <div class="sb" id="st">
+    <div class="tr"><div class="tb" id="bb" onclick="tg('boxing')">拳击</div><div class="tb" id="bf" onclick="tg('fasting')">断食</div></div>
+    <div class="fr" style="margin-top:10px"><div class="fg"><label>时长 (min)</label><input type="number" id="td" placeholder="60" inputmode="numeric"></div><div class="fg"><label>热量 (kcal)</label><input type="number" id="tc" placeholder="600" inputmode="numeric"></div></div>
+    <div class="fr"><div class="fg"><label>最高心率</label><input type="number" id="th" placeholder="171" inputmode="numeric"></div><div class="fg"><label>平均心率</label><input type="number" id="ta" placeholder="118" inputmode="numeric"></div></div>
+    <button class="btn sm" onclick="sv('training')">💾 保存训练</button>
   </div>
 
-  <!-- Token Setup -->
-  <div id="tokenSetup" style="margin-top:20px;padding:12px;background:var(--card);border-radius:var(--radius)">
-    <div style="font-size:12px;color:var(--gold);margin-bottom:8px">🔑 输入 GitHub Token（仅存手机，一次设置）</div>
-    <input type="password" id="tokenInput" placeholder="ghp_..." style="margin-bottom:8px;font-size:13px">
-    <button class="save-btn small" onclick="saveToken()">保存 Token</button>
-    <div style="font-size:10px;color:var(--muted);margin-top:6px" id="tokenStatus"></div>
+  <!-- Token + Submit -->
+  <div style="margin-top:20px;padding:12px;background:var(--card);border-radius:var(--r)">
+    <div style="font-size:12px;color:var(--gold);margin-bottom:8px">🔑 GitHub Token（仅存手机，一次设置）</div>
+    <input type="password" id="ti" placeholder="ghp_..." style="margin-bottom:8px;font-size:13px">
+    <button class="btn sm" onclick="stk()">保存 Token</button>
+    <div style="font-size:10px;color:var(--muted);margin-top:6px" id="ts2"></div>
   </div>
-
-  <!-- 提交按钮 -->
-  <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border);text-align:center">
-    <button id="btnSubmit" class="save-btn" style="background:linear-gradient(135deg,#c9a96e,#e0556a);font-size:16px">
-      📡 提交到御医团队
-    </button>
-    <div style="font-size:10px;color:var(--muted);margin-top:8px" id="submitStatus">数据直连 GitHub · 免 VPN · 提交后刷新看板即可</div>
+  <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);text-align:center">
+    <button id="bs" class="btn" style="background:linear-gradient(135deg,#c9a96e,#e0556a);font-size:16px">📡 提交到御医团队</button>
+    <div style="font-size:10px;color:var(--muted);margin-top:8px" id="ss">提交后华佗/如意/张教练将收到数据</div>
   </div>
 </div>
 
-<!-- ── Tab 2: Dashboard ── -->
+<!-- Tab: Dashboard -->
 <div class="tab-panel" id="tab-dashboard">
-  <div class="stat-grid" id="todayStats"></div>
-  <div class="chart-box"><div class="chart-title">体重趋势 · 15天</div><canvas id="chartWeight"></canvas></div>
-  <div class="chart-box"><div class="chart-title">睡眠时长 · 7天</div><canvas id="chartSleep"></canvas></div>
-  <div class="chart-box"><div class="chart-title">深睡趋势 · 7天</div><canvas id="chartDeep"></canvas></div>
-  <div class="chart-box"><div class="chart-title">静息心率 · 7天</div><canvas id="chartHR"></canvas></div>
+  <div class="sg" id="tstats"></div>
+  <div class="cb"><div class="ct">⚖️ 体重趋势 · 15天</div><div id="chW"></div></div>
+  <div class="cb"><div class="ct">🌙 睡眠时长 · 7天</div><div id="chS"></div></div>
+  <div class="cb"><div class="ct">💤 深睡趋势 · 7天</div><div id="chD"></div></div>
+  <div class="cb"><div class="ct">❤️ 静息心率 · 7天</div><div id="chH"></div></div>
 </div>
 
-<!-- ── Tab 3: Supplements ── -->
-<div class="tab-panel" id="tab-supplements">
-  <div class="timeline" id="suppTimeline"></div>
-</div>
+<!-- Tab: Supplements -->
+<div class="tab-panel" id="tab-supplements"><div class="tl" id="suppT"></div></div>
 
-<!-- ── Tab 4: Habits ── -->
-<div class="tab-panel" id="tab-habits">
-  <div class="habit-grid" id="habitRings"></div>
-  <div style="margin-top:var(--space-lg);font-size:var(--fs-xs);color:var(--muted)" id="weekDetail"></div>
-</div>
+<!-- Tab: Habits -->
+<div class="tab-panel" id="tab-habits"><div class="hg" id="rings"></div><div style="margin-top:12px;font-size:12px;color:var(--muted)" id="wd"></div></div>
 
-<!-- ── Tab 5: Team ── -->
+<!-- Tab: Team -->
 <div class="tab-panel" id="tab-team">
-  <div style="font-size:var(--fs-xs);color:var(--muted);margin-bottom:var(--space-lg);text-align:center;letter-spacing:.03em">每日处方 · 数据驱动 · 晨检同步</div>
+  <div style="font-size:12px;color:var(--muted);margin-bottom:12px;text-align:center">每日处方 · 数据驱动 · 晨检同步</div>
   <div id="teamRx"></div>
 </div>
 
 <nav>
-  <div class="nav-item active" onclick="switchTab('entry',this)"><span class="nav-emoji">📝</span>录入</div>
-  <div class="nav-item" onclick="switchTab('dashboard',this)"><span class="nav-emoji">📊</span>看板</div>
-  <div class="nav-item" onclick="switchTab('supplements',this)"><span class="nav-emoji">💊</span>补剂</div>
-  <div class="nav-item" onclick="switchTab('habits',this)"><span class="nav-emoji">🎯</span>习惯</div>
-  <div class="nav-item" onclick="switchTab('team',this)"><span class="nav-emoji">🏯</span>团队</div>
+  <div class="ni ac" onclick="sw('entry',this)"><span class="ne">📝</span>录入</div>
+  <div class="ni" onclick="sw('dashboard',this)"><span class="ne">📊</span>看板</div>
+  <div class="ni" onclick="sw('supplements',this)"><span class="ne">💊</span>补剂</div>
+  <div class="ni" onclick="sw('habits',this)"><span class="ne">🎯</span>习惯</div>
+  <div class="ni" onclick="sw('team',this)"><span class="ne">🏯</span>团队</div>
 </nav>
-
 <div class="toast" id="toast"></div>
 
 <script>
-// Chart.js — try multiple CDNs for China accessibility
-(function(){
-  var s=document.createElement('script');
-  s.src='https://unpkg.com/chart.js@4.4.0/dist/chart.umd.min.js';
-  s.onerror=function(){var s2=document.createElement('script');s2.src='https://cdn.bootcdn.net/ajax/libs/Chart.js/4.4.0/chart.umd.min.js';document.head.appendChild(s2)};
-  document.head.appendChild(s);
-})();
-</script>
-<script>
-// ── State ──
-const STORAGE_KEY='imperial_health_data';
-const SUPP_STORAGE='imperial_supp_checks';
-let BASE_DATA=[],PRESCRIPTIONS={},boxingVal=null,fastingVal=null,charts={};
-
-// ── Data ──
-async function loadBaseData(){
-  try{const r=await fetch('data.json');if(r.ok)BASE_DATA=await r.json()}catch(e){console.warn('data.json unavailable, using localStorage only')}
-  try{const r=await fetch('prescriptions.json');if(r.ok)PRESCRIPTIONS=await r.json()}catch(e){}
-}
-function loadData(){
-  const local=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');
-  const merged={};BASE_DATA.forEach(d=>merged[d.date]={...d});local.forEach(d=>merged[d.date]={...merged[d.date],...d});
-  return Object.values(merged).sort((a,b)=>a.date.localeCompare(b.date));
-}
-function saveData(data){localStorage.setItem(STORAGE_KEY,JSON.stringify(data))}
-function getData(){return loadData()}
-function today(){return new Date().toISOString().split('T')[0]}
+// ── Core ──
+var D=[],P={},bv=null,fv=null;
+const K='ihd',SK='isc',GH='https://api.github.com/repos/mrdeng33/imperial-health';
+async function lbd(){try{let r=await fetch('data.json');if(r.ok)D=await r.json()}catch(e){}try{let r=await fetch('prescriptions.json');if(r.ok)P=await r.json()}catch(e){}}
+function ld2(){var l=JSON.parse(localStorage.getItem(K)||'[]'),m={};D.forEach(function(d){m[d.date]=Object.assign({},d)});l.forEach(function(d){m[d.date]=Object.assign(m[d.date]||{},d)});return Object.values(m).sort(function(a,b){return a.date.localeCompare(b.date)})}
+function sd(d){localStorage.setItem(K,JSON.stringify(d))}
+function td(){return new Date().toISOString().split('T')[0]}
+function tk(){return localStorage.getItem('gt')||''}
 
 // ── Init ──
 async function init(){
-  try{await loadBaseData()}catch(e){}
-  document.getElementById('headerDate').textContent=new Date().toLocaleDateString('zh-CN',{year:'numeric',month:'long',day:'numeric',weekday:'long'});
-  document.getElementById('entryDate').value=today();
-  updateWeekday();
-  loadDayData();
-  try{renderDashboard()}catch(e){}
-  renderSupplements();
-  try{renderHabits()}catch(e){}
-  renderTeam();
+  await lbd();
+  document.getElementById('hd').textContent=new Date().toLocaleDateString('zh-CN',{year:'numeric',month:'long',day:'numeric',weekday:'long'});
+  document.getElementById('ed').value=td();uw();ld3();rd();rs2();rh();rt();
+  document.getElementById('tb').style.display=document.getElementById('ed').value===td()?'inline':'none';
+  var t=tk();if(t){document.getElementById('ti').value=t;document.getElementById('ts2').textContent='✅ 已配置（'+t.slice(0,7)+'...）';document.getElementById('ts2').style.color='var(--green)'}
 }
-function updateWeekday(){
-  const d=new Date(document.getElementById('entryDate').value);
-  document.getElementById('entryWeekday').textContent='星期'+['日','一','二','三','四','五','六'][d.getDay()];
-  document.getElementById('todayBadge').style.display=document.getElementById('entryDate').value===today()?'inline':'none';
-}
-
-// ── Load day data ──
-function loadDayData(){
-  const date=document.getElementById('entryDate').value;
-  const data=getData();const e=data.find(d=>d.date===date);
-  'awakeTime,coreSleep,deepSleep,remSleep,heartRate,hrv,weight,shortVideo,abstinence,anxiety,feeling,bedtime,wakeTime,lunch,dinner,preBoxingFood,fastingStart,fastingEnd,trainingDur,trainingCal,trainingMaxHR,trainingAvgHR'.split(',').forEach(f=>{
-    const el=document.getElementById(f);if(el)el.value=e&&e[f]!==undefined?e[f]:'';
+function uw(){var d=new Date(document.getElementById('ed').value);document.getElementById('ew').textContent='星期'+['日','一','二','三','四','五','六'][d.getDay()]}
+function ld3(){
+  var e=ld2().find(function(d){return d.date===document.getElementById('ed').value});
+  'aw,rs,cs,ds,hr,hv,bw,sv,ab,ax,fl,bt,wt,lu,di,pb,fs,fe,td,tc,th,ta'.split(',').forEach(function(f){
+    var el=document.getElementById(f);if(el)el.value=(e&&e[f]!==undefined)?e[f]:'';
   });
-  boxingVal=e&&e.boxing!==undefined?e.boxing:null;updateToggleUI('btnBoxing',boxingVal);
-  fastingVal=e&&e.fasting!==undefined?e.fasting:null;updateToggleUI('btnFasting',fastingVal);
+  bv=(e&&e.boxing!==undefined)?e.boxing:null;tui('bb',bv);fv=(e&&e.fasting!==undefined)?e.fasting:null;tui('bf',fv);
 }
 
-// ── Toggle ──
-function toggleBtn(type){
-  if(type==='boxing'){boxingVal=boxingVal===true?false:boxingVal===false?null:true;updateToggleUI('btnBoxing',boxingVal)}
-  else{fastingVal=fastingVal===true?false:fastingVal===false?null:true;updateToggleUI('btnFasting',fastingVal)}
+// ── Toggles ──
+function tg(t){
+  if(t==='boxing'){bv=bv===true?false:bv===false?null:true;tui('bb',bv)}
+  else{fv=fv===true?false:fv===false?null:true;tui('bf',fv)}
 }
-function updateToggleUI(id,val){
-  const el=document.getElementById(id);el.classList.remove('on','off');
-  if(val===true){el.classList.add('on');el.textContent=id==='btnBoxing'?'拳击 ✅':'断食 ✅'}
-  else if(val===false){el.classList.add('off');el.textContent=id==='btnBoxing'?'拳击 ❌':'断食 ❌'}
-  else{el.textContent=id==='btnBoxing'?'拳击':'断食'}
+function tui(id,v){
+  var el=document.getElementById(id);el.classList.remove('on','off');
+  if(v===true){el.classList.add('on');el.textContent=id==='bb'?'拳击 ✅':'断食 ✅'}
+  else if(v===false){el.classList.add('off');el.textContent=id==='bb'?'拳击 ❌':'断食 ❌'}
+  else el.textContent=id==='bb'?'拳击':'断食';
 }
-
-// ── Sections ──
-function toggleSection(id){document.getElementById(id).classList.toggle('hidden')}
+function ts(id){document.getElementById(id).classList.toggle('hidden')}
 
 // ── Save ──
-function saveSection(section){
-  const date=document.getElementById('entryDate').value;
-  let data=getData();let entry=data.find(d=>d.date===date);if(!entry){entry={date};data.push(entry)}
-  if(section==='morning'){
-    const f='awakeTime,coreSleep,deepSleep,remSleep,heartRate,hrv,weight,shortVideo,abstinence,anxiety,feeling,bedtime,wakeTime'.split(',');
-    f.forEach(k=>{const v=document.getElementById(k)?.value;if(v!==''&&v!==undefined){entry[k]=k==='feeling'||k==='bedtime'||k==='wakeTime'?v:parseFloat(v)||parseInt(v)||v}else delete entry[k]});
-    const core=parseInt(document.getElementById('coreSleep')?.value)||0;
-    const deep=parseInt(document.getElementById('deepSleep')?.value)||0;
-    const rem=parseInt(document.getElementById('remSleep')?.value)||0;
-    if(core+deep+rem>0)entry.sleepTotal=Math.round((core+deep+rem)/0.6)/100;
+function sv(s){
+  var date=document.getElementById('ed').value,data=ld2(),e=data.find(function(d){return d.date===date});
+  if(!e){e={date:date};data.push(e)}
+  if(s==='morning'){
+    'aw,rs,cs,ds,hr,hv,bw,sv,ab,ax,fl,bt,wt'.split(',').forEach(function(k){var v=document.getElementById(k).value;if(v!==''&&v!==undefined)e[k]=(k==='fl'||k==='bt'||k==='wt')?v:parseFloat(v)||parseInt(v)||v;else delete e[k]});
+    var cs=parseInt(document.getElementById('cs').value)||0,ds=parseInt(document.getElementById('ds').value)||0,rs=parseInt(document.getElementById('rs').value)||0;
+    if(cs+ds+rs>0)e.sleepTotal=Math.round((cs+ds+rs)/0.6)/100;
   }
-  if(section==='diet'){'lunch,dinner,preBoxingFood,fastingStart,fastingEnd'.split(',').forEach(k=>{const v=document.getElementById(k)?.value;if(v!==''&&v!==undefined)entry[k]=v;else delete entry[k]})}
-  if(section==='training'){
-    entry.boxing=boxingVal;entry.fasting=fastingVal;
-    'trainingDur,trainingCal,trainingMaxHR,trainingAvgHR'.split(',').forEach(k=>{const v=document.getElementById(k)?.value;if(v!==''&&v!==undefined)entry[k]=parseInt(v)||0;else delete entry[k]});
-  }
-  data.sort((a,b)=>a.date.localeCompare(b.date));saveData(data);
-  showToast('已保存: '+{morning:'晨检',diet:'饮食',training:'训练'}[section]);
-  renderDashboard();renderHabits();renderSupplements();renderTeam();
+  if(s==='diet'){'lu,di,pb,fs,fe'.split(',').forEach(function(k){var v=document.getElementById(k).value;if(v!==''&&v!==undefined)e[k]=v;else delete e[k]})}
+  if(s==='training'){e.boxing=bv;e.fasting=fv;'td,tc,th,ta'.split(',').forEach(function(k){var v=document.getElementById(k).value;if(v!==''&&v!==undefined)e[k]=parseInt(v)||0;else delete e[k]})}
+  data.sort(function(a,b){return a.date.localeCompare(b.date)});sd(data);
+  st2('✅ 已保存');rd();rh();rs2();rt();
 }
 
 // ── Dashboard ──
-function renderDashboard(){
-  const data=getData();const td=today();const t=data.find(d=>d.date===td)||data[data.length-1];
-  if(!t){document.getElementById('todayStats').innerHTML='<div style="grid-column:span 3;text-align:center;color:var(--muted);padding:20px">暂无数据</div>';return}
-  const s=t.sleepTotal?Number(t.sleepTotal).toFixed(1):'--';const d=t.deepSleep||'--';const h=t.heartRate||'--';const w=t.weight||'--';
-  const dc=typeof t.deepSleep=='number'?(t.deepSleep<20?'bad':t.deepSleep<35?'warn':'good'):'';
-  const hc=typeof t.heartRate=='number'?(t.heartRate>80?'warn':t.heartRate<55?'warn':'good'):'';
-  const bx=t.boxing===true?'✅':t.boxing===false?'❌':'—';
-  const ax=t.anxiety||'—';
-  document.getElementById('todayStats').innerHTML=`
-    <div class="stat-card"><div class="value">${s}h</div><div class="label">总睡眠</div></div>
-    <div class="stat-card ${dc}"><div class="value">${d}m</div><div class="label">深睡</div></div>
-    <div class="stat-card ${hc}"><div class="value">${h}</div><div class="label">心率</div></div>
-    <div class="stat-card"><div class="value">${w}</div><div class="label">体重 kg</div></div>
-    <div class="stat-card"><div class="value">${bx}</div><div class="label">拳击</div></div>
-    <div class="stat-card"><div class="value">${ax}</div><div class="label">焦虑 /10</div></div>`;
-  const lastN=(d,n)=>{const a=d.filter(x=>x.date).sort((a,b)=>a.date.localeCompare(b.date));return a.slice(-n)};
-  renderChart('chartWeight',lastN(data,15).filter(x=>x.weight).map(x=>({x:x.date,y:x.weight})),{min:70,max:88},'kg');
-  renderChart('chartSleep',lastN(data,7).filter(x=>x.sleepTotal).map(x=>({x:x.date,y:x.sleepTotal})),{min:4,max:9},'h');
-  renderChart('chartDeep',lastN(data,7).filter(x=>x.deepSleep).map(x=>({x:x.date,y:x.deepSleep})),{min:0,max:60},'min');
-  renderChart('chartHR',lastN(data,7).filter(x=>x.heartRate).map(x=>({x:x.date,y:x.heartRate})),{min:50,max:100},'bpm');
+function rd(){
+  var data=ld2(),t0=td(),t=data.find(function(d){return d.date===t0})||data[data.length-1];
+  if(!t){document.getElementById('tstats').innerHTML='<div style="grid-column:span 3;text-align:center;color:var(--muted);padding:20px">暂无数据</div>';return}
+  var s=t.sleepTotal?Number(t.sleepTotal).toFixed(1):'--',d=t.deepSleep||'--',h=t.heartRate||'--',w=t.weight||'--';
+  var dc=typeof t.deepSleep=='number'?(t.deepSleep<20?'b':t.deepSleep<35?'w':'g'):'';
+  var hc=typeof t.heartRate=='number'?(t.heartRate>80?'w':t.heartRate<55?'w':'g'):'';
+  document.getElementById('tstats').innerHTML=
+    '<div class="sc"><div class="v">'+s+'h</div><div class="l">总睡眠</div></div>'+
+    '<div class="sc '+dc+'"><div class="v">'+d+'m</div><div class="l">深睡</div></div>'+
+    '<div class="sc '+hc+'"><div class="v">'+h+'</div><div class="l">心率</div></div>'+
+    '<div class="sc"><div class="v">'+w+'</div><div class="l">体重 kg</div></div>'+
+    '<div class="sc"><div class="v">'+(t.boxing===true?'✅':t.boxing===false?'❌':'—')+'</div><div class="l">拳击</div></div>'+
+    '<div class="sc"><div class="v">'+(t.anxiety||'—')+'</div><div class="l">焦虑 /10</div></div>';
+  var ln=function(d,n){var a=d.filter(function(x){return x.date}).sort(function(a,b){return a.date.localeCompare(b.date)});return a.slice(-n)};
+  rb2('chW',ln(data,15).filter(function(x){return x.weight}).map(function(x){return {l:x.date.slice(5),v:x.weight}}),70,88,'kg');
+  rb2('chS',ln(data,7).filter(function(x){return x.sleepTotal}).map(function(x){return {l:x.date.slice(5),v:x.sleepTotal}}),4,9,'h');
+  rb2('chD',ln(data,7).filter(function(x){return x.deepSleep}).map(function(x){return {l:x.date.slice(5),v:x.deepSleep}}),0,60,'min');
+  rb2('chH',ln(data,7).filter(function(x){return x.heartRate}).map(function(x){return {l:x.date.slice(5),v:x.heartRate}}),50,100,'bpm');
 }
-function renderChart(id,pts,opts,unit){
-  const ctx=document.getElementById(id);if(!ctx)return;if(charts[id])charts[id].destroy();
-  if(!pts.length){ctx.parentElement.innerHTML=ctx.parentElement.innerHTML;return}
-  charts[id]=new Chart(ctx,{type:'line',data:{labels:pts.map(p=>p.x.slice(5)),datasets:[{data:pts.map(p=>p.y),borderColor:'#c9a96e',backgroundColor:'rgba(201,169,110,.08)',fill:true,tension:.4,pointRadius:3,pointBackgroundColor:'#c9a96e',borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#94a3b8',font:{size:9},maxTicksLimit:5,autoSkip:true},grid:{color:'rgba(148,163,184,.06)'}},y:{...opts,ticks:{color:'#94a3b8',font:{size:9},callback:v=>v+unit},grid:{color:'rgba(148,163,184,.06)'}}}}});
+function rb2(id,pts,min,max,unit){
+  var el=document.getElementById(id);if(!el||!pts.length)return;
+  var h='';pts.forEach(function(p){var pct=Math.round((p.v-min)/(max-min)*100);
+    h+='<div class="bar-row"><span class="br-l">'+p.l+'</span><div class="br-bg"><div class="br-fill" style="width:'+pct+'%"></div></div><span class="br-v">'+p.v+unit+'</span></div>';
+  });el.innerHTML=h;
 }
 
-// ── Supplements ──
-function getSuppChecks(){try{return JSON.parse(localStorage.getItem(SUPP_STORAGE)||'{}')}catch(e){return{}}}
-function renderSupplements(){
-  const supps=[
-    {time:'起床空腹',items:['☕ 黑咖啡 1杯']},
-    {time:'午餐后 · 12-13点',items:['🧠 Neuriva Ultra ×2','🐟 Omega Mini ×3','☀️ D3+K2 ×1','🔩 锌 ×1','💊 Men\'s Multi ×1']},
-    {time:'拳击后 · 30分钟内',items:['💪 ON乳清蛋白 1勺'],boxing:true},
-    {time:'晚餐后',items:['🫁 Liver Detox']},
-    {time:'睡前 · 30分钟',items:['🌙 甘氨酸镁 200-400mg']}
+// ── Supps ──
+function getsc(){try{return JSON.parse(localStorage.getItem(SK)||'{}')}catch(e){return{}}}
+function rs2(){
+  var supps=[
+    {t:'起床空腹',i:['☕ 黑咖啡 1杯']},
+    {t:'午餐后 · 12-13点',i:['🧠 Neuriva Ultra ×2','🐟 Omega Mini ×3','☀️ D3+K2 ×1','🔩 锌 ×1','💊 Men\'s Multi ×1']},
+    {t:'拳击后 · 30分钟内',i:['💪 ON乳清蛋白 1勺'],bx:true},
+    {t:'晚餐后',i:['🫁 Liver Detox']},
+    {t:'睡前 · 30分钟',i:['🌙 甘氨酸镁 200-400mg']}
   ];
-  const td=today();const todayData=getData().find(d=>d.date===td);const isBoxing=todayData&&todayData.boxing===true;
-  const checks=getSuppChecks();const tc=checks[td]||{};
-  let gi=0,html='';
-  supps.forEach(s=>{if(s.boxing&&!isBoxing)return;
-    html+=`<div class="tl-item"><div class="tl-time">${s.time}</div><div class="tl-content">`;
-    s.items.forEach(it=>{
-      const done=tc[gi]===true;
-      html+=`<div class="supp-row${done?' done':''}" onclick="toggleSupp(${gi})">
-        <div class="supp-checkbox"></div><span class="supp-label">${it}</span>
-      </div>`;
-      gi++;
-    });
-    html+=`</div></div>`;
+  var t0=td(),td2=ld2().find(function(d){return d.date===t0}),isBx=td2&&td2.boxing===true;
+  var ch=getsc(),tc2=ch[t0]||{},gi=0,h='';
+  supps.forEach(function(s){if(s.bx&&!isBx)return;
+    h+='<div class="tli"><div class="tt">'+s.t+'</div><div class="tc">';
+    s.i.forEach(function(it){var dn=tc2[gi]===true;h+='<div class="sr'+(dn?' d':'')+'" onclick="ts2('+gi+')"><div class="sb2"></div><span class="sl2">'+it+'</span></div>';gi++});
+    h+='</div></div>';
   });
-  document.getElementById('suppTimeline').innerHTML=html||'<div style="text-align:center;color:var(--muted);padding:20px">暂无数据</div>';
+  document.getElementById('suppT').innerHTML=h||'<div style="text-align:center;color:var(--muted);padding:20px">暂无数据</div>';
 }
-function toggleSupp(idx){
-  const td=today();const c=getSuppChecks();if(!c[td])c[td]={};c[td][idx]=!c[td][idx];
-  localStorage.setItem(SUPP_STORAGE,JSON.stringify(c));renderSupplements();
-}
+function ts2(idx){var t0=td(),c=getsc();if(!c[t0])c[t0]={};c[t0][idx]=!c[t0][idx];localStorage.setItem(SK,JSON.stringify(c));rs2()}
 
 // ── Habits ──
-function renderHabits(){
-  const data=getData();const now=new Date();const day=now.getDay();
-  const monday=new Date(now);monday.setDate(now.getDate()-(day===0?6:day-1));monday.setHours(0,0,0,0);
-  const weekData=data.filter(d=>d.date>=monday.toISOString().split('T')[0]&&d.date<=today());
-  const bc=weekData.filter(d=>d.boxing===true).length;
-  const fc=weekData.filter(d=>d.fasting===true).length;
-  const svc=weekData.filter(d=>typeof d.shortVideo=='number'&&d.shortVideo<=30).length;
-  const td=Math.max(1,Math.ceil((now-monday)/86400000)+1);
-  let absDays=0;for(let i=data.length-1;i>=0;i--){if(typeof data[i].abstinence=='number'){absDays=data[i].abstinence;break}}
-  document.getElementById('habitRings').innerHTML=`
-    <div class="habit-card"><div class="ring"><canvas id="ringBoxing"></canvas></div><div class="h-title">拳击 ${bc}/3</div><div class="h-sub">本周</div></div>
-    <div class="habit-card"><div class="ring"><canvas id="ringFasting"></canvas></div><div class="h-title">断食 ${fc}/7</div><div class="h-sub">目标5天</div></div>
-    <div class="habit-card"><div class="ring"><canvas id="ringVideo"></canvas></div><div class="h-title">睡前刷手机 ${svc}/${td}天</div><div class="h-sub">睡前≤30min</div></div>
-    <div class="habit-card"><div class="ring"><canvas id="ringAbstinence"></canvas></div><div class="h-title">内守 ${absDays}/30</div><div class="h-sub">连续天数</div></div>`;
-  let dhtml='';
-  weekData.slice().reverse().forEach(d=>{const wd=new Date(d.date).getDay();const bx=d.boxing===true?'🥊':d.boxing===false?'❌':'-';const fs=d.fasting===true?'✅':d.fasting?'⚠️':'-';const sv=typeof d.shortVideo=='number'?d.shortVideo+'min':'-';const ab=typeof d.abstinence=='number'?'🔒'+d.abstinence+'天':'-';dhtml+=`<div style="padding:6px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;font-size:var(--fs-xs)"><span>${d.date.slice(5)} 周${'日一二三四五六'[wd]}</span><span>${bx}|${fs}|📱${sv}|${ab}</span></div>`});
-  document.getElementById('weekDetail').innerHTML=dhtml||'暂无数据';
-  setTimeout(()=>{drawRing('ringBoxing',bc,3,'#f87171');drawRing('ringFasting',fc,7,'#fbbf24');drawRing('ringVideo',svc,td,'#4ade80');drawRing('ringAbstinence',absDays,30,'#94a3b8')},100);
+function rh(){
+  var data=ld2(),now=new Date(),day=now.getDay(),mon=new Date(now);mon.setDate(now.getDate()-(day===0?6:day-1));mon.setHours(0,0,0,0);
+  var wd2=data.filter(function(d){return d.date>=mon.toISOString().split('T')[0]&&d.date<=td()});
+  var bc=wd2.filter(function(d){return d.boxing===true}).length;
+  var fc=wd2.filter(function(d){return d.fasting===true}).length;
+  var svc=wd2.filter(function(d){return typeof d.shortVideo=='number'&&d.shortVideo<=30}).length;
+  var td3=Math.max(1,Math.ceil((now-mon)/86400000)+1);
+  var abs=0;for(var i=data.length-1;i>=0;i--){if(typeof data[i].abstinence=='number'){abs=data[i].abstinence;break}}
+  document.getElementById('rings').innerHTML=
+    '<div class="hc"><div class="ri"><canvas id="rBx"></canvas></div><div class="ht">拳击 '+bc+'/3</div><div class="hs">本周</div></div>'+
+    '<div class="hc"><div class="ri"><canvas id="rFs"></canvas></div><div class="ht">断食 '+fc+'/7</div><div class="hs">目标5天</div></div>'+
+    '<div class="hc"><div class="ri"><canvas id="rSv"></canvas></div><div class="ht">睡前刷手机 '+svc+'/'+td3+'天</div><div class="hs">睡前≤30min</div></div>'+
+    '<div class="hc"><div class="ri"><canvas id="rAb"></canvas></div><div class="ht">内守 '+abs+'/30</div><div class="hs">连续天数</div></div>';
+  var dh='';wd2.slice().reverse().forEach(function(d){var wd3=new Date(d.date).getDay(),bx2=d.boxing===true?'🥊':d.boxing===false?'❌':'-',fs2=d.fasting===true?'✅':d.fasting?'⚠️':'-',sv2=typeof d.shortVideo=='number'?d.shortVideo+'min':'-',ab2=typeof d.abstinence=='number'?'🔒'+d.abstinence+'天':'-';dh+='<div style="padding:5px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;font-size:12px"><span>'+d.date.slice(5)+' 周'+'日一二三四五六'[wd3]+'</span><span>'+bx2+'|'+fs2+'|📱'+sv2+'|'+ab2+'</span></div>'});
+  document.getElementById('wd').innerHTML=dh||'暂无数据';
+  setTimeout(function(){dr('rBx',bc,3,'#f87171');dr('rFs',fc,7,'#fbbf24');dr('rSv',svc,td3,'#4ade80');dr('rAb',abs,30,'#94a3b8')},100);
 }
-function drawRing(cid,count,target,color){
-  const c=document.getElementById(cid);if(!c||c.width)return;
-  const dpr=window.devicePixelRatio||1;const sz=64*dpr;c.width=sz;c.height=sz;c.style.width='64px';c.style.height='64px';
-  const ctx=c.getContext('2d');ctx.scale(dpr,dpr);const r=25,lw=4;
+function dr(cid,cnt,tgt,color){
+  var c=document.getElementById(cid);if(!c||c.width)return;var dpr=window.devicePixelRatio||1,sz=64*dpr;c.width=sz;c.height=sz;c.style.width='64px';c.style.height='64px';
+  var ctx=c.getContext('2d');ctx.scale(dpr,dpr);var r=25,lw=4;
   ctx.beginPath();ctx.arc(32,32,r,0,Math.PI*2);ctx.strokeStyle='rgba(148,163,184,.1)';ctx.lineWidth=lw;ctx.stroke();
-  const pct=Math.min(count/target,1);
-  ctx.beginPath();ctx.arc(32,32,r,-Math.PI/2,-Math.PI/2+Math.PI*2*pct);ctx.strokeStyle=color;ctx.lineWidth=lw;ctx.lineCap='round';ctx.stroke();
-  ctx.fillStyle='#e2e8f0';ctx.font='bold 14px Fira Sans,-apple-system,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(count,32,32);
+  var pct=Math.min(cnt/tgt,1);ctx.beginPath();ctx.arc(32,32,r,-Math.PI/2,-Math.PI/2+Math.PI*2*pct);ctx.strokeStyle=color;ctx.lineWidth=lw;ctx.lineCap='round';ctx.stroke();
+  ctx.fillStyle='#e2e8f0';ctx.font='bold 14px -apple-system,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(cnt,32,32);
 }
 
 // ── Team ──
-function renderTeam(){
-  const td=today();const rx=PRESCRIPTIONS[td];
-  if(!rx){document.getElementById('teamRx').innerHTML='<div style="text-align:center;color:var(--muted);padding:32px;font-size:var(--fs-sm);line-height:1.8">今日处方尚未生成<br>等待华佗晨检同步...</div>';return}
-  function card(name,emoji,color,lines){
-    return`<div class="rx-card"><div class="rx-header"><div class="rx-avatar">${emoji}</div><div class="rx-name" style="color:${color}">${name}</div></div><div class="rx-body">${lines.map(l=>'<div class="rx-line">'+l+'</div>').join('')}</div></div>`;
-  }
-  const h=rx.huatuo,z=rx.zhang,r=rx.ruyi;
+function rt(){
+  var t0=td(),rx=P[t0];
+  if(!rx){document.getElementById('teamRx').innerHTML='<div style="text-align:center;color:var(--muted);padding:30px">今日处方尚未生成<br>等待华佗晨检...</div>';return}
+  function card(name,emoji,color,lines){return '<div class="rc"><div class="rh"><div class="ra">'+emoji+'</div><div class="rn" style="color:'+color+'">'+name+'</div></div><div class="rb">'+lines.map(function(l){return '<div class="rl">'+l+'</div>'}).join('')+'</div></div>'}
+  var h=rx.huatuo,z=rx.zhang,r=rx.ruyi;
   document.getElementById('teamRx').innerHTML=
     card('华佗 · 健康总管','🏥','#c9a96e',['① 身体: '+h.body,'② 饮食: '+h.diet,'③ 精力防守: '+h.energy,'④ 情绪: '+h.mood,'⚡ '+h.top1])+
     card('张教练 · 运动体能','🥊','#4ade80',['🎯 '+z.train,'🔧 课前: '+z.pre,'📅 '+z.plan])+
     card('如意 · 营养师','🍽️','#fbbf24',['🥩 蛋白质: '+r.protein,'🧂 钠: '+r.sodium,'⏰ 断食: '+r.fasting,'⚡ '+r.top1]);
 }
 
-// ── Tabs ──
-function switchTab(tab,el){
-  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-  document.getElementById('tab-'+tab).classList.add('active');
-  if(el)el.classList.add('active');
-  if(tab==='dashboard')renderDashboard();
-  if(tab==='supplements')renderSupplements();
-  if(tab==='habits')renderHabits();
-  if(tab==='team')renderTeam();
-}
+// ── Token ──
+function stk(){var v=document.getElementById('ti').value.trim();if(v.startsWith('ghp_')){localStorage.setItem('gt',v);document.getElementById('ts2').textContent='✅ Token 已保存';document.getElementById('ts2').style.color='var(--green)';st2('✅ Token 已保存')}else if(v){alert('Token 格式不对，应以 ghp_ 开头')}}
+function st2(m){var t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(function(){t.classList.remove('show')},2000)}
 
-// ── Submit: GitHub API (token in localStorage) ──
-const GH='https://api.github.com/repos/mrdeng33/imperial-health';
-function getToken(){return localStorage.getItem('gh_token')||''}
-async function submitToImperial(){
-  const token=getToken();
-  if(!token){st.textContent='⚠️ 请先在上方输入 GitHub Token';st.style.color='var(--amber)';return}
-  const date=document.getElementById('entryDate').value;
-  const entry={date};
-  'awakeTime,coreSleep,deepSleep,remSleep,heartRate,hrv,weight,shortVideo,abstinence,anxiety,feeling,bedtime,wakeTime,lunch,dinner,preBoxingFood,fastingStart,fastingEnd,trainingDur,trainingCal,trainingMaxHR,trainingAvgHR'.split(',').forEach(f=>{
-    const el=document.getElementById(f);if(el&&el.value!=='')entry[f]=isNaN(el.value)?el.value:parseFloat(el.value)||parseInt(el.value)||el.value;
-  });
-  entry.boxing=boxingVal;entry.fasting=fastingVal;
-  const st=document.getElementById('submitStatus');
-  st.textContent='⏳ 正在提交...';st.style.color='var(--amber)';
-  const H={Authorization:'token '+token,'Content-Type':'application/json',Accept:'application/vnd.github+json'};
+// ── Submit ──
+async function subm(){
+  var token=tk();if(!token){document.getElementById('ss').textContent='⚠️ 请先在上方输入 GitHub Token';document.getElementById('ss').style.color='var(--amber)';return}
+  var date=document.getElementById('ed').value,entry={date:date};
+  'aw,rs,cs,ds,hr,hv,bw,sv,ab,ax,fl,bt,wt,lu,di,pb,fs,fe,td,tc,th,ta'.split(',').forEach(function(f){var el=document.getElementById(f);if(el&&el.value!=='')entry[f]=isNaN(el.value)?el.value:parseFloat(el.value)||parseInt(el.value)||el.value});
+  entry.boxing=bv;entry.fasting=fv;
+  var st=document.getElementById('ss');st.textContent='⏳ 正在提交...';st.style.color='var(--amber)';
+  var H={Authorization:'token '+token,'Content-Type':'application/json',Accept:'application/vnd.github+json'};
   try{
-    const r1=await fetch(GH+'/contents/data.json',{headers:{...H},cache:'no-store'});
+    var r1=await fetch(GH+'/contents/data.json',{headers:Object.assign({},H),cache:'no-store'});
     if(!r1.ok)throw new Error('读取失败 HTTP '+r1.status);
-    const f=await r1.json();
-    const data=JSON.parse(atob(f.content));
-    const idx=data.findIndex(d=>d.date===date);
-    if(idx>=0)data[idx]={...data[idx],...entry};else data.push(entry);
-    data.sort((a,b)=>a.date.localeCompare(b.date));
-    const json=JSON.stringify(data,null,2);
-    const b64=btoa(String.fromCharCode(...new TextEncoder().encode(json)));
-    const r2=await fetch(GH+'/contents/data.json',{method:'PUT',headers:H,body:JSON.stringify({message:'📱 '+date,content:b64,sha:f.sha})});
-    if(r2.ok){st.textContent='✅ 已提交！';st.style.color='var(--green)';showToast('✅ 已提交到御医')}
-    else{const e=await r2.json();st.textContent='❌ '+(e.message||'失败');st.style.color='var(--red)'}
-  }catch(e){st.textContent='❌ '+e.message;st.style.color='var(--red')}
+    var f=await r1.json(),data=JSON.parse(atob(f.content));
+    var idx=data.findIndex(function(d){return d.date===date});
+    if(idx>=0)data[idx]=Object.assign(data[idx],entry);else data.push(entry);
+    data.sort(function(a,b){return a.date.localeCompare(b.date)});
+    var json=JSON.stringify(data,null,2),b64=btoa(String.fromCharCode.apply(null,new TextEncoder().encode(json)));
+    var r2=await fetch(GH+'/contents/data.json',{method:'PUT',headers:H,body:JSON.stringify({message:'📱 '+date,content:b64,sha:f.sha})});
+    if(r2.ok){st.textContent='✅ 已提交！';st.style.color='var(--green)';st2('✅ 已提交到御医')}
+    else{var e2=await r2.json();st.textContent='❌ '+(e2.message||'失败');st.style.color='var(--red)'}
+  }catch(e){st.textContent='❌ '+e.message;st.style.color='var(--red)'}
 }
-function saveToken(){
-  const v=document.getElementById('tokenInput').value.trim();
-  if(v.startsWith('ghp_')){
-    localStorage.setItem('gh_token',v);
-    document.getElementById('tokenStatus').textContent='✅ Token 已保存';
-    document.getElementById('tokenStatus').style.color='var(--green)';
-    showToast('✅ Token 已保存');
-  }else if(v){
-    alert('Token 格式不对，应以 ghp_ 开头');
-  }
-}
-// On load: restore saved token
-(function(){
-  const t=getToken();
-  if(t){
-    document.getElementById('tokenInput').value=t;
-    document.getElementById('tokenStatus').textContent='✅ 已配置（'+t.slice(0,7)+'...）';
-    document.getElementById('tokenStatus').style.color='var(--green)';
-  }
-})();
 
-// ── Toast ──
-function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000);}
-function resetData(){if(confirm('确定清空所有数据？')){localStorage.removeItem(STORAGE_KEY);localStorage.removeItem(SUPP_STORAGE);location.reload()}}
+// ── Tabs ──
+function sw(tab,el){
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('active')});
+  document.querySelectorAll('.ni').forEach(function(n){n.classList.remove('ac')});
+  document.getElementById('tab-'+tab).classList.add('active');if(el)el.classList.add('ac');
+  if(tab==='dashboard')rd();if(tab==='supplements')rs2();if(tab==='habits')rh();if(tab==='team')rt();
+}
+
+// ── Boot ──
+(function(){var t=tk();if(t){document.getElementById('ti').value=t;document.getElementById('ts2').textContent='✅ 已配置（'+t.slice(0,7)+'...）';document.getElementById('ts2').style.color='var(--green)'}})();
 init();
-document.getElementById('btnSubmit')?.addEventListener('click',submitToImperial);
+document.getElementById('bs').addEventListener('click',subm);
 </script>
 </body>
 </html>
