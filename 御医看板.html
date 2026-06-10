@@ -8,82 +8,83 @@
 <meta name="theme-color" content="#0f1117">
 <title>御医看板</title>
 <style>
-:root {
-  --bg:#0f1117; --card:#1a1d28; --card2:#222639; --gold:#c9a96e;
-  --text:#e2d5c1; --muted:#8b8d9a; --red:#e0556a; --green:#5bb98c;
-  --amber:#d4953a; --border:rgba(201,169,110,.15);
-  --shadow:0 2px 12px rgba(0,0,0,.3);
-}
+:root{--bg:#0f1117;--card:#1a1d28;--card2:#222639;--gold:#c9a96e;--text:#e2d5c1;--muted:#8b8d9a;--red:#e0556a;--green:#5bb98c;--amber:#d4953a;--border:rgba(201,169,110,.15)}
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif;background:var(--bg);color:var(--text);max-width:430px;margin:0 auto;min-height:100vh;padding-bottom:80px;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif;background:var(--bg);color:var(--text);max-width:430px;margin:0 auto;min-height:100vh;padding-bottom:90px;-webkit-tap-highlight-color:transparent;user-select:none}
 
-/* Header */
 header{padding:20px 20px 12px;text-align:center;border-bottom:1px solid var(--border)}
 header h1{font-size:20px;font-weight:600;letter-spacing:.5px;color:var(--gold)}
 header .date{font-size:13px;color:var(--muted);margin-top:4px}
 
-/* Tab panels */
-.tab-panel{display:none;padding:16px}
+.tab-panel{display:none;padding:16px;}
 .tab-panel.active{display:block}
 
 /* Form */
-.form-group{margin-bottom:14px}
-.form-group label{display:block;font-size:13px;color:var(--muted);margin-bottom:5px;letter-spacing:.3px}
-.form-row{display:flex;gap:10px}
+.section-label{font-size:13px;color:var(--gold);margin:16px 0 8px;padding-bottom:6px;border-bottom:1px solid var(--border);letter-spacing:.5px;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+.section-label .arrow{transition:transform .2s;font-size:11px}
+.section-label.collapsed .arrow{transform:rotate(-90deg)}
+.section-body{overflow:hidden;transition:max-height .3s}
+.section-body.hidden{max-height:0!important}
+.form-group{margin-bottom:10px}
+.form-group label{display:block;font-size:12px;color:var(--muted);margin-bottom:4px}
+.form-row{display:flex;gap:8px}
 .form-row .form-group{flex:1}
-input,select{width:100%;background:var(--card2);border:1px solid var(--border);color:var(--text);padding:10px 12px;border-radius:10px;font-size:16px;outline:none;transition:border .2s}
-input:focus,select:focus{border-color:var(--gold)}
-input::placeholder{color:#555}
-select{-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M6 8L1 3h10z' fill='%238b8d9a'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
-.toggle-row{display:flex;gap:10px}
-.toggle-btn{flex:1;padding:12px;text-align:center;border-radius:10px;border:1px solid var(--border);background:var(--card2);color:var(--muted);font-size:15px;cursor:pointer;transition:all .2s}
-.toggle-btn.active{background:var(--green);color:#fff;border-color:var(--green)}
-.toggle-btn.fail{background:var(--red);color:#fff;border-color:var(--red)}
-.save-btn{width:100%;padding:14px;background:var(--gold);color:#0f1117;border:none;border-radius:12px;font-size:17px;font-weight:600;cursor:pointer;margin-top:8px;letter-spacing:.5px}
+input,select,textarea{width:100%;background:var(--card2);border:1px solid var(--border);color:var(--text);padding:9px 10px;border-radius:9px;font-size:15px;outline:none;transition:border .2s}
+input:focus,select:focus,textarea:focus{border-color:var(--gold)}
+input::placeholder,textarea::placeholder{color:#555}
+textarea{resize:vertical;min-height:50px;font-family:inherit}
+select{-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M6 8L1 3h10z' fill='%238b8d9a'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px}
+.toggle-row{display:flex;gap:8px}
+.toggle-btn{flex:1;padding:10px;text-align:center;border-radius:9px;border:1px solid var(--border);background:var(--card2);color:var(--muted);font-size:14px;cursor:pointer;transition:all .2s}
+.toggle-btn.on{background:var(--green);color:#fff;border-color:var(--green)}
+.toggle-btn.off{background:var(--red);color:#fff;border-color:var(--red)}
+.save-btn{width:100%;padding:13px;background:var(--gold);color:#0f1117;border:none;border-radius:11px;font-size:16px;font-weight:600;cursor:pointer;letter-spacing:.5px}
 .save-btn:active{opacity:.85}
+.save-btn.small{font-size:14px;padding:10px}
+.today-badge{font-size:11px;padding:3px 8px;border-radius:10px;background:rgba(91,185,140,.15);color:var(--green)}
 
-/* Section title */
-.section-title{font-size:14px;color:var(--gold);margin:20px 0 10px;padding-bottom:8px;border-bottom:1px solid var(--border);letter-spacing:.5px}
+/* Dashboard */
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+.stat-card{background:var(--card);border-radius:11px;padding:13px;text-align:center;border:1px solid var(--border)}
+.stat-card .value{font-size:24px;font-weight:700}
+.stat-card .label{font-size:10px;color:var(--muted);margin-top:3px}
+.stat-card.good .value{color:var(--green)}.stat-card.warn .value{color:var(--amber)}.stat-card.bad .value{color:var(--red)}
+.chart-box{background:var(--card);border-radius:11px;padding:12px;margin-bottom:8px;border:1px solid var(--border)}
+.chart-box .chart-title{font-size:12px;color:var(--gold);margin-bottom:8px}
+.chart-box canvas{width:100%!important;height:160px!important}
 
-/* Stat cards */
-.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
-.stat-card{background:var(--card);border-radius:12px;padding:14px;text-align:center;border:1px solid var(--border)}
-.stat-card .value{font-size:26px;font-weight:700;color:var(--text)}
-.stat-card .label{font-size:11px;color:var(--muted);margin-top:4px}
-.stat-card.good .value{color:var(--green)}
-.stat-card.warn .value{color:var(--amber)}
-.stat-card.bad .value{color:var(--red)}
-
-/* Chart container */
-.chart-box{background:var(--card);border-radius:12px;padding:14px;margin-bottom:10px;border:1px solid var(--border)}
-.chart-box .chart-title{font-size:13px;color:var(--gold);margin-bottom:10px;letter-spacing:.3px}
-.chart-box canvas{width:100%!important;height:180px!important}
-
-/* Supplement timeline */
+/* Supplements timeline */
 .timeline{position:relative;padding-left:24px}
 .timeline::before{content:'';position:absolute;left:8px;top:4px;bottom:4px;width:2px;background:var(--border)}
-.tl-item{position:relative;margin-bottom:20px;padding-left:10px}
+.tl-item{position:relative;margin-bottom:18px;padding-left:10px}
 .tl-item::before{content:'';position:absolute;left:-20px;top:6px;width:12px;height:12px;border-radius:50%;background:var(--gold);border:2px solid var(--bg)}
-.tl-item .tl-time{font-size:11px;color:var(--gold);margin-bottom:3px}
-.tl-item .tl-content{font-size:14px;line-height:1.5}
-.tl-item .tl-check{cursor:pointer;font-size:13px;color:var(--muted);margin-top:4px;display:inline-block;padding:4px 10px;border-radius:6px;border:1px solid var(--border)}
-.tl-item .tl-check.done{color:var(--green);border-color:var(--green);background:rgba(91,185,140,.1)}
+.tl-item .tl-time{font-size:11px;color:var(--gold);margin-bottom:2px}
+.tl-item .tl-content{font-size:13px;line-height:1.6}
+.tl-check{cursor:pointer;font-size:12px;color:var(--muted);margin-top:3px;display:inline-block;padding:3px 8px;border-radius:6px;border:1px solid var(--border)}
+.tl-check.done{color:var(--green);border-color:var(--green);background:rgba(91,185,140,.1)}
 
-/* Habit rings */
-.habit-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
-.habit-card{background:var(--card);border-radius:14px;padding:16px 10px;text-align:center;border:1px solid var(--border)}
-.habit-card .ring{width:70px;height:70px;margin:0 auto 8px;position:relative}
+/* Habits */
+.habit-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.habit-card{background:var(--card);border-radius:13px;padding:14px 8px;text-align:center;border:1px solid var(--border)}
+.habit-card .ring{width:65px;height:65px;margin:0 auto 6px;position:relative}
 .habit-card .ring canvas{width:100%!important;height:100%!important}
-.habit-card .h-title{font-size:13px;color:var(--text);margin-bottom:2px}
-.habit-card .h-sub{font-size:11px;color:var(--muted)}
+.habit-card .h-title{font-size:12px;color:var(--text)}
+.habit-card .h-sub{font-size:10px;color:var(--muted);margin-top:1px}
 
-/* Bottom nav */
-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:var(--card);border-top:1px solid var(--border);display:flex;z-index:100;padding:8px 0 env(safe-area-inset-bottom,8px)}
-nav .nav-item{flex:1;text-align:center;color:var(--muted);font-size:11px;padding:6px 0;cursor:pointer;transition:all .2s}
-nav .nav-item .icon{font-size:22px;display:block;margin-bottom:2px}
+/* Team prescriptions */
+.rx-card{background:var(--card);border-radius:13px;padding:14px;margin-bottom:10px;border:1px solid var(--border)}
+.rx-card .rx-header{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.rx-card .rx-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;background:var(--card2)}
+.rx-card .rx-name{font-size:14px;font-weight:600;color:var(--gold)}
+.rx-card .rx-body{font-size:13px;line-height:1.7;color:var(--text)}
+.rx-card .rx-body .rx-line{margin-bottom:4px}
+
+/* Nav */
+nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:var(--card);border-top:1px solid var(--border);display:flex;z-index:100;padding:6px 0 env(safe-area-inset-bottom,6px)}
+nav .nav-item{flex:1;text-align:center;color:var(--muted);font-size:10px;padding:4px 0;cursor:pointer;transition:all .2s}
+nav .nav-item .icon{font-size:20px;display:block;margin-bottom:1px}
 nav .nav-item.active{color:var(--gold)}
 
-/* Toast */
 .toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:var(--green);color:#fff;padding:10px 24px;border-radius:20px;font-size:14px;z-index:200;opacity:0;transition:opacity .3s;pointer-events:none}
 .toast.show{opacity:1}
 </style>
@@ -95,48 +96,71 @@ nav .nav-item.active{color:var(--gold)}
   <div class="date" id="headerDate"></div>
 </header>
 
-<!-- Tab 1: 晨检录入 -->
+<!-- ── Tab 1: 录入 ── -->
 <div class="tab-panel active" id="tab-entry">
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-    <input type="date" id="entryDate" style="width:auto;padding:8px 12px;font-size:14px">
-    <span style="font-size:13px;color:var(--muted)" id="entryWeekday"></span>
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+    <input type="date" id="entryDate" style="width:auto;font-size:13px;padding:7px 10px" onchange="loadDayData()">
+    <span style="font-size:12px;color:var(--muted)" id="entryWeekday"></span>
+    <span class="today-badge" id="todayBadge" style="display:none">今天</span>
   </div>
 
-  <div class="section-title">🌙 睡眠</div>
-  <div class="form-row">
-    <div class="form-group"><label>总时长 (h)</label><input type="number" id="sleepTotal" placeholder="如 7.68" step="0.01" inputmode="decimal"></div>
-    <div class="form-group"><label>深睡 (min)</label><input type="number" id="deepSleep" placeholder="44" inputmode="numeric"></div>
-    <div class="form-group"><label>REM (min)</label><input type="number" id="remSleep" placeholder="66" inputmode="numeric"></div>
-  </div>
-  <div class="form-row">
-    <div class="form-group"><label>入睡时间</label><input type="time" id="bedtime"></div>
+  <!-- 晨检 -->
+  <div class="section-label" onclick="toggleSection('sec-morning')">☀️ 晨检数据 <span class="arrow">▼</span></div>
+  <div class="section-body" id="sec-morning">
+    <div class="form-row">
+      <div class="form-group"><label>总睡眠 (h)</label><input type="number" id="sleepTotal" placeholder="7.68" step="0.01" inputmode="decimal"></div>
+      <div class="form-group"><label>深睡 (min)</label><input type="number" id="deepSleep" placeholder="44" inputmode="numeric"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>REM (min)</label><input type="number" id="remSleep" placeholder="66" inputmode="numeric"></div>
+      <div class="form-group"><label>入睡时间</label><input type="time" id="bedtime"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>心率 (bpm)</label><input type="number" id="heartRate" placeholder="74" inputmode="numeric"></div>
+      <div class="form-group"><label>HRV (ms)</label><input type="number" id="hrv" placeholder="可选" inputmode="numeric"></div>
+      <div class="form-group"><label>体重 (kg)</label><input type="number" id="weight" placeholder="84.0" step="0.1" inputmode="decimal"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>📱 短视频 (min)</label><input type="number" id="shortVideo" placeholder="30" inputmode="numeric"></div>
+      <div class="form-group"><label>😰 焦虑 (1-10)</label><input type="number" id="anxiety" placeholder="5" min="0" max="10" inputmode="numeric"></div>
+    </div>
+    <div class="form-group"><label>💬 感受</label><input type="text" id="feeling" placeholder="一句话..."></div>
+    <button class="save-btn small" onclick="saveSection('morning')">💾 保存晨检</button>
   </div>
 
-  <div class="section-title">❤️ 身体</div>
-  <div class="form-row">
-    <div class="form-group"><label>心率 (bpm)</label><input type="number" id="heartRate" placeholder="74" inputmode="numeric"></div>
-    <div class="form-group"><label>HRV (ms)</label><input type="number" id="hrv" placeholder="可选" inputmode="numeric"></div>
-    <div class="form-group"><label>体重 (kg)</label><input type="number" id="weight" placeholder="84.0" step="0.1" inputmode="decimal"></div>
+  <!-- 饮食 -->
+  <div class="section-label" onclick="toggleSection('sec-diet')">🍽️ 饮食记录 <span class="arrow">▼</span></div>
+  <div class="section-body" id="sec-diet">
+    <div class="form-group"><label>🥊 拳击前（如有）</label><input type="text" id="preBoxingFood" placeholder="半根香蕉+黑咖啡"></div>
+    <div class="form-group"><label>🍱 午餐</label><textarea id="lunch" placeholder="牛丸牛杂粿条 ~570kcal 34g蛋白" rows="2"></textarea></div>
+    <div class="form-group"><label>🍲 晚餐</label><textarea id="dinner" placeholder="沙姜鸡套餐 ~620kcal 60g蛋白" rows="2"></textarea></div>
+    <div style="display:flex;gap:8px">
+      <div class="form-group" style="flex:1"><label>⏰ 开窗</label><input type="time" id="fastingStart"></div>
+      <div class="form-group" style="flex:1"><label>🔒 关窗</label><input type="time" id="fastingEnd"></div>
+    </div>
+    <button class="save-btn small" onclick="saveSection('diet')">💾 保存饮食</button>
   </div>
 
-  <div class="section-title">✅ 今日打卡</div>
-  <div class="toggle-row">
-    <div class="toggle-btn" id="btnBoxing" onclick="toggleBtn('boxing',this)">🥊 拳击</div>
-    <div class="toggle-btn" id="btnFasting" onclick="toggleBtn('fasting',this)">⏰ 断食</div>
-  </div>
-  <div class="form-row" style="margin-top:10px">
-    <div class="form-group"><label>📱 短视频 (min)</label><input type="number" id="shortVideo" placeholder="30" inputmode="numeric"></div>
-    <div class="form-group"><label>😰 焦虑 (1-10)</label><input type="number" id="anxiety" placeholder="5" min="0" max="10" inputmode="numeric"></div>
-  </div>
-  <div class="form-group"><label>💬 感受</label><input type="text" id="feeling" placeholder="一句话..."></div>
-
-  <button class="save-btn" onclick="saveEntry()">💾 保存</button>
-  <div style="text-align:center;margin-top:10px">
-    <span style="font-size:12px;color:var(--muted);cursor:pointer;text-decoration:underline" onclick="resetData()">清空所有数据</span>
+  <!-- 训练 -->
+  <div class="section-label" onclick="toggleSection('sec-training')">🥊 训练记录 <span class="arrow">▼</span></div>
+  <div class="section-body" id="sec-training">
+    <div class="toggle-row">
+      <div class="toggle-btn" id="btnBoxing" onclick="toggleBtn('boxing')">🥊 拳击</div>
+      <div class="toggle-btn" id="btnFasting" onclick="toggleBtn('fasting')">⏰ 断食</div>
+    </div>
+    <div class="form-row" style="margin-top:10px">
+      <div class="form-group"><label>时长 (min)</label><input type="number" id="trainingDur" placeholder="60" inputmode="numeric"></div>
+      <div class="form-group"><label>热量 (kcal)</label><input type="number" id="trainingCal" placeholder="600" inputmode="numeric"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>最高心率</label><input type="number" id="trainingMaxHR" placeholder="171" inputmode="numeric"></div>
+      <div class="form-group"><label>平均心率</label><input type="number" id="trainingAvgHR" placeholder="118" inputmode="numeric"></div>
+    </div>
+    <button class="save-btn small" onclick="saveSection('training')">💾 保存训练</button>
   </div>
 </div>
 
-<!-- Tab 2: 数据看板 -->
+<!-- ── Tab 2: 看板 ── -->
 <div class="tab-panel" id="tab-dashboard">
   <div class="stat-grid" id="todayStats"></div>
   <div class="chart-box"><div class="chart-title">⚖️ 体重趋势 (15天)</div><canvas id="chartWeight"></canvas></div>
@@ -145,17 +169,21 @@ nav .nav-item.active{color:var(--gold)}
   <div class="chart-box"><div class="chart-title">❤️ 静息心率 (7天)</div><canvas id="chartHR"></canvas></div>
 </div>
 
-<!-- Tab 3: 补剂时刻表 -->
+<!-- ── Tab 3: 补剂 ── -->
 <div class="tab-panel" id="tab-supplements">
   <div class="timeline" id="suppTimeline"></div>
 </div>
 
-<!-- Tab 4: 习惯追踪 -->
+<!-- ── Tab 4: 习惯 ── -->
 <div class="tab-panel" id="tab-habits">
-  <div class="section-title">📅 本周执行率</div>
   <div class="habit-grid" id="habitRings"></div>
-  <div class="section-title">📋 本周明细</div>
-  <div id="weekDetail" style="font-size:13px;color:var(--muted)"></div>
+  <div style="margin-top:12px;font-size:12px;color:var(--muted)" id="weekDetail"></div>
+</div>
+
+<!-- ── Tab 5: 团队 ── -->
+<div class="tab-panel" id="tab-team">
+  <div style="font-size:13px;color:var(--muted);margin-bottom:12px;text-align:center">今日处方 · 数据驱动 · 每日更新</div>
+  <div id="teamRx"></div>
 </div>
 
 <nav>
@@ -163,225 +191,197 @@ nav .nav-item.active{color:var(--gold)}
   <div class="nav-item" onclick="switchTab('dashboard',this)"><span class="icon">📊</span>看板</div>
   <div class="nav-item" onclick="switchTab('supplements',this)"><span class="icon">💊</span>补剂</div>
   <div class="nav-item" onclick="switchTab('habits',this)"><span class="icon">🎯</span>习惯</div>
+  <div class="nav-item" onclick="switchTab('team',this)"><span class="icon">🏯</span>团队</div>
 </nav>
-
 <div class="toast" id="toast"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
-// ── Data ──
-const STORAGE_KEY = 'imperial_health_data';
-const PRESET_DATA = [
+// ── State ──
+const STORAGE_KEY='imperial_health_data';
+let boxingVal=null,fastingVal=null;
+const PRESET=[
   {date:'2026-06-04',weight:86,feeling:'建档初始化'},
   {date:'2026-06-05',sleepTotal:6,boxing:false,fasting:false,shortVideo:180,feeling:'3点睡9点醒，没午睡疲惫'},
-  {date:'2026-06-06',sleepTotal:5.92,deepSleep:9,heartRate:83,boxing:false,fasting:true,shortVideo:15,feeling:'深睡仅9min，甘氨酸镁首服'},
+  {date:'2026-06-06',sleepTotal:5.92,deepSleep:9,heartRate:83,boxing:false,fasting:true,shortVideo:15,lunch:'麦当劳板烧鸡腿堡+薯条+麦乐鸡 ~1090kcal',dinner:'沙县鸡腿饭+双倍青菜 ~710kcal',feeling:'深睡仅9min，甘氨酸镁首服'},
   {date:'2026-06-07',sleepTotal:7.05,deepSleep:33,heartRate:84,fasting:true,shortVideo:14,weight:84.1,feeling:'甘氨酸镁首夜见效！深睡9→33min'},
-  {date:'2026-06-08',sleepTotal:6.4,deepSleep:46,boxing:false,fasting:'half',shortVideo:120,weight:84.2,feeling:'入睡2:00太晚，醒后刷短视频2h'},
-  {date:'2026-06-09',sleepTotal:6.85,deepSleep:30,boxing:false,fasting:'late',shortVideo:30,weight:84.2,anxiety:6,feeling:'入睡3:00崩溃，有希望但也焦虑'},
-  {date:'2026-06-10',sleepTotal:7.68,deepSleep:44,remSleep:66,heartRate:74,boxing:true,shortVideo:0,weight:84.0,anxiety:5,bedtime:'00:30',feeling:'翻盘！拳击日600kcal，焦虑降到5'}
+  {date:'2026-06-08',sleepTotal:6.4,deepSleep:46,boxing:false,fasting:'half',shortVideo:120,weight:84.2,lunch:'包子×10 ~760kcal',dinner:'潮汕菜+西瓜 ~1040kcal',feeling:'入睡2:00太晚，醒后刷短视频2h'},
+  {date:'2026-06-09',sleepTotal:6.85,deepSleep:30,boxing:false,fasting:'late',shortVideo:30,weight:84.2,anxiety:6,lunch:'牛丸牛杂粿条 ~570kcal 34g',dinner:'沙姜鸡套餐 ~620kcal 60g',bedtime:'03:00',feeling:'入睡3:00崩溃，有希望但也焦虑'},
+  {date:'2026-06-10',sleepTotal:7.68,deepSleep:44,remSleep:66,heartRate:74,boxing:true,shortVideo:0,weight:84.0,anxiety:5,bedtime:'00:30',trainingDur:60,trainingCal:600,trainingMaxHR:171,trainingAvgHR:118,feeling:'翻盘！拳击日600kcal，焦虑降到5'}
 ];
 
-function loadData(){try{const d=localStorage.getItem(STORAGE_KEY);return d?JSON.parse(d):[...PRESET_DATA]}catch(e){return[...PRESET_DATA]}}
+// ── Prescriptions (team tab) ──
+const PRESCRIPTIONS={
+  '2026-06-10':{
+    huatuo:{body:'今晚0:00前上床。连续两天稳住入睡，这周翻盘。',diet:'拳击日+150kcal。断食窗口从正餐开始。',energy:'深睡44min回来了，不用打七折。心率74，训练别推太狠。',mood:'焦虑5是最近最低。保持稳定向好。',top1:'连续两天0:30前上床，今晚23:30更好。'},
+    zhang:{train:'🥊 4天没练后首堂恢复。RPE 7，打靶2min×2轮。600kcal达标。','pre':'弹力带肩外旋2×15，半根香蕉+黑咖啡出门。',plan:'周三🥊+🏋️ | 周四零食 | 周五🥊+🏋️ | 周六Z2 | 周七休'},
+    ruyi:{protein:'101g/140g(72%)，翻盘！晚餐沙姜鸡立大功。',sodium:'🟡中等，甘氨酸镁200mg即可。',fasting:'13:30-20:00，晚关1h。明天锁回19:00。',top1:'明天14:00开窗，蛋白50g午餐起步。'}
+  }
+};
+
+// ── Data ──
+function loadData(){try{const d=localStorage.getItem(STORAGE_KEY);return d?JSON.parse(d):[...PRESET]}catch(e){return[...PRESET]}}
 function saveData(data){localStorage.setItem(STORAGE_KEY,JSON.stringify(data))}
 function getData(){return loadData()}
 function today(){return new Date().toISOString().split('T')[0]}
 
 // ── Init ──
-let boxingVal=null,fastingVal=null;
 function init(){
   document.getElementById('headerDate').textContent=new Date().toLocaleDateString('zh-CN',{year:'numeric',month:'long',day:'numeric',weekday:'long'});
   document.getElementById('entryDate').value=today();
   updateWeekday();
-  document.getElementById('entryDate').addEventListener('change',updateWeekday);
-  renderDashboard();
-  renderSupplements();
-  renderHabits();
-  checkTodayEntry();
+  loadDayData();
+  renderDashboard();renderSupplements();renderHabits();renderTeam();
 }
 function updateWeekday(){
   const d=new Date(document.getElementById('entryDate').value);
   document.getElementById('entryWeekday').textContent='星期'+['日','一','二','三','四','五','六'][d.getDay()];
+  const badge=document.getElementById('todayBadge');
+  badge.style.display=document.getElementById('entryDate').value===today()?'inline':'none';
+}
+
+// ── Load day ──
+function loadDayData(){
+  const date=document.getElementById('entryDate').value;
+  const data=getData();const e=data.find(d=>d.date===date);
+  const fields=['sleepTotal','deepSleep','remSleep','heartRate','hrv','weight','shortVideo','anxiety','feeling','bedtime','lunch','dinner','preBoxingFood','fastingStart','fastingEnd','trainingDur','trainingCal','trainingMaxHR','trainingAvgHR'];
+  fields.forEach(f=>{const el=document.getElementById(f);if(el){el.value=e&&e[f]!==undefined?e[f]:'';if(f==='lunch'||f==='dinner')el.value=e&&e[f]||''}});
+  boxingVal=e&&e.boxing!==undefined?e.boxing:null;updateToggleUI('btnBoxing',boxingVal);
+  fastingVal=e&&e.fasting!==undefined?e.fasting:null;updateToggleUI('btnFasting',fastingVal);
 }
 
 // ── Toggle ──
-function toggleBtn(type,el){
+function toggleBtn(type){
   if(type==='boxing'){boxingVal=boxingVal===true?false:boxingVal===false?null:true;updateToggleUI('btnBoxing',boxingVal)}
   else{fastingVal=fastingVal===true?false:fastingVal===false?null:true;updateToggleUI('btnFasting',fastingVal)}
 }
 function updateToggleUI(id,val){
   const el=document.getElementById(id);
-  el.classList.remove('active','fail');
-  if(val===true){el.classList.add('active');el.textContent=id==='btnBoxing'?'🥊 ✅':'⏰ ✅'}
-  else if(val===false){el.classList.add('fail');el.textContent=id==='btnBoxing'?'🥊 ❌':'⏰ ❌'}
+  el.classList.remove('on','off');
+  if(val===true){el.classList.add('on');el.textContent=id==='btnBoxing'?'🥊 ✅':'⏰ ✅'}
+  else if(val===false){el.classList.add('off');el.textContent=id==='btnBoxing'?'🥊 ❌':'⏰ ❌'}
   else{el.textContent=id==='btnBoxing'?'🥊 拳击':'⏰ 断食'}
 }
-function checkTodayEntry(){
-  const data=getData();const td=today();
-  const e=data.find(d=>d.date===td);
-  if(e){
-    document.getElementById('sleepTotal').value=e.sleepTotal||'';
-    document.getElementById('deepSleep').value=e.deepSleep||'';
-    document.getElementById('remSleep').value=e.remSleep||'';
-    document.getElementById('heartRate').value=e.heartRate||'';
-    document.getElementById('hrv').value=e.hrv||'';
-    document.getElementById('weight').value=e.weight||'';
-    document.getElementById('shortVideo').value=e.shortVideo??'';
-    document.getElementById('anxiety').value=e.anxiety||'';
-    document.getElementById('feeling').value=e.feeling||'';
-    document.getElementById('bedtime').value=e.bedtime||'';
-    if(e.boxing!==undefined){boxingVal=e.boxing;updateToggleUI('btnBoxing',boxingVal)}
-    if(e.fasting!==undefined){fastingVal=e.fasting;updateToggleUI('btnFasting',fastingVal)}
-  }
-}
 
-// ── Save ──
-function saveEntry(){
+// ── Section collapse ──
+function toggleSection(id){document.getElementById(id).classList.toggle('hidden');}
+
+// ── Save sections ──
+function saveSection(section){
   const date=document.getElementById('entryDate').value;
-  const entry={
-    date,
-    sleepTotal:parseFloat(document.getElementById('sleepTotal').value)||undefined,
-    deepSleep:parseInt(document.getElementById('deepSleep').value)||undefined,
-    remSleep:parseInt(document.getElementById('remSleep').value)||undefined,
-    heartRate:parseInt(document.getElementById('heartRate').value)||undefined,
-    hrv:parseInt(document.getElementById('hrv').value)||undefined,
-    weight:parseFloat(document.getElementById('weight').value)||undefined,
-    boxing:boxingVal,
-    fasting:fastingVal,
-    shortVideo:parseInt(document.getElementById('shortVideo').value)??undefined,
-    anxiety:parseInt(document.getElementById('anxiety').value)||undefined,
-    feeling:document.getElementById('feeling').value||undefined,
-    bedtime:document.getElementById('bedtime').value||undefined
-  };
-  Object.keys(entry).forEach(k=>{if(entry[k]===undefined)delete entry[k]});
-  if(Object.keys(entry).length<=1){showToast('⚠️ 至少填一项数据');return}
+  let data=getData();let entry=data.find(d=>d.date===date);
+  if(!entry){entry={date};data.push(entry)}
 
-  let data=getData();
-  const idx=data.findIndex(d=>d.date===date);
-  if(idx>=0)data[idx]=entry;else data.push(entry);
+  if(section==='morning'){
+    const f=['sleepTotal','deepSleep','remSleep','heartRate','hrv','weight','shortVideo','anxiety','feeling','bedtime'];
+    f.forEach(k=>{const v=document.getElementById(k)?.value;if(v!==''&&v!==undefined){entry[k]=k==='feeling'||k==='bedtime'?v:parseFloat(v)||parseInt(v)||v}else delete entry[k]});
+  }
+  if(section==='diet'){
+    ['lunch','dinner','preBoxingFood','fastingStart','fastingEnd'].forEach(k=>{const v=document.getElementById(k)?.value;if(v!==''&&v!==undefined)entry[k]=v;else delete entry[k]});
+  }
+  if(section==='training'){
+    entry.boxing=boxingVal;entry.fasting=fastingVal;
+    ['trainingDur','trainingCal','trainingMaxHR','trainingAvgHR'].forEach(k=>{const v=document.getElementById(k)?.value;if(v!==''&&v!==undefined)entry[k]=parseInt(v)||0;else delete entry[k]});
+  }
+
   data.sort((a,b)=>a.date.localeCompare(b.date));
   saveData(data);
-  showToast('✅ 已保存');
-  renderDashboard();renderHabits();
+  showToast('✅ '+{morning:'晨检',diet:'饮食',training:'训练'}[section]+'已保存');
+  renderDashboard();renderHabits();renderSupplements();renderTeam();
 }
 
 // ── Dashboard ──
 let charts={};
 function renderDashboard(){
-  const data=getData();
-  // Today stats
-  const td=today();const t=data.find(d=>d.date===td)||data[data.length-1];
+  const data=getData();const td=today();const t=data.find(d=>d.date===td)||data[data.length-1];
   if(!t){document.getElementById('todayStats').innerHTML='<div style="grid-column:span 2;text-align:center;color:var(--muted);padding:20px">暂无数据</div>';return}
-  const sleepH=t.sleepTotal?Number(t.sleepTotal).toFixed(1):'--';
-  const deep=t.deepSleep||'--';const hr=t.heartRate||'--';const wt=t.weight||'--';
-  const deepClass=typeof t.deepSleep=='number'?(t.deepSleep<20?'bad':t.deepSleep<35?'warn':'good'):'';
-  const hrClass=typeof t.heartRate=='number'?(t.heartRate>80?'warn':t.heartRate<55?'warn':'good'):'';
+  const s=t.sleepTotal?Number(t.sleepTotal).toFixed(1):'--';const d=t.deepSleep||'--';const h=t.heartRate||'--';const w=t.weight||'--';
+  const dc=typeof t.deepSleep=='number'?(t.deepSleep<20?'bad':t.deepSleep<35?'warn':'good'):'';
+  const hc=typeof t.heartRate=='number'?(t.heartRate>80?'warn':t.heartRate<55?'warn':'good'):'';
+  const bx=t.boxing===true?'🥊':t.boxing===false?'❌':'—';
   document.getElementById('todayStats').innerHTML=`
-    <div class="stat-card"><div class="value">${sleepH}h</div><div class="label">总睡眠</div></div>
-    <div class="stat-card ${deepClass}"><div class="value">${deep}min</div><div class="label">深睡</div></div>
-    <div class="stat-card ${hrClass}"><div class="value">${hr}</div><div class="label">心率 bpm</div></div>
-    <div class="stat-card"><div class="value">${wt}</div><div class="label">体重 kg</div></div>`;
-
-  // Charts
+    <div class="stat-card"><div class="value">${s}h</div><div class="label">总睡眠</div></div>
+    <div class="stat-card ${dc}"><div class="value">${d}min</div><div class="label">深睡</div></div>
+    <div class="stat-card ${hc}"><div class="value">${h}</div><div class="label">心率 bpm</div></div>
+    <div class="stat-card"><div class="value">${w}</div><div class="label">体重 kg</div></div>
+    <div class="stat-card"><div class="value">${bx}</div><div class="label">拳击</div></div>
+    <div class="stat-card"><div class="value">${t.anxiety||'—'}</div><div class="label">焦虑 /10</div></div>`;
   const lastN=(d,n)=>{const a=d.filter(x=>x.date).sort((a,b)=>a.date.localeCompare(b.date));return a.slice(-n)};
-  renderChart('chartWeight',lastN(data,15).filter(d=>d.weight).map(d=>({x:d.date,y:d.weight})),'体重 (kg)',{min:70,max:88});
-  renderChart('chartSleep',lastN(data,7).filter(d=>d.sleepTotal).map(d=>({x:d.date,y:d.sleepTotal})),'睡眠 (h)',{min:4,max:9});
-  renderChart('chartDeep',lastN(data,7).filter(d=>d.deepSleep).map(d=>({x:d.date,y:d.deepSleep})),'深睡 (min)',{min:0,max:60});
-  renderChart('chartHR',lastN(data,7).filter(d=>d.heartRate).map(d=>({x:d.date,y:d.heartRate})),'心率 (bpm)',{min:50,max:100});
+  renderChart('chartWeight',lastN(data,15).filter(x=>x.weight).map(x=>({x:x.date,y:x.weight})),{min:70,max:88});
+  renderChart('chartSleep',lastN(data,7).filter(x=>x.sleepTotal).map(x=>({x:x.date,y:x.sleepTotal})),{min:4,max:9});
+  renderChart('chartDeep',lastN(data,7).filter(x=>x.deepSleep).map(x=>({x:x.date,y:x.deepSleep})),{min:0,max:60});
+  renderChart('chartHR',lastN(data,7).filter(x=>x.heartRate).map(x=>({x:x.date,y:x.heartRate})),{min:50,max:100});
 }
-function renderChart(id,points,label,yOpts){
-  const ctx=document.getElementById(id);if(!ctx)return;
-  if(charts[id])charts[id].destroy();
-  if(!points.length){ctx.parentElement.innerHTML='<div class="chart-title">'+label+'</div><div style="text-align:center;color:var(--muted);padding:30px">暂无数据</div>';return}
-  const labels=points.map(p=>p.x.slice(5));
-  charts[id]=new Chart(ctx,{
-    type:'line',
-    data:{labels,datasets:[{label,data:points.map(p=>p.y),borderColor:'#c9a96e',backgroundColor:'rgba(201,169,110,.1)',fill:true,tension:.4,pointRadius:4,pointBackgroundColor:'#c9a96e',borderWidth:2}]},
-    options:{
-      responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false}},
-      scales:{
-        x:{ticks:{color:'#8b8d9a',font:{size:10}},grid:{color:'rgba(139,141,154,.1)'}},
-        y:{...yOpts,ticks:{color:'#8b8d9a',font:{size:10}},grid:{color:'rgba(139,141,154,.1)'}}
-      }
-    }
-  });
+function renderChart(id,pts,opts){
+  const ctx=document.getElementById(id);if(!ctx)return;if(charts[id])charts[id].destroy();
+  if(!pts.length){ctx.parentElement.innerHTML='<div class="chart-title">'+ctx.parentElement.querySelector('.chart-title')?.textContent+'</div><div style="text-align:center;color:var(--muted);padding:30px">暂无数据</div>';return}
+  charts[id]=new Chart(ctx,{type:'line',data:{labels:pts.map(p=>p.x.slice(5)),datasets:[{data:pts.map(p=>p.y),borderColor:'#c9a96e',backgroundColor:'rgba(201,169,110,.1)',fill:true,tension:.4,pointRadius:3,pointBackgroundColor:'#c9a96e',borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#8b8d9a',font:{size:9},maxTicksLimit:7},grid:{color:'rgba(139,141,154,.1)'}},y:{...opts,ticks:{color:'#8b8d9a',font:{size:9}},grid:{color:'rgba(139,141,154,.1)'}}}}});
 }
 
 // ── Supplements ──
 function renderSupplements(){
   const supps=[
-    {time:'☀️ 起床空腹',items:[{n:'☕',t:'黑咖啡 1杯'}]},
-    {time:'🕐 午餐后 (12-13点)',items:[{n:'🧠',t:'Neuriva Ultra ×2'},{n:'🐟',t:'Omega Mini ×3'},{n:'☀️',t:'D3+K2 ×1'},{n:'🔩',t:'锌 ×1'},{n:'💊',t:"Men's Multi ×1"}]},
-    {time:'🥊 拳击后30分钟',items:[{n:'💪',t:'ON乳清蛋白 1勺'}]},
-    {time:'🌙 晚餐后',items:[{n:'🫁',t:'Liver Detox'}]},
-    {time:'🌙 睡前30分钟',items:[{n:'🌙',t:'甘氨酸镁 日常200mg / 高钠日400mg'}]}
+    {time:'☀️ 起床空腹',items:['☕ 黑咖啡 1杯']},
+    {time:'🕐 午餐后',items:['🧠 Neuriva Ultra ×2','🐟 Omega Mini ×3','☀️ D3+K2 ×1','🔩 锌 ×1','💊 Men\'s Multi ×1']},
+    {time:'🥊 拳击后30min',items:['💪 ON乳清蛋白 1勺'],boxing:true},
+    {time:'🌙 晚餐后',items:['🫁 Liver Detox']},
+    {time:'🌙 睡前30min',items:['🌙 甘氨酸镁 200-400mg']}
   ];
-  const todayData=getData().find(d=>d.date===today());
-  const isBoxingDay=todayData&&todayData.boxing===true;
-
+  const todayData=getData().find(d=>d.date===today());const isBoxing=todayData&&todayData.boxing===true;
   let html='';
-  supps.forEach((s,i)=>{
-    if(s.time.includes('拳击')&&!isBoxingDay)return;
-    html+=`<div class="tl-item"><div class="tl-time">${s.time}</div><div class="tl-content">`;
-    s.items.forEach(it=>{html+=`<div style="margin-bottom:3px">${it.n} ${it.t}</div>`});
-    html+=`<span class="tl-check" onclick="this.classList.toggle('done')">✓ 已吃</span></div></div>`;
-  });
+  supps.forEach(s=>{if(s.boxing&&!isBoxing)return;html+=`<div class="tl-item"><div class="tl-time">${s.time}</div><div class="tl-content">${s.items.map(i=>'<div>'+i+'</div>').join('')}<span class="tl-check" onclick="this.classList.toggle(\'done\')">✓ 已吃</span></div></div>`});
   document.getElementById('suppTimeline').innerHTML=html||'<div style="text-align:center;color:var(--muted);padding:20px">加载中...</div>';
 }
 
 // ── Habits ──
 function renderHabits(){
-  const data=getData();
-  const now=new Date();const day=now.getDay();const monday=new Date(now);monday.setDate(now.getDate()-(day===0?6:day-1));
+  const data=getData();const now=new Date();const day=now.getDay();
+  const monday=new Date(now);monday.setDate(now.getDate()-(day===0?6:day-1));monday.setHours(0,0,0,0);
   const weekData=data.filter(d=>d.date>=monday.toISOString().split('T')[0]&&d.date<=today());
-
-  const boxingCount=weekData.filter(d=>d.boxing===true).length;
-  const fastingCount=weekData.filter(d=>d.fasting===true).length;
-  const shortVideoDays=weekData.filter(d=>typeof d.shortVideo=='number'&&d.shortVideo<=30).length;
-  const totalDays=Math.max(1,Math.ceil((now-monday)/86400000)+1);
-
-  drawRing('ringBoxing',boxingCount,3,'#e0556a',true);
-  drawRing('ringFasting',fastingCount,7,'#d4953a',true);
-  drawRing('ringVideo',shortVideoDays,totalDays,'#5bb98c',true);
+  const bc=weekData.filter(d=>d.boxing===true).length;
+  const fc=weekData.filter(d=>d.fasting===true).length;
+  const svc=weekData.filter(d=>typeof d.shortVideo=='number'&&d.shortVideo<=30).length;
+  const td=Math.max(1,Math.ceil((now-monday)/86400000)+1);
 
   document.getElementById('habitRings').innerHTML=`
-    <div class="habit-card"><div class="ring"><canvas id="ringBoxing"></canvas></div><div class="h-title">拳击 ${boxingCount}/3</div><div class="h-sub">本周</div></div>
-    <div class="habit-card"><div class="ring"><canvas id="ringFasting"></canvas></div><div class="h-title">断食 ${fastingCount}/7</div><div class="h-sub">目标5天</div></div>
-    <div class="habit-card"><div class="ring"><canvas id="ringVideo"></canvas></div><div class="h-title">短视频 ${shortVideoDays}/${totalDays}天</div><div class="h-sub">≤30min/天</div></div>`;
+    <div class="habit-card"><div class="ring"><canvas id="ringBoxing"></canvas></div><div class="h-title">拳击 ${bc}/3</div><div class="h-sub">本周</div></div>
+    <div class="habit-card"><div class="ring"><canvas id="ringFasting"></canvas></div><div class="h-title">断食 ${fc}/7</div><div class="h-sub">目标5天</div></div>
+    <div class="habit-card"><div class="ring"><canvas id="ringVideo"></canvas></div><div class="h-title">短视频 ${svc}/${td}天</div><div class="h-sub">≤30min/天</div></div>`;
 
-  // Week detail
-  let detail='';
-  weekData.forEach(d=>{
-    const wd=new Date(d.date).getDay();
-    const boxing=d.boxing===true?'🥊':d.boxing===false?'❌':'—';
-    const fasting=d.fasting===true?'✅':d.fasting===false?'❌':d.fasting==='half'||d.fasting==='late'?'⚠️':'—';
-    const sv=typeof d.shortVideo=='number'?d.shortVideo+'min':'—';
-    detail+=`<div style="padding:6px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between"><span>${d.date.slice(5)} 周${'日一二三四五六'[wd]}</span><span>${boxing} | ${fasting} | 📱${sv}</span></div>`;
-  });
-  document.getElementById('weekDetail').innerHTML=detail||'暂无数据';
+  let dhtml='';
+  weekData.slice().reverse().forEach(d=>{const wd=new Date(d.date).getDay();const bx=d.boxing===true?'🥊':d.boxing===false?'❌':'-';const fs=d.fasting===true?'✅':d.fasting?'⚠️':'-';const sv=typeof d.shortVideo=='number'?d.shortVideo+'min':'-';dhtml+=`<div style="padding:5px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;font-size:12px"><span>${d.date.slice(5)} 周${'日一二三四五六'[wd]}</span><span>${bx} | ${fs} | 📱${sv}</span></div>`});
+  document.getElementById('weekDetail').innerHTML=dhtml||'暂无数据';
 
-  setTimeout(()=>{
-    drawRing('ringBoxing',boxingCount,3,'#e0556a',false);
-    drawRing('ringFasting',fastingCount,7,'#d4953a',false);
-    drawRing('ringVideo',shortVideoDays,totalDays,'#5bb98c',false);
-  },100);
+  setTimeout(()=>{drawRing('ringBoxing',bc,3,'#e0556a');drawRing('ringFasting',fc,7,'#d4953a');drawRing('ringVideo',svc,td,'#5bb98c')},100);
+}
+function drawRing(cid,count,target,color){
+  const c=document.getElementById(cid);if(!c||c.width)return;
+  const dpr=window.devicePixelRatio||1;const sz=70*dpr;c.width=sz;c.height=sz;c.style.width='70px';c.style.height='70px';
+  const ctx=c.getContext('2d');ctx.scale(dpr,dpr);const r=28,lw=5;
+  ctx.beginPath();ctx.arc(35,35,r,0,Math.PI*2);ctx.strokeStyle='rgba(139,141,154,.12)';ctx.lineWidth=lw;ctx.stroke();
+  const pct=Math.min(count/target,1);
+  ctx.beginPath();ctx.arc(35,35,r,-Math.PI/2,-Math.PI/2+Math.PI*2*pct);ctx.strokeStyle=color;ctx.lineWidth=lw;ctx.lineCap='round';ctx.stroke();
+  ctx.fillStyle='#e2d5c1';ctx.font='bold 15px -apple-system';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(count,35,35);
 }
 
-function drawRing(canvasId,count,target,color,isPlaceholder){
-  const c=document.getElementById(canvasId);if(!c)return;
-  const dpr=window.devicePixelRatio||1;
-  const size=80*dpr;c.width=size;c.height=size;c.style.width='80px';c.style.height='80px';
-  const ctx=c.getContext('2d');ctx.scale(dpr,dpr);
-  const cx=40,cy=40,r=32,lw=6;
-  ctx.clearRect(0,0,80,80);
-  // bg
-  ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.strokeStyle='rgba(139,141,154,.15)';ctx.lineWidth=lw;ctx.stroke();
-  // fg
-  const pct=Math.min(count/target,1);
-  ctx.beginPath();ctx.arc(cx,cy,r,-Math.PI/2,-Math.PI/2+Math.PI*2*pct);ctx.strokeStyle=color;ctx.lineWidth=lw;ctx.lineCap='round';ctx.stroke();
-  // center
-  ctx.fillStyle='#e2d5c1';ctx.font='bold 16px -apple-system';ctx.textAlign='center';ctx.textBaseline='middle';
-  ctx.fillText(count,cx,cy);
+// ── Team prescriptions ──
+function renderTeam(){
+  const td=today();const rx=PRESCRIPTIONS[td];
+  if(!rx){document.getElementById('teamRx').innerHTML='<div style="text-align:center;color:var(--muted);padding:30px">今日处方尚未生成<br>等待华佗晨检...</div>';return}
+  function card(name,avatar,color,lines){
+    return`<div class="rx-card"><div class="rx-header"><div class="rx-avatar">${avatar}</div><div class="rx-name" style="color:${color}">${name}</div></div><div class="rx-body">${lines.map(l=>'<div class="rx-line">'+l+'</div>').join('')}</div></div>`;
+  }
+  const h=rx.huatuo,z=rx.zhang,r=rx.ruyi;
+  document.getElementById('teamRx').innerHTML=
+    card('华佗 · 健康总管','🏥','#c9a96e',[
+      '① 身体：'+h.body,'② 饮食：'+h.diet,'③ 精力防守：'+h.energy,'④ 情绪：'+h.mood,'⚡ '+h.top1
+    ])+
+    card('张教练 · 体能','🥊','#5bb98c',[
+      '🎯 '+z.train,'🔧 课前：'+z.pre,'📅 '+z.plan
+    ])+
+    card('如意 · 营养师','🍽️','#d4953a',[
+      '🥩 蛋白质：'+r.protein,'🧂 钠：'+r.sodium,'⏰ 断食：'+r.fasting,'⚡ '+r.top1
+    ]);
 }
 
 // ── Tabs ──
@@ -393,17 +393,11 @@ function switchTab(tab,el){
   if(tab==='dashboard')renderDashboard();
   if(tab==='supplements')renderSupplements();
   if(tab==='habits')renderHabits();
+  if(tab==='team')renderTeam();
 }
 
-// ── Toast ──
-function showToast(msg){
-  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),2000);
-}
-
-function resetData(){if(confirm('确定清空所有数据？此操作不可恢复。')){localStorage.removeItem(STORAGE_KEY);location.reload()}}
-
-// ── Boot ──
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000);}
+function resetData(){if(confirm('确定清空所有数据？')){localStorage.removeItem(STORAGE_KEY);location.reload()}}
 init();
 </script>
 </body>
