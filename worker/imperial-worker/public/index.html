@@ -3,203 +3,181 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no,viewport-fit=cover">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#0f1117">
-<title>🏯 御医 · 晨检录入</title>
+<title>🏯 御医 · 晨检</title>
 <style>
-:root{
-  --bg:#0f1117;--card:rgba(26,29,40,.7);--gold:#c9a96e;--gold2:#b8944e;
-  --text:#e2e8f0;--muted:#94a3b8;--red:#f87171;--green:#4ade80;--amber:#fbbf24;
-  --border:rgba(201,169,110,.15);--r:14px;--rs:10px;
-}
+:root{--bg:#0f1117;--card:#1a1d28;--gold:#c9a96e;--text:#e2e8f0;--muted:#94a3b8;--red:#f87171;--green:#4ade80;--amber:#fbbf24;--border:rgba(201,169,110,.15);--r:14px}
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Noto Sans SC',sans-serif;background:var(--bg);color:var(--text);max-width:430px;margin:0 auto;min-height:100dvh;padding-bottom:40px;-webkit-tap-highlight-color:transparent;-webkit-font-smoothing:antialiased}
-header{padding:20px;text-align:center;border-bottom:1px solid var(--border)}
+html,body{width:100%;min-height:100dvh;background:var(--bg)}
+body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Noto Sans SC',sans-serif;color:var(--text);max-width:430px;margin:0 auto;padding:0 0 40px}
+header{padding:20px 16px;text-align:center;border-bottom:1px solid var(--border)}
 header h1{font-size:20px;font-weight:600;color:var(--gold)}
 header .date{font-size:12px;color:var(--muted);margin-top:4px}
-.section{margin:16px}
-.section-title{font-size:13px;color:var(--gold);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;cursor:pointer}
-.section-title .arrow{font-size:10px;transition:transform .2s}
-.section-body{overflow:hidden;transition:max-height .3s}
-.section-body.collapsed{max-height:0!important}
-.field-group{margin-bottom:10px}
-.field-group label{display:block;font-size:11px;color:var(--muted);margin-bottom:4px;font-weight:500}
-.field-row{display:flex;gap:8px}
-.field-row .field-group{flex:1}
-input,select,textarea{width:100%;background:var(--card);border:1px solid var(--border);color:var(--text);padding:10px 12px;border-radius:var(--rs);font-size:15px;font-family:inherit;outline:none;transition:border-color .15s;-webkit-appearance:none}
-input:focus,select:focus,textarea:focus{border-color:var(--gold)}
+.section{margin:0 16px 16px}
+.stitle{font-size:13px;color:var(--gold);padding:12px 0 8px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;cursor:pointer;user-select:none}
+.stitle .ar{font-size:10px;transition:transform .2s}
+.sbody{overflow:hidden;transition:max-height .3s}
+.sbody.collapsed{max-height:0!important}
+.sbody>*{margin-top:10px}
+.fg{margin-bottom:10px}
+.fg label{display:block;font-size:11px;color:var(--muted);margin-bottom:4px;font-weight:500}
+.fr{display:flex;gap:8px}
+.fr .fg{flex:1}
+input,textarea{width:100%;background:var(--card);border:1px solid var(--border);color:var(--text);padding:10px 12px;border-radius:10px;font-size:16px;font-family:inherit;outline:none}
+input:focus,textarea:focus{border-color:var(--gold)}
 textarea{resize:vertical;min-height:50px}
-input[type=number]{font-variant-numeric:tabular-nums}
-.toggle-row{display:flex;gap:8px}
-.toggle-btn{flex:1;padding:12px;text-align:center;border-radius:var(--rs);border:1px solid var(--border);background:var(--card);color:var(--muted);font-size:15px;cursor:pointer;transition:all .15s;user-select:none}
-.toggle-btn:active{transform:scale(.97)}
-.toggle-btn.on{background:rgba(74,222,128,.15);color:var(--green);border-color:rgba(74,222,128,.3)}
-.toggle-btn.off{background:rgba(248,113,113,.15);color:var(--red);border-color:rgba(248,113,113,.3)}
-.submit-btn{display:block;width:calc(100% - 32px);margin:24px 16px;padding:14px;background:linear-gradient(135deg,#c9a96e,#e0556a);color:#fff;border:none;border-radius:var(--r);font-size:17px;font-weight:600;cursor:pointer;letter-spacing:.5px}
-.submit-btn:active{opacity:.85;transform:scale(.98)}
-.submit-btn:disabled{opacity:.5;pointer-events:none}
-.status{text-align:center;font-size:12px;color:var(--muted);margin:-8px 0 16px;min-height:20px}
-.status.success{color:var(--green)}.status.error{color:var(--red)}.status.loading{color:var(--amber)}
-.info-bar{text-align:center;font-size:10px;color:var(--muted);padding:8px;border-top:1px solid var(--border);margin-top:16px}
-.toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:var(--green);color:var(--bg);padding:10px 24px;border-radius:24px;font-size:14px;font-weight:600;z-index:200;opacity:0;transition:opacity .15s;pointer-events:none}
+.trow{display:flex;gap:8px}
+.tbtn{flex:1;padding:12px;text-align:center;border-radius:10px;border:1px solid var(--border);background:var(--card);color:var(--muted);font-size:15px;cursor:pointer;user-select:none}
+.tbtn:active{transform:scale(.97)}
+.tbtn.on{background:rgba(74,222,128,.15);color:var(--green);border-color:rgba(74,222,128,.3)}
+.tbtn.off{background:rgba(248,113,113,.15);color:var(--red);border-color:rgba(248,113,113,.3)}
+.btn{display:block;width:calc(100% - 32px);margin:24px 16px;padding:14px;background:linear-gradient(135deg,#c9a96e,#e0556a);color:#fff;border:none;border-radius:var(--r);font-size:17px;font-weight:600;cursor:pointer;text-align:center}
+.btn:active{opacity:.85;transform:scale(.98)}
+.btn:disabled{opacity:.5}
+.st{text-align:center;font-size:12px;color:var(--muted);margin:-8px 16px 16px;min-height:20px}
+.st.ok{color:var(--green)}.st.err{color:var(--red)}.st.ing{color:var(--amber)}
+.info{text-align:center;font-size:10px;color:var(--muted);padding:8px;border-top:1px solid var(--border);margin-top:16px}
+.toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:var(--green);color:#0f1117;padding:10px 24px;border-radius:24px;font-size:14px;font-weight:600;z-index:200;opacity:0;transition:opacity .15s;pointer-events:none}
 .toast.show{opacity:1}
+#loadedTag{display:inline-block;font-size:9px;padding:2px 6px;border-radius:10px;background:rgba(74,222,128,.15);color:var(--green);margin-left:6px;vertical-align:middle}
 </style>
 </head>
 <body>
 
 <header>
-  <h1>🏯 御医 · 晨检</h1>
-  <div class="date" id="headerDate"></div>
+  <h1>🏯 御医 · 晨检 <span id="loadedTag" style="display:none">v2</span></h1>
+  <div class="date" id="hd"></div>
 </header>
 
-<form id="mainForm" onsubmit="return false">
-  <input type="date" id="entryDate" style="width:auto;margin:16px;font-size:14px;padding:8px 12px" onchange="updateDayLabel()">
-  <span style="font-size:11px;color:var(--muted);margin-left:-8px" id="dayLabel"></span>
+<div style="padding:16px;display:flex;align-items:center;gap:8px">
+  <input type="date" id="ed" style="width:auto;font-size:14px;padding:8px 10px">
+  <span style="font-size:11px;color:var(--muted)" id="ew"></span>
+</div>
 
-  <!-- 晨检 -->
-  <div class="section">
-    <div class="section-title" onclick="toggleSection('morning')">☀️ 晨检数据 <span class="arrow">▾</span></div>
-    <div class="section-body" id="morning">
-      <div class="field-row"><div class="field-group"><label>清醒时间 (min)</label><input type="number" id="aw" placeholder="33" inputmode="numeric"></div><div class="field-group"><label>REM 快速动眼 (min)</label><input type="number" id="rs" placeholder="66" inputmode="numeric"></div></div>
-      <div class="field-row"><div class="field-group"><label>核心睡眠 (min)</label><input type="number" id="cs" placeholder="351" inputmode="numeric"></div><div class="field-group"><label>深度睡眠 (min)</label><input type="number" id="ds" placeholder="44" inputmode="numeric"></div></div>
-      <div class="field-row"><div class="field-group"><label>入睡时间</label><input type="time" id="bt"></div><div class="field-group"><label>起床时间</label><input type="time" id="wt"></div></div>
-      <div class="field-row"><div class="field-group"><label>❤️ 静息心率 (bpm)</label><input type="number" id="hr" placeholder="74" inputmode="numeric"></div><div class="field-group"><label>📈 HRV (ms)</label><input type="number" id="hv" placeholder="可选" inputmode="numeric"></div><div class="field-group"><label>⚖️ 体重 (kg)</label><input type="number" id="bw" placeholder="84.0" step="0.1" inputmode="decimal"></div></div>
-      <div class="field-row"><div class="field-group"><label>📱 睡前刷手机 (min)</label><input type="number" id="sv" placeholder="30" inputmode="numeric"></div><div class="field-group"><label>🔒 内守 第几天</label><input type="number" id="ab" placeholder="天" inputmode="numeric"></div></div>
-      <div class="field-group"><label>😰 焦虑 (1-10)</label><input type="number" id="ax" placeholder="5" min="0" max="10" inputmode="numeric"></div>
-      <div class="field-group"><label>💬 今日感受</label><input type="text" id="fl" placeholder="一句话概括..."></div>
-    </div>
+<!-- 晨检 -->
+<div class="section">
+  <div class="stitle" onclick="ts('sm')">☀️ 晨检数据 <span class="ar">▾</span></div>
+  <div class="sbody" id="sm">
+    <div class="fr"><div class="fg"><label>清醒时间 (min)</label><input type="number" id="aw" placeholder="33"></div><div class="fg"><label>快速动眼 REM (min)</label><input type="number" id="rs" placeholder="66"></div></div>
+    <div class="fr"><div class="fg"><label>核心睡眠 (min)</label><input type="number" id="cs" placeholder="351"></div><div class="fg"><label>深度睡眠 (min)</label><input type="number" id="ds" placeholder="44"></div></div>
+    <div class="fr"><div class="fg"><label>入睡时间</label><input type="time" id="bt"></div><div class="fg"><label>起床时间</label><input type="time" id="wt"></div></div>
+    <div class="fr"><div class="fg"><label>❤️ 静息心率 (bpm)</label><input type="number" id="hr" placeholder="74"></div><div class="fg"><label>📈 HRV (ms)</label><input type="number" id="hv" placeholder="可选"></div><div class="fg"><label>⚖️ 体重 (kg)</label><input type="number" id="bw" placeholder="84.0" step="0.1"></div></div>
+    <div class="fr"><div class="fg"><label>📱 睡前刷手机 (min)</label><input type="number" id="sv" placeholder="30"></div><div class="fg"><label>🔒 内守 第几天</label><input type="number" id="ab" placeholder="天"></div></div>
+    <div class="fg"><label>😰 焦虑 (1-10)</label><input type="number" id="ax" placeholder="5" min="0" max="10"></div>
+    <div class="fg"><label>💬 今日感受</label><input type="text" id="fl" placeholder="一句话概括..."></div>
   </div>
+</div>
 
-  <!-- 饮食 -->
-  <div class="section">
-    <div class="section-title" onclick="toggleSection('diet')">🍽️ 饮食记录 <span class="arrow">▾</span></div>
-    <div class="section-body collapsed" id="diet">
-      <div class="field-group"><label>🍌 拳击前加餐</label><input type="text" id="pb" placeholder="半根香蕉 + 黑咖啡"></div>
-      <div class="field-group"><label>🍱 午餐</label><textarea id="lu" placeholder="牛丸牛杂粿条 ~570kcal 34g蛋白" rows="2"></textarea></div>
-      <div class="field-group"><label>🍲 晚餐</label><textarea id="di" placeholder="沙姜鸡套餐 ~620kcal 60g蛋白" rows="2"></textarea></div>
-      <div class="field-row"><div class="field-group"><label>🕐 开窗时间</label><input type="time" id="fs"></div><div class="field-group"><label>🔒 关窗时间</label><input type="time" id="fe"></div></div>
-    </div>
+<!-- 饮食 -->
+<div class="section">
+  <div class="stitle" onclick="ts('sd')">🍽️ 饮食记录 <span class="ar">▾</span></div>
+  <div class="sbody collapsed" id="sd">
+    <div class="fg"><label>🍌 拳击前加餐</label><input type="text" id="pb" placeholder="半根香蕉 + 黑咖啡"></div>
+    <div class="fg"><label>🍱 午餐</label><textarea id="lu" placeholder="牛丸牛杂粿条 ~570kcal 34g蛋白" rows="2"></textarea></div>
+    <div class="fg"><label>🍲 晚餐</label><textarea id="di" placeholder="沙姜鸡套餐 ~620kcal 60g蛋白" rows="2"></textarea></div>
+    <div class="fr"><div class="fg"><label>🕐 开窗时间</label><input type="time" id="fs"></div><div class="fg"><label>🔒 关窗时间</label><input type="time" id="fe"></div></div>
   </div>
+</div>
 
-  <!-- 训练 -->
-  <div class="section">
-    <div class="section-title" onclick="toggleSection('training')">🥊 训练记录 <span class="arrow">▾</span></div>
-    <div class="section-body collapsed" id="training">
-      <div class="toggle-row">
-        <div class="toggle-btn" id="bb" onclick="toggleTri('boxing')">拳击</div>
-        <div class="toggle-btn" id="bf" onclick="toggleTri('fasting')">断食</div>
-      </div>
-      <div class="field-row" style="margin-top:10px"><div class="field-group"><label>时长 (min)</label><input type="number" id="td" placeholder="60" inputmode="numeric"></div><div class="field-group"><label>热量 (kcal)</label><input type="number" id="tc" placeholder="600" inputmode="numeric"></div></div>
-      <div class="field-row"><div class="field-group"><label>最高心率</label><input type="number" id="th" placeholder="171" inputmode="numeric"></div><div class="field-group"><label>平均心率</label><input type="number" id="ta" placeholder="118" inputmode="numeric"></div></div>
-    </div>
+<!-- 训练 -->
+<div class="section">
+  <div class="stitle" onclick="ts('st')">🥊 训练记录 <span class="ar">▾</span></div>
+  <div class="sbody collapsed" id="st">
+    <div class="trow"><div class="tbtn" id="bb" onclick="tg('boxing')">拳击</div><div class="tbtn" id="bf" onclick="tg('fasting')">断食</div></div>
+    <div class="fr"><div class="fg"><label>时长 (min)</label><input type="number" id="td" placeholder="60"></div><div class="fg"><label>热量 (kcal)</label><input type="number" id="tc" placeholder="600"></div></div>
+    <div class="fr"><div class="fg"><label>最高心率</label><input type="number" id="th" placeholder="171"></div><div class="fg"><label>平均心率</label><input type="number" id="ta" placeholder="118"></div></div>
   </div>
+</div>
 
-  <button type="submit" class="submit-btn" id="submitBtn" onclick="doSubmit()">📡 提交到御医团队</button>
-  <div class="status" id="status">提交后华佗 / 如意 / 张教练将收到数据</div>
-</form>
+<button type="button" class="btn" id="bs" onclick="sub()">📡 提交到御医团队</button>
+<div class="st" id="ss">提交后华佗 / 如意 / 张教练将收到数据</div>
 
-<div class="info-bar">🔒 数据通过 Cloudflare Worker 安全提交 · 无需配置 Token</div>
+<div class="info">🔒 Worker 安全提交 · 无需配置 Token</div>
 <div class="toast" id="toast"></div>
 
 <script>
-// ── Date ──
-function today(){ return new Date().toISOString().split('T')[0] }
-function updateDayLabel(){
-  var d=new Date(document.getElementById('entryDate').value);
-  document.getElementById('dayLabel').textContent='星期'+['日','一','二','三','四','五','六'][d.getDay()];
-}
-function setHeader(){
-  document.getElementById('headerDate').textContent=new Date().toLocaleDateString('zh-CN',{year:'numeric',month:'long',day:'numeric',weekday:'long'});
-}
+(function(){
+  try{
+    // version tag
+    document.getElementById('loadedTag').style.display='inline';
 
-// ── Toggles ──
-var boxingState=null,fastingState=null;
-function toggleTri(type){
-  if(type==='boxing'){boxingState=boxingState===true?false:boxingState===false?null:true;updateToggleUI('bb',boxingState)}
-  else{fastingState=fastingState===true?false:fastingState===false?null:true;updateToggleUI('bf',fastingState)}
+    // header date
+    document.getElementById('hd').textContent=new Date().toLocaleDateString('zh-CN',{year:'numeric',month:'long',day:'numeric',weekday:'long'});
+
+    // date picker
+    var dt=document.getElementById('ed');
+    dt.value=new Date().toISOString().split('T')[0];
+    dt.addEventListener('change',function(){
+      var d=new Date(dt.value);
+      document.getElementById('ew').textContent='星期'+['日','一','二','三','四','五','六'][d.getDay()];
+    });
+    dt.dispatchEvent(new Event('change'));
+
+    init=true;
+  }catch(e){
+    document.body.innerHTML='<div style="padding:20px;color:#f87171">JS Error: '+e.message+'</div>';
+  }
+})();
+
+// section toggle
+function ts(id){document.getElementById(id).classList.toggle('collapsed')}
+
+// tri-toggle
+var bv=null,fv=null;
+function tg(t){
+  if(t==='boxing'){bv=bv===true?false:bv===false?null:true;tui('bb',bv)}
+  else{fv=fv===true?false:fv===false?null:true;tui('bf',fv)}
 }
-function updateToggleUI(id,v){
+function tui(id,v){
   var el=document.getElementById(id);el.classList.remove('on','off');
   if(v===true){el.classList.add('on');el.textContent=id==='bb'?'拳击 ✅':'断食 ✅'}
   else if(v===false){el.classList.add('off');el.textContent=id==='bb'?'拳击 ❌':'断食 ❌'}
   else el.textContent=id==='bb'?'拳击':'断食';
 }
-function toggleSection(id){
-  document.getElementById(id).classList.toggle('collapsed');
-}
 
-// ── Toast ──
-function toast(msg){
-  var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
+// toast
+function toast(m){
+  var t=document.getElementById('toast');t.textContent=m;t.classList.add('show');
   setTimeout(function(){t.classList.remove('show')},2000);
 }
 
-// ── Field mapping (short id → data.json field name) ──
-var fmap={
-  aw:'awakeTime',rs:'remSleep',cs:'coreSleep',ds:'deepSleep',
-  hr:'heartRate',hv:'hrv',bw:'weight',sv:'shortVideo',ab:'abstinence',
-  ax:'anxiety',fl:'feeling',bt:'bedtime',wt:'wakeTime',
-  lu:'lunch',di:'dinner',pb:'preBoxingFood',fs:'fastingStart',fe:'fastingEnd',
-  td:'trainingDur',tc:'trainingCal',th:'trainingMaxHR',ta:'trainingAvgHR'
-};
+// submit
+async function sub(){
+  var btn=document.getElementById('bs'),st=document.getElementById('ss');
+  btn.disabled=true;st.textContent='⏳ 正在提交...';st.className='st ing';
 
-// ── Submit ──
-async function doSubmit(){
-  var btn=document.getElementById('submitBtn'),st=document.getElementById('status');
-  btn.disabled=true;st.textContent='⏳ 正在提交...';st.className='status loading';
+  var date=document.getElementById('ed').value;
+  var entry={date:date};
 
-  var date=document.getElementById('entryDate').value,entry={date:date};
+  var map={aw:'awakeTime',rs:'remSleep',cs:'coreSleep',ds:'deepSleep',hr:'heartRate',hv:'hrv',bw:'weight',sv:'shortVideo',ab:'abstinence',ax:'anxiety',fl:'feeling',bt:'bedtime',wt:'wakeTime',lu:'lunch',di:'dinner',pb:'preBoxingFood',fs:'fastingStart',fe:'fastingEnd',td:'trainingDur',tc:'trainingCal',th:'trainingMaxHR',ta:'trainingAvgHR'};
 
-  // Collect field values
-  Object.keys(fmap).forEach(function(f){
-    var el=document.getElementById(f);
+  Object.keys(map).forEach(function(k){
+    var el=document.getElementById(k);
     if(el&&el.value!==''&&el.value!==undefined){
       var v=el.value;
-      entry[fmap[f]]=isNaN(v)?v:parseFloat(v)||parseInt(v)||v;
+      entry[map[k]]=isNaN(v)?v:parseFloat(v)||parseInt(v)||v;
     }
   });
 
-  // Auto-calc sleep total
-  var cs2=parseInt(document.getElementById('cs').value)||0,
-      ds2=parseInt(document.getElementById('ds').value)||0,
-      rs2=parseInt(document.getElementById('rs').value)||0;
+  var cs2=parseInt(document.getElementById('cs').value)||0,ds2=parseInt(document.getElementById('ds').value)||0,rs2=parseInt(document.getElementById('rs').value)||0;
   if(cs2+ds2+rs2>0)entry.sleepTotal=Math.round((cs2+ds2+rs2)/0.6)/100;
 
-  // Toggle states
-  entry.boxing=boxingState;entry.fasting=fastingState;
-
-  // Only keep fields with values (omit null/undefined)
+  entry.boxing=bv;entry.fasting=fv;
   Object.keys(entry).forEach(function(k){if(entry[k]===null||entry[k]===undefined)delete entry[k]});
 
   try{
-    var res=await fetch('/update',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify(entry)
-    });
+    var res=await fetch('/update',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(entry)});
     var data=await res.json();
-    if(data.ok){
-      st.textContent='✅ 已提交！华佗团队将收到 ' + date + ' 的数据';
-      st.className='status success';
-      toast('✅ 已提交到御医');
-    } else {
-      st.textContent='❌ '+(data.error||'提交失败');
-      st.className='status error';
-    }
-  }catch(e){
-    st.textContent='❌ 网络错误: '+e.message;
-    st.className='status error';
-  }
+    if(data.ok){st.textContent='✅ 已提交！'+date;st.className='st ok';toast('✅ 已提交到御医')}
+    else{st.textContent='❌ '+(data.error||'失败');st.className='st err'}
+  }catch(e){st.textContent='❌ 网络错误: '+e.message;st.className='st err'}
   btn.disabled=false;
 }
-
-// ── Init ──
-(function(){
-  setHeader();
-  document.getElementById('entryDate').value=today();
-  updateDayLabel();
-})();
 </script>
 </body>
 </html>
