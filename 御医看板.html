@@ -5,107 +5,214 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#0f1117">
+<meta name="theme-color" content="#0F172A">
 <title>御医看板</title>
 <style>
-:root{--bg:#0f1117;--card:#1a1d28;--card2:#222639;--gold:#c9a96e;--text:#e2d5c1;--muted:#8b8d9a;--red:#e0556a;--green:#5bb98c;--amber:#d4953a;--border:rgba(201,169,110,.15)}
+@import url('https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;500;600&display=swap');
+:root{
+  --bg:#0F172A; --card:rgba(30,41,59,.7); --card2:#1E293B;
+  --gold:#c9a96e; --gold2:#b8944e; --text:#e2e8f0; --muted:#94a3b8;
+  --red:#f87171; --green:#4ade80; --amber:#fbbf24;
+  --border:rgba(201,169,110,.12); --radius:14px; --radius-sm:10px;
+  --fs-xs:11px; --fs-sm:13px; --fs-base:15px; --fs-lg:18px; --fs-xl:24px;
+  --space-xs:4px; --space-sm:8px; --space-md:12px; --space-lg:16px; --space-xl:20px;
+  --transition:180ms ease-out;
+}
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif;background:var(--bg);color:var(--text);max-width:430px;margin:0 auto;min-height:100vh;padding-bottom:90px;-webkit-tap-highlight-color:transparent;user-select:none}
+body{
+  font-family:'Fira Sans',-apple-system,BlinkMacSystemFont,'SF Pro Display','PingFang SC',sans-serif;
+  background:var(--bg);color:var(--text);max-width:430px;margin:0 auto;
+  min-height:100dvh;padding-bottom:96px;-webkit-tap-highlight-color:transparent;
+  -webkit-font-smoothing:antialiased;user-select:none;
+}
 
-header{padding:20px 20px 12px;text-align:center;border-bottom:1px solid var(--border)}
-header h1{font-size:20px;font-weight:600;letter-spacing:.5px;color:var(--gold)}
-header .date{font-size:13px;color:var(--muted);margin-top:4px}
+/* Header */
+header{padding:var(--space-xl) var(--space-xl) var(--space-md);text-align:center;border-bottom:1px solid var(--border);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+header h1{font-size:var(--fs-lg);font-weight:600;letter-spacing:.02em;color:var(--gold);display:flex;align-items:center;justify-content:center;gap:var(--space-sm)}
+header .date{font-size:var(--fs-xs);color:var(--muted);margin-top:var(--space-xs)}
+header .logo{width:24px;height:24px;opacity:.85;flex-shrink:0}
 
-.tab-panel{display:none;padding:16px;}
-.tab-panel.active{display:block}
+/* Tab panels */
+.tab-panel{display:none;padding:var(--space-lg)}
+.tab-panel.active{display:block;animation:fadeIn var(--transition)}
+@keyframes fadeIn{from{opacity:.6;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+
+/* Section */
+.section-label{
+  font-size:var(--fs-sm);color:var(--gold);margin:var(--space-lg) 0 var(--space-sm);
+  padding-bottom:var(--space-sm);border-bottom:1px solid var(--border);
+  letter-spacing:.03em;cursor:pointer;display:flex;justify-content:space-between;align-items:center;
+  transition:color var(--transition)
+}
+.section-label:active{color:var(--gold2)}
+.section-label .arrow{font-size:10px;transition:transform var(--transition)}
+.section-body{overflow:hidden;transition:max-height .3s ease-out}
+.section-body.hidden{max-height:0!important}
 
 /* Form */
-.section-label{font-size:13px;color:var(--gold);margin:16px 0 8px;padding-bottom:6px;border-bottom:1px solid var(--border);letter-spacing:.5px;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
-.section-label .arrow{transition:transform .2s;font-size:11px}
-.section-label.collapsed .arrow{transform:rotate(-90deg)}
-.section-body{overflow:hidden;transition:max-height .3s}
-.section-body.hidden{max-height:0!important}
-.form-group{margin-bottom:10px}
-.form-group label{display:block;font-size:12px;color:var(--muted);margin-bottom:4px}
-.form-row{display:flex;gap:8px}
+.form-group{margin-bottom:var(--space-md)}
+.form-group label{display:block;font-size:var(--fs-xs);color:var(--muted);margin-bottom:var(--space-xs);letter-spacing:.03em;font-weight:500;text-transform:uppercase}
+.form-row{display:flex;gap:var(--space-sm)}
 .form-row .form-group{flex:1}
-input,select,textarea{width:100%;background:var(--card2);border:1px solid var(--border);color:var(--text);padding:9px 10px;border-radius:9px;font-size:15px;outline:none;transition:border .2s}
-input:focus,select:focus,textarea:focus{border-color:var(--gold)}
-input::placeholder,textarea::placeholder{color:#555}
-textarea{resize:vertical;min-height:50px;font-family:inherit}
-select{-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M6 8L1 3h10z' fill='%238b8d9a'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px}
-.toggle-row{display:flex;gap:8px}
-.toggle-btn{flex:1;padding:10px;text-align:center;border-radius:9px;border:1px solid var(--border);background:var(--card2);color:var(--muted);font-size:14px;cursor:pointer;transition:all .2s}
-.toggle-btn.on{background:var(--green);color:#fff;border-color:var(--green)}
-.toggle-btn.off{background:var(--red);color:#fff;border-color:var(--red)}
-.save-btn{width:100%;padding:13px;background:var(--gold);color:#0f1117;border:none;border-radius:11px;font-size:16px;font-weight:600;cursor:pointer;letter-spacing:.5px}
-.save-btn:active{opacity:.85}
-.save-btn.small{font-size:14px;padding:10px}
-.today-badge{font-size:11px;padding:3px 8px;border-radius:10px;background:rgba(91,185,140,.15);color:var(--green)}
+input,select,textarea{
+  width:100%;background:var(--card);border:1px solid var(--border);
+  color:var(--text);padding:10px var(--space-md);border-radius:var(--radius-sm);
+  font-size:var(--fs-base);font-family:inherit;outline:none;
+  transition:border-color var(--transition),box-shadow var(--transition)
+}
+input:focus,select:focus,textarea:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,169,110,.1)}
+input::placeholder,textarea::placeholder{color:rgba(148,163,184,.4)}
+textarea{resize:vertical;min-height:52px}
+select{
+  -webkit-appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M6 8L1 3h10z' fill='%2394a3b8'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 12px center;padding-right:32px
+}
 
-/* Dashboard */
-.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
-.stat-card{background:var(--card);border-radius:11px;padding:13px;text-align:center;border:1px solid var(--border)}
-.stat-card .value{font-size:24px;font-weight:700}
-.stat-card .label{font-size:10px;color:var(--muted);margin-top:3px}
+/* Toggle buttons */
+.toggle-row{display:flex;gap:var(--space-sm)}
+.toggle-btn{
+  flex:1;padding:11px;text-align:center;border-radius:var(--radius-sm);
+  border:1px solid var(--border);background:var(--card);color:var(--muted);
+  font-size:var(--fs-sm);font-family:inherit;cursor:pointer;
+  transition:all var(--transition)
+}
+.toggle-btn:active{transform:scale(.97)}
+.toggle-btn.on{background:rgba(74,222,128,.15);color:var(--green);border-color:rgba(74,222,128,.3)}
+.toggle-btn.off{background:rgba(248,113,113,.15);color:var(--red);border-color:rgba(248,113,113,.3)}
+
+/* Save button */
+.save-btn{
+  width:100%;padding:13px;background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:var(--bg);border:none;border-radius:var(--radius);font-size:var(--fs-base);
+  font-weight:600;font-family:inherit;cursor:pointer;letter-spacing:.02em;
+  transition:opacity var(--transition),transform var(--transition);margin-top:var(--space-sm)
+}
+.save-btn:active{opacity:.85;transform:scale(.98)}
+.save-btn.small{font-size:var(--fs-sm);padding:11px}
+
+/* Badge */
+.today-badge{font-size:10px;padding:2px 8px;border-radius:20px;background:rgba(74,222,128,.12);color:var(--green);font-weight:500}
+
+/* Stats grid */
+.stat-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:var(--space-sm);margin-bottom:var(--space-sm)}
+.stat-card{
+  background:var(--card);border-radius:var(--radius);padding:var(--space-md);
+  text-align:center;border:1px solid var(--border);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  transition:border-color var(--transition)
+}
+.stat-card .value{font-size:var(--fs-xl);font-weight:600;letter-spacing:-.01em;transition:color var(--transition)}
+.stat-card .label{font-size:var(--fs-xs);color:var(--muted);margin-top:2px;letter-spacing:.03em}
 .stat-card.good .value{color:var(--green)}.stat-card.warn .value{color:var(--amber)}.stat-card.bad .value{color:var(--red)}
-.chart-box{background:var(--card);border-radius:11px;padding:12px;margin-bottom:8px;border:1px solid var(--border)}
-.chart-box .chart-title{font-size:12px;color:var(--gold);margin-bottom:8px}
+
+/* Charts */
+.chart-box{
+  background:var(--card);border-radius:var(--radius);padding:var(--space-md);
+  margin-bottom:var(--space-sm);border:1px solid var(--border);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)
+}
+.chart-box .chart-title{font-size:var(--fs-xs);color:var(--gold);margin-bottom:var(--space-sm);letter-spacing:.03em;font-weight:500;text-transform:uppercase}
 .chart-box canvas{width:100%!important;height:160px!important}
 
-/* Supplements timeline */
-.timeline{position:relative;padding-left:24px}
-.timeline::before{content:'';position:absolute;left:8px;top:4px;bottom:4px;width:2px;background:var(--border)}
-.tl-item{position:relative;margin-bottom:18px;padding-left:10px}
-.tl-item::before{content:'';position:absolute;left:-20px;top:6px;width:12px;height:12px;border-radius:50%;background:var(--gold);border:2px solid var(--bg)}
-.tl-item .tl-time{font-size:11px;color:var(--gold);margin-bottom:2px}
-.tl-item .tl-content{font-size:13px;line-height:1.6}
-.tl-check{cursor:pointer;font-size:12px;color:var(--muted);margin-top:3px;display:inline-block;padding:3px 8px;border-radius:6px;border:1px solid var(--border)}
-.tl-check.done{color:var(--green);border-color:var(--green);background:rgba(91,185,140,.1)}
+/* Timeline */
+.timeline{position:relative;padding-left:28px}
+.timeline::before{content:'';position:absolute;left:9px;top:6px;bottom:6px;width:1.5px;background:linear-gradient(to bottom,var(--gold),transparent)}
+.tl-item{position:relative;margin-bottom:var(--space-xl);padding-left:12px}
+.tl-item::before{content:'';position:absolute;left:-22px;top:6px;width:10px;height:10px;border-radius:50%;background:var(--gold);border:2px solid var(--bg)}
+.tl-item .tl-time{font-size:var(--fs-xs);color:var(--gold);margin-bottom:2px;font-weight:500;letter-spacing:.03em;text-transform:uppercase}
+.tl-item .tl-content{font-size:var(--fs-sm);line-height:1.7}
+.tl-check{
+  cursor:pointer;font-size:var(--fs-xs);color:var(--muted);margin-top:var(--space-xs);
+  display:inline-block;padding:4px 10px;border-radius:6px;border:1px solid var(--border);
+  transition:all var(--transition)
+}
+.tl-check:active{transform:scale(.95)}
+.tl-check.done{color:var(--green);border-color:rgba(74,222,128,.3);background:rgba(74,222,128,.08)}
 
-/* Habits */
-.habit-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px}
-.habit-card{background:var(--card);border-radius:13px;padding:14px 8px;text-align:center;border:1px solid var(--border)}
-.habit-card .ring{width:65px;height:65px;margin:0 auto 6px;position:relative}
+/* Habit rings */
+.habit-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:var(--space-sm)}
+.habit-card{
+  background:var(--card);border-radius:var(--radius);padding:var(--space-md) var(--space-sm);
+  text-align:center;border:1px solid var(--border);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)
+}
+.habit-card .ring{width:60px;height:60px;margin:0 auto var(--space-xs)}
 .habit-card .ring canvas{width:100%!important;height:100%!important}
-.habit-card .h-title{font-size:12px;color:var(--text)}
+.habit-card .h-title{font-size:var(--fs-xs);color:var(--text);font-weight:500}
 .habit-card .h-sub{font-size:10px;color:var(--muted);margin-top:1px}
 
 /* Team prescriptions */
-.rx-card{background:var(--card);border-radius:13px;padding:14px;margin-bottom:10px;border:1px solid var(--border)}
-.rx-card .rx-header{display:flex;align-items:center;gap:8px;margin-bottom:8px}
-.rx-card .rx-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;background:var(--card2)}
-.rx-card .rx-name{font-size:14px;font-weight:600;color:var(--gold)}
-.rx-card .rx-body{font-size:13px;line-height:1.7;color:var(--text)}
-.rx-card .rx-body .rx-line{margin-bottom:4px}
+.rx-card{
+  background:var(--card);border-radius:var(--radius);padding:var(--space-lg);
+  margin-bottom:var(--space-md);border:1px solid var(--border);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  transition:border-color var(--transition)
+}
+.rx-card:hover{border-color:rgba(201,169,110,.25)}
+.rx-card .rx-header{display:flex;align-items:center;gap:10px;margin-bottom:var(--space-md)}
+.rx-card .rx-avatar{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;background:var(--card2)}
+.rx-card .rx-name{font-size:var(--fs-sm);font-weight:600;color:var(--gold)}
+.rx-card .rx-body{font-size:var(--fs-sm);line-height:1.8;color:var(--text)}
+.rx-card .rx-line{padding:2px 0;padding-left:var(--space-md);position:relative}
+.rx-card .rx-line::before{content:'';position:absolute;left:0;top:12px;width:4px;height:4px;border-radius:50%;background:var(--gold);opacity:.5}
 
 /* Nav */
-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:var(--card);border-top:1px solid var(--border);display:flex;z-index:100;padding:6px 0 env(safe-area-inset-bottom,6px)}
-nav .nav-item{flex:1;text-align:center;color:var(--muted);font-size:10px;padding:4px 0;cursor:pointer;transition:all .2s}
-nav .nav-item .icon{font-size:20px;display:block;margin-bottom:1px}
+nav{
+  position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;
+  background:rgba(15,23,42,.92);border-top:1px solid var(--border);
+  display:flex;z-index:100;padding:var(--space-sm) 0 env(safe-area-inset-bottom,8px);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)
+}
+nav .nav-item{
+  flex:1;text-align:center;color:var(--muted);font-size:10px;
+  padding:var(--space-xs) 0;cursor:pointer;
+  transition:color var(--transition),transform var(--transition)
+}
+nav .nav-item:active{transform:scale(.94)}
+nav .nav-item .nav-icon{display:block;margin:0 auto 2px;width:22px;height:22px;opacity:.55;transition:opacity var(--transition)}
 nav .nav-item.active{color:var(--gold)}
+nav .nav-item.active .nav-icon{opacity:1}
 
-.toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:var(--green);color:#fff;padding:10px 24px;border-radius:20px;font-size:14px;z-index:200;opacity:0;transition:opacity .3s;pointer-events:none}
+/* Toast */
+.toast{
+  position:fixed;top:20px;left:50%;transform:translateX(-50%);background:var(--green);
+  color:var(--bg);padding:10px 24px;border-radius:24px;font-size:var(--fs-sm);font-weight:600;
+  z-index:200;opacity:0;transition:opacity var(--transition);pointer-events:none
+}
 .toast.show{opacity:1}
+
+/* Supplement checkbox */
+.supp-row{display:flex;align-items:center;gap:10px;margin-bottom:6px;cursor:pointer;padding:4px 0;transition:opacity var(--transition)}
+.supp-row:active{opacity:.7}
+.supp-row .supp-icon{font-size:16px;width:22px;text-align:center;flex-shrink:0;transition:transform var(--transition)}
+.supp-row.done .supp-icon{transform:scale(1.15)}
+.supp-row .supp-label{font-size:var(--fs-sm);transition:color var(--transition),text-decoration var(--transition)}
+.supp-row.done .supp-label{text-decoration:line-through;color:var(--muted)}
+.supp-checkbox{width:20px;height:20px;border-radius:6px;border:1.5px solid var(--border);flex-shrink:0;transition:all var(--transition);display:flex;align-items:center;justify-content:center}
+.supp-row.done .supp-checkbox{border-color:var(--green);background:rgba(74,222,128,.15)}
+.supp-row.done .supp-checkbox::after{content:'✓';font-size:11px;color:var(--green);font-weight:700}
 </style>
 </head>
 <body>
 
 <header>
-  <h1>🏯 御医看板</h1>
+  <h1>
+    <svg class="logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2"/><line x1="12" y1="12" x2="12" y2="15"/><circle cx="12" cy="16" r="1"/></svg>
+    御医看板
+  </h1>
   <div class="date" id="headerDate"></div>
 </header>
 
-<!-- ── Tab 1: 录入 ── -->
-<div class="tab-panel active" id="tab-entry">
-  <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
-    <input type="date" id="entryDate" style="width:auto;font-size:13px;padding:7px 10px" onchange="loadDayData()">
-    <span style="font-size:12px;color:var(--muted)" id="entryWeekday"></span>
+<!-- ── Tab 1: Entry ── -->
+<div class="tab-panel active" id="tab-entry" style="padding-bottom:var(--space-xl)">
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:var(--space-md)">
+    <input type="date" id="entryDate" style="width:auto;font-size:var(--fs-sm);padding:8px 12px" onchange="loadDayData()">
+    <span style="font-size:var(--fs-xs);color:var(--muted)" id="entryWeekday"></span>
     <span class="today-badge" id="todayBadge" style="display:none">今天</span>
   </div>
 
-  <!-- 晨检 -->
-  <div class="section-label" onclick="toggleSection('sec-morning')">☀️ 晨检数据 <span class="arrow">▼</span></div>
+  <div class="section-label" onclick="toggleSection('sec-morning')">☀️ 晨检数据 <span class="arrow">▾</span></div>
   <div class="section-body" id="sec-morning">
     <div class="form-row">
       <div class="form-group"><label>清醒时间 (min)</label><input type="number" id="awakeTime" placeholder="33" inputmode="numeric"></div>
@@ -119,42 +226,40 @@ nav .nav-item.active{color:var(--gold)}
       <div class="form-group"><label>入睡时间</label><input type="time" id="bedtime"></div>
       <div class="form-group"><label>起床时间</label><input type="time" id="wakeTime"></div>
     </div>
-    <div class="form-group" style="font-size:12px;color:var(--muted)">总睡眠自动算：（核心+深睡+REM）÷60</div>
     <div class="form-row">
       <div class="form-group"><label>心率 (bpm)</label><input type="number" id="heartRate" placeholder="74" inputmode="numeric"></div>
       <div class="form-group"><label>HRV (ms)</label><input type="number" id="hrv" placeholder="可选" inputmode="numeric"></div>
       <div class="form-group"><label>体重 (kg)</label><input type="number" id="weight" placeholder="84.0" step="0.1" inputmode="decimal"></div>
     </div>
     <div class="form-row">
-      <div class="form-group"><label>📱 睡前刷手机 (min)</label><input type="number" id="shortVideo" placeholder="30" inputmode="numeric"></div>
-      <div class="form-group"><label>🔒 内守 第</label><input type="number" id="abstinence" placeholder="天" inputmode="numeric"></div>
+      <div class="form-group"><label>睡前刷手机 (min)</label><input type="number" id="shortVideo" placeholder="30" inputmode="numeric"></div>
+      <div class="form-group"><label>内守 第</label><input type="number" id="abstinence" placeholder="天" inputmode="numeric"></div>
     </div>
-    <div class="form-group"><label>😰 焦虑 (1-10)</label><input type="number" id="anxiety" placeholder="5" min="0" max="10" inputmode="numeric"></div>
-    <div class="form-group"><label>💬 感受</label><input type="text" id="feeling" placeholder="一句话..."></div>
-    <button class="save-btn small" onclick="saveSection('morning')">💾 保存晨检</button>
+    <div class="form-group"><label>焦虑 (1-10)</label><input type="number" id="anxiety" placeholder="5" min="0" max="10" inputmode="numeric"></div>
+    <div class="form-group"><label>感受</label><input type="text" id="feeling" placeholder="一句话概括今天的状态..."></div>
+    <div style="font-size:var(--fs-xs);color:var(--muted);padding:4px 0">自动计算: 总睡眠 = (核心+深睡+REM) ÷ 60</div>
+    <button class="save-btn small" onclick="saveSection('morning')">保存晨检</button>
   </div>
 
-  <!-- 饮食 -->
-  <div class="section-label" onclick="toggleSection('sec-diet')">🍽️ 饮食记录 <span class="arrow">▼</span></div>
+  <div class="section-label" onclick="toggleSection('sec-diet')">🍽️ 饮食记录 <span class="arrow">▾</span></div>
   <div class="section-body" id="sec-diet">
-    <div class="form-group"><label>🥊 拳击前（如有）</label><input type="text" id="preBoxingFood" placeholder="半根香蕉+黑咖啡"></div>
-    <div class="form-group"><label>🍱 午餐</label><textarea id="lunch" placeholder="牛丸牛杂粿条 ~570kcal 34g蛋白" rows="2"></textarea></div>
-    <div class="form-group"><label>🍲 晚餐</label><textarea id="dinner" placeholder="沙姜鸡套餐 ~620kcal 60g蛋白" rows="2"></textarea></div>
+    <div class="form-group"><label>拳击前（如有）</label><input type="text" id="preBoxingFood" placeholder="半根香蕉 + 黑咖啡"></div>
+    <div class="form-group"><label>午餐</label><textarea id="lunch" placeholder="牛丸牛杂粿条 ~570kcal 34g蛋白" rows="2"></textarea></div>
+    <div class="form-group"><label>晚餐</label><textarea id="dinner" placeholder="沙姜鸡套餐 ~620kcal 60g蛋白" rows="2"></textarea></div>
     <div style="display:flex;gap:8px">
-      <div class="form-group" style="flex:1"><label>⏰ 开窗</label><input type="time" id="fastingStart"></div>
-      <div class="form-group" style="flex:1"><label>🔒 关窗</label><input type="time" id="fastingEnd"></div>
+      <div class="form-group" style="flex:1"><label>开窗</label><input type="time" id="fastingStart"></div>
+      <div class="form-group" style="flex:1"><label>关窗</label><input type="time" id="fastingEnd"></div>
     </div>
-    <button class="save-btn small" onclick="saveSection('diet')">💾 保存饮食</button>
+    <button class="save-btn small" onclick="saveSection('diet')">保存饮食</button>
   </div>
 
-  <!-- 训练 -->
-  <div class="section-label" onclick="toggleSection('sec-training')">🥊 训练记录 <span class="arrow">▼</span></div>
+  <div class="section-label" onclick="toggleSection('sec-training')">🥊 训练记录 <span class="arrow">▾</span></div>
   <div class="section-body" id="sec-training">
     <div class="toggle-row">
-      <div class="toggle-btn" id="btnBoxing" onclick="toggleBtn('boxing')">🥊 拳击</div>
-      <div class="toggle-btn" id="btnFasting" onclick="toggleBtn('fasting')">⏰ 断食</div>
+      <div class="toggle-btn" id="btnBoxing" onclick="toggleBtn('boxing')">拳击</div>
+      <div class="toggle-btn" id="btnFasting" onclick="toggleBtn('fasting')">断食</div>
     </div>
-    <div class="form-row" style="margin-top:10px">
+    <div class="form-row" style="margin-top:var(--space-md)">
       <div class="form-group"><label>时长 (min)</label><input type="number" id="trainingDur" placeholder="60" inputmode="numeric"></div>
       <div class="form-group"><label>热量 (kcal)</label><input type="number" id="trainingCal" placeholder="600" inputmode="numeric"></div>
     </div>
@@ -162,55 +267,66 @@ nav .nav-item.active{color:var(--gold)}
       <div class="form-group"><label>最高心率</label><input type="number" id="trainingMaxHR" placeholder="171" inputmode="numeric"></div>
       <div class="form-group"><label>平均心率</label><input type="number" id="trainingAvgHR" placeholder="118" inputmode="numeric"></div>
     </div>
-    <button class="save-btn small" onclick="saveSection('training')">💾 保存训练</button>
+    <button class="save-btn small" onclick="saveSection('training')">保存训练</button>
   </div>
 </div>
 
-<!-- ── Tab 2: 看板 ── -->
+<!-- ── Tab 2: Dashboard ── -->
 <div class="tab-panel" id="tab-dashboard">
   <div class="stat-grid" id="todayStats"></div>
-  <div class="chart-box"><div class="chart-title">⚖️ 体重趋势 (15天)</div><canvas id="chartWeight"></canvas></div>
-  <div class="chart-box"><div class="chart-title">🌙 睡眠时长 (7天)</div><canvas id="chartSleep"></canvas></div>
-  <div class="chart-box"><div class="chart-title">💤 深睡趋势 (7天)</div><canvas id="chartDeep"></canvas></div>
-  <div class="chart-box"><div class="chart-title">❤️ 静息心率 (7天)</div><canvas id="chartHR"></canvas></div>
+  <div class="chart-box"><div class="chart-title">体重趋势 · 15天</div><canvas id="chartWeight"></canvas></div>
+  <div class="chart-box"><div class="chart-title">睡眠时长 · 7天</div><canvas id="chartSleep"></canvas></div>
+  <div class="chart-box"><div class="chart-title">深睡趋势 · 7天</div><canvas id="chartDeep"></canvas></div>
+  <div class="chart-box"><div class="chart-title">静息心率 · 7天</div><canvas id="chartHR"></canvas></div>
 </div>
 
-<!-- ── Tab 3: 补剂 ── -->
+<!-- ── Tab 3: Supplements ── -->
 <div class="tab-panel" id="tab-supplements">
   <div class="timeline" id="suppTimeline"></div>
 </div>
 
-<!-- ── Tab 4: 习惯 ── -->
+<!-- ── Tab 4: Habits ── -->
 <div class="tab-panel" id="tab-habits">
   <div class="habit-grid" id="habitRings"></div>
-  <div style="margin-top:12px;font-size:12px;color:var(--muted)" id="weekDetail"></div>
+  <div style="margin-top:var(--space-lg);font-size:var(--fs-xs);color:var(--muted)" id="weekDetail"></div>
 </div>
 
-<!-- ── Tab 5: 团队 ── -->
+<!-- ── Tab 5: Team ── -->
 <div class="tab-panel" id="tab-team">
-  <div style="font-size:13px;color:var(--muted);margin-bottom:12px;text-align:center">今日处方 · 数据驱动 · 每日更新</div>
+  <div style="font-size:var(--fs-xs);color:var(--muted);margin-bottom:var(--space-lg);text-align:center;letter-spacing:.03em">每日处方 · 数据驱动 · 晨检同步</div>
   <div id="teamRx"></div>
 </div>
 
 <nav>
-  <div class="nav-item active" onclick="switchTab('entry',this)"><span class="icon">📝</span>录入</div>
-  <div class="nav-item" onclick="switchTab('dashboard',this)"><span class="icon">📊</span>看板</div>
-  <div class="nav-item" onclick="switchTab('supplements',this)"><span class="icon">💊</span>补剂</div>
-  <div class="nav-item" onclick="switchTab('habits',this)"><span class="icon">🎯</span>习惯</div>
-  <div class="nav-item" onclick="switchTab('team',this)"><span class="icon">🏯</span>团队</div>
+  <div class="nav-item active" onclick="switchTab('entry',this)">
+    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>录入
+  </div>
+  <div class="nav-item" onclick="switchTab('dashboard',this)">
+    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>看板
+  </div>
+  <div class="nav-item" onclick="switchTab('supplements',this)">
+    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>补剂
+  </div>
+  <div class="nav-item" onclick="switchTab('habits',this)">
+    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>习惯
+  </div>
+  <div class="nav-item" onclick="switchTab('team',this)">
+    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>团队
+  </div>
 </nav>
+
 <div class="toast" id="toast"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
 // ── State ──
 const STORAGE_KEY='imperial_health_data';
-let boxingVal=null,fastingVal=null;
+const SUPP_STORAGE='imperial_supp_checks';
+let BASE_DATA=[],PRESCRIPTIONS={},boxingVal=null,fastingVal=null,charts={};
 
 // ── Data ──
-let BASE_DATA=[],PRESCRIPTIONS={};
 async function loadBaseData(){
-  try{const r=await fetch('data.json');if(r.ok)BASE_DATA=await r.json()}catch(e){}
+  try{const r=await fetch('data.json');if(r.ok)BASE_DATA=await r.json()}catch(e){console.warn('data.json unavailable, using localStorage only')}
   try{const r=await fetch('prescriptions.json');if(r.ok)PRESCRIPTIONS=await r.json()}catch(e){}
 }
 function loadData(){
@@ -234,16 +350,16 @@ async function init(){
 function updateWeekday(){
   const d=new Date(document.getElementById('entryDate').value);
   document.getElementById('entryWeekday').textContent='星期'+['日','一','二','三','四','五','六'][d.getDay()];
-  const badge=document.getElementById('todayBadge');
-  badge.style.display=document.getElementById('entryDate').value===today()?'inline':'none';
+  document.getElementById('todayBadge').style.display=document.getElementById('entryDate').value===today()?'inline':'none';
 }
 
-// ── Load day ──
+// ── Load day data ──
 function loadDayData(){
   const date=document.getElementById('entryDate').value;
   const data=getData();const e=data.find(d=>d.date===date);
-  const fields=['awakeTime','coreSleep','deepSleep','remSleep','heartRate','hrv','weight','shortVideo','abstinence','anxiety','feeling','bedtime','wakeTime','lunch','dinner','preBoxingFood','fastingStart','fastingEnd','trainingDur','trainingCal','trainingMaxHR','trainingAvgHR'];
-  fields.forEach(f=>{const el=document.getElementById(f);if(el){el.value=e&&e[f]!==undefined?e[f]:'';if(f==='lunch'||f==='dinner')el.value=e&&e[f]||''}});
+  'awakeTime,coreSleep,deepSleep,remSleep,heartRate,hrv,weight,shortVideo,abstinence,anxiety,feeling,bedtime,wakeTime,lunch,dinner,preBoxingFood,fastingStart,fastingEnd,trainingDur,trainingCal,trainingMaxHR,trainingAvgHR'.split(',').forEach(f=>{
+    const el=document.getElementById(f);if(el)el.value=e&&e[f]!==undefined?e[f]:'';
+  });
   boxingVal=e&&e.boxing!==undefined?e.boxing:null;updateToggleUI('btnBoxing',boxingVal);
   fastingVal=e&&e.fasting!==undefined?e.fasting:null;updateToggleUI('btnFasting',fastingVal);
 }
@@ -254,84 +370,74 @@ function toggleBtn(type){
   else{fastingVal=fastingVal===true?false:fastingVal===false?null:true;updateToggleUI('btnFasting',fastingVal)}
 }
 function updateToggleUI(id,val){
-  const el=document.getElementById(id);
-  el.classList.remove('on','off');
-  if(val===true){el.classList.add('on');el.textContent=id==='btnBoxing'?'🥊 ✅':'⏰ ✅'}
-  else if(val===false){el.classList.add('off');el.textContent=id==='btnBoxing'?'🥊 ❌':'⏰ ❌'}
-  else{el.textContent=id==='btnBoxing'?'🥊 拳击':'⏰ 断食'}
+  const el=document.getElementById(id);el.classList.remove('on','off');
+  if(val===true){el.classList.add('on');el.textContent=id==='btnBoxing'?'拳击 ✅':'断食 ✅'}
+  else if(val===false){el.classList.add('off');el.textContent=id==='btnBoxing'?'拳击 ❌':'断食 ❌'}
+  else{el.textContent=id==='btnBoxing'?'拳击':'断食'}
 }
 
-// ── Section collapse ──
-function toggleSection(id){document.getElementById(id).classList.toggle('hidden');}
+// ── Sections ──
+function toggleSection(id){document.getElementById(id).classList.toggle('hidden')}
 
-// ── Save sections ──
+// ── Save ──
 function saveSection(section){
   const date=document.getElementById('entryDate').value;
-  let data=getData();let entry=data.find(d=>d.date===date);
-  if(!entry){entry={date};data.push(entry)}
-
+  let data=getData();let entry=data.find(d=>d.date===date);if(!entry){entry={date};data.push(entry)}
   if(section==='morning'){
-    const f=['awakeTime','coreSleep','deepSleep','remSleep','heartRate','hrv','weight','shortVideo','abstinence','anxiety','feeling','bedtime','wakeTime'];
+    const f='awakeTime,coreSleep,deepSleep,remSleep,heartRate,hrv,weight,shortVideo,abstinence,anxiety,feeling,bedtime,wakeTime'.split(',');
     f.forEach(k=>{const v=document.getElementById(k)?.value;if(v!==''&&v!==undefined){entry[k]=k==='feeling'||k==='bedtime'||k==='wakeTime'?v:parseFloat(v)||parseInt(v)||v}else delete entry[k]});
-    // Auto-calculate total sleep from components
     const core=parseInt(document.getElementById('coreSleep')?.value)||0;
     const deep=parseInt(document.getElementById('deepSleep')?.value)||0;
     const rem=parseInt(document.getElementById('remSleep')?.value)||0;
     if(core+deep+rem>0)entry.sleepTotal=Math.round((core+deep+rem)/0.6)/100;
   }
-  if(section==='diet'){
-    ['lunch','dinner','preBoxingFood','fastingStart','fastingEnd'].forEach(k=>{const v=document.getElementById(k)?.value;if(v!==''&&v!==undefined)entry[k]=v;else delete entry[k]});
-  }
+  if(section==='diet'){'lunch,dinner,preBoxingFood,fastingStart,fastingEnd'.split(',').forEach(k=>{const v=document.getElementById(k)?.value;if(v!==''&&v!==undefined)entry[k]=v;else delete entry[k]})}
   if(section==='training'){
     entry.boxing=boxingVal;entry.fasting=fastingVal;
-    ['trainingDur','trainingCal','trainingMaxHR','trainingAvgHR'].forEach(k=>{const v=document.getElementById(k)?.value;if(v!==''&&v!==undefined)entry[k]=parseInt(v)||0;else delete entry[k]});
+    'trainingDur,trainingCal,trainingMaxHR,trainingAvgHR'.split(',').forEach(k=>{const v=document.getElementById(k)?.value;if(v!==''&&v!==undefined)entry[k]=parseInt(v)||0;else delete entry[k]});
   }
-
-  data.sort((a,b)=>a.date.localeCompare(b.date));
-  saveData(data);
-  showToast('✅ '+{morning:'晨检',diet:'饮食',training:'训练'}[section]+'已保存');
+  data.sort((a,b)=>a.date.localeCompare(b.date));saveData(data);
+  showToast('已保存: '+{morning:'晨检',diet:'饮食',training:'训练'}[section]);
   renderDashboard();renderHabits();renderSupplements();renderTeam();
 }
 
 // ── Dashboard ──
-let charts={};
 function renderDashboard(){
   const data=getData();const td=today();const t=data.find(d=>d.date===td)||data[data.length-1];
-  if(!t){document.getElementById('todayStats').innerHTML='<div style="grid-column:span 2;text-align:center;color:var(--muted);padding:20px">暂无数据</div>';return}
+  if(!t){document.getElementById('todayStats').innerHTML='<div style="grid-column:span 3;text-align:center;color:var(--muted);padding:20px">暂无数据</div>';return}
   const s=t.sleepTotal?Number(t.sleepTotal).toFixed(1):'--';const d=t.deepSleep||'--';const h=t.heartRate||'--';const w=t.weight||'--';
   const dc=typeof t.deepSleep=='number'?(t.deepSleep<20?'bad':t.deepSleep<35?'warn':'good'):'';
   const hc=typeof t.heartRate=='number'?(t.heartRate>80?'warn':t.heartRate<55?'warn':'good'):'';
-  const bx=t.boxing===true?'🥊':t.boxing===false?'❌':'—';
+  const bx=t.boxing===true?'✅':t.boxing===false?'❌':'—';
+  const ax=t.anxiety||'—';
   document.getElementById('todayStats').innerHTML=`
     <div class="stat-card"><div class="value">${s}h</div><div class="label">总睡眠</div></div>
-    <div class="stat-card ${dc}"><div class="value">${d}min</div><div class="label">深睡</div></div>
-    <div class="stat-card ${hc}"><div class="value">${h}</div><div class="label">心率 bpm</div></div>
+    <div class="stat-card ${dc}"><div class="value">${d}m</div><div class="label">深睡</div></div>
+    <div class="stat-card ${hc}"><div class="value">${h}</div><div class="label">心率</div></div>
     <div class="stat-card"><div class="value">${w}</div><div class="label">体重 kg</div></div>
     <div class="stat-card"><div class="value">${bx}</div><div class="label">拳击</div></div>
-    <div class="stat-card"><div class="value">${t.anxiety||'—'}</div><div class="label">焦虑 /10</div></div>`;
+    <div class="stat-card"><div class="value">${ax}</div><div class="label">焦虑 /10</div></div>`;
   const lastN=(d,n)=>{const a=d.filter(x=>x.date).sort((a,b)=>a.date.localeCompare(b.date));return a.slice(-n)};
-  renderChart('chartWeight',lastN(data,15).filter(x=>x.weight).map(x=>({x:x.date,y:x.weight})),{min:70,max:88});
-  renderChart('chartSleep',lastN(data,7).filter(x=>x.sleepTotal).map(x=>({x:x.date,y:x.sleepTotal})),{min:4,max:9});
-  renderChart('chartDeep',lastN(data,7).filter(x=>x.deepSleep).map(x=>({x:x.date,y:x.deepSleep})),{min:0,max:60});
-  renderChart('chartHR',lastN(data,7).filter(x=>x.heartRate).map(x=>({x:x.date,y:x.heartRate})),{min:50,max:100});
+  renderChart('chartWeight',lastN(data,15).filter(x=>x.weight).map(x=>({x:x.date,y:x.weight})),{min:70,max:88},'kg');
+  renderChart('chartSleep',lastN(data,7).filter(x=>x.sleepTotal).map(x=>({x:x.date,y:x.sleepTotal})),{min:4,max:9},'h');
+  renderChart('chartDeep',lastN(data,7).filter(x=>x.deepSleep).map(x=>({x:x.date,y:x.deepSleep})),{min:0,max:60},'min');
+  renderChart('chartHR',lastN(data,7).filter(x=>x.heartRate).map(x=>({x:x.date,y:x.heartRate})),{min:50,max:100},'bpm');
 }
-function renderChart(id,pts,opts){
+function renderChart(id,pts,opts,unit){
   const ctx=document.getElementById(id);if(!ctx)return;if(charts[id])charts[id].destroy();
-  if(!pts.length){ctx.parentElement.innerHTML='<div class="chart-title">'+ctx.parentElement.querySelector('.chart-title')?.textContent+'</div><div style="text-align:center;color:var(--muted);padding:30px">暂无数据</div>';return}
-  charts[id]=new Chart(ctx,{type:'line',data:{labels:pts.map(p=>p.x.slice(5)),datasets:[{data:pts.map(p=>p.y),borderColor:'#c9a96e',backgroundColor:'rgba(201,169,110,.1)',fill:true,tension:.4,pointRadius:3,pointBackgroundColor:'#c9a96e',borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#8b8d9a',font:{size:9},maxTicksLimit:7},grid:{color:'rgba(139,141,154,.1)'}},y:{...opts,ticks:{color:'#8b8d9a',font:{size:9}},grid:{color:'rgba(139,141,154,.1)'}}}}});
+  if(!pts.length){ctx.parentElement.innerHTML=ctx.parentElement.innerHTML;return}
+  charts[id]=new Chart(ctx,{type:'line',data:{labels:pts.map(p=>p.x.slice(5)),datasets:[{data:pts.map(p=>p.y),borderColor:'#c9a96e',backgroundColor:'rgba(201,169,110,.08)',fill:true,tension:.4,pointRadius:3,pointBackgroundColor:'#c9a96e',borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#94a3b8',font:{size:9},maxTicksLimit:7},grid:{color:'rgba(148,163,184,.06)'}},y:{...opts,ticks:{color:'#94a3b8',font:{size:9},callback:v=>v+unit},grid:{color:'rgba(148,163,184,.06)'}}}}});
 }
 
 // ── Supplements ──
-const SUPP_STORAGE='imperial_supp_checks';
 function getSuppChecks(){try{return JSON.parse(localStorage.getItem(SUPP_STORAGE)||'{}')}catch(e){return{}}}
-function setSuppCheck(date,idx,val){const c=getSuppChecks();if(!c[date])c[date]={};c[date][idx]=val;localStorage.setItem(SUPP_STORAGE,JSON.stringify(c))}
 function renderSupplements(){
   const supps=[
-    {time:'☀️ 起床空腹',items:['☕ 黑咖啡 1杯']},
-    {time:'🕐 午餐后 (12-13点)',items:['🧠 Neuriva Ultra ×2','🐟 Omega Mini ×3','☀️ D3+K2 ×1','🔩 锌 ×1','💊 Men\'s Multi ×1']},
-    {time:'🥊 拳击后30分钟',items:['💪 ON乳清蛋白 1勺'],boxing:true},
-    {time:'🌙 晚餐后',items:['🫁 Liver Detox']},
-    {time:'🌙 睡前30分钟',items:['🌙 甘氨酸镁 200-400mg']}
+    {time:'起床空腹',items:['☕ 黑咖啡 1杯']},
+    {time:'午餐后 · 12-13点',items:['🧠 Neuriva Ultra ×2','🐟 Omega Mini ×3','☀️ D3+K2 ×1','🔩 锌 ×1','💊 Men\'s Multi ×1']},
+    {time:'拳击后 · 30分钟内',items:['💪 ON乳清蛋白 1勺'],boxing:true},
+    {time:'晚餐后',items:['🫁 Liver Detox']},
+    {time:'睡前 · 30分钟',items:['🌙 甘氨酸镁 200-400mg']}
   ];
   const td=today();const todayData=getData().find(d=>d.date===td);const isBoxing=todayData&&todayData.boxing===true;
   const checks=getSuppChecks();const tc=checks[td]||{};
@@ -339,26 +445,19 @@ function renderSupplements(){
   supps.forEach(s=>{if(s.boxing&&!isBoxing)return;
     html+=`<div class="tl-item"><div class="tl-time">${s.time}</div><div class="tl-content">`;
     s.items.forEach(it=>{
-      const cid='supp_'+gi;const checked=tc[gi]===true;
-      html+=`<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;cursor:pointer" onclick="toggleSupp('${cid}',${gi})">
-        <span id="${cid}" style="font-size:18px;width:24px;text-align:center">${checked?'✅':'⬜'}</span>
-        <span style="font-size:13px;${checked?'text-decoration:line-through;color:var(--muted)':''}">${it}</span>
+      const done=tc[gi]===true;
+      html+=`<div class="supp-row${done?' done':''}" onclick="toggleSupp(${gi})">
+        <div class="supp-checkbox"></div><span class="supp-label">${it}</span>
       </div>`;
       gi++;
     });
     html+=`</div></div>`;
   });
-  document.getElementById('suppTimeline').innerHTML=html||'<div style="text-align:center;color:var(--muted);padding:20px">加载中...</div>';
+  document.getElementById('suppTimeline').innerHTML=html||'<div style="text-align:center;color:var(--muted);padding:20px">暂无数据</div>';
 }
-function toggleSupp(cid,idx){
-  const td=today();const c=getSuppChecks();if(!c[td])c[td]={};
-  c[td][idx]=!c[td][idx];localStorage.setItem(SUPP_STORAGE,JSON.stringify(c));
-  const el=document.getElementById(cid);if(!el)return;
-  const checked=c[td][idx];
-  el.textContent=checked?'✅':'⬜';
-  const txt=el.nextElementSibling;if(txt)txt.style.textDecoration=checked?'line-through':'';
-  txt.style.color=checked?'var(--muted)':'var(--text)';
-  renderSupplements();
+function toggleSupp(idx){
+  const td=today();const c=getSuppChecks();if(!c[td])c[td]={};c[td][idx]=!c[td][idx];
+  localStorage.setItem(SUPP_STORAGE,JSON.stringify(c));renderSupplements();
 }
 
 // ── Habits ──
@@ -370,49 +469,39 @@ function renderHabits(){
   const fc=weekData.filter(d=>d.fasting===true).length;
   const svc=weekData.filter(d=>typeof d.shortVideo=='number'&&d.shortVideo<=30).length;
   const td=Math.max(1,Math.ceil((now-monday)/86400000)+1);
-  // 内守: find latest abstinence day count
   let absDays=0;for(let i=data.length-1;i>=0;i--){if(typeof data[i].abstinence=='number'){absDays=data[i].abstinence;break}}
-
   document.getElementById('habitRings').innerHTML=`
     <div class="habit-card"><div class="ring"><canvas id="ringBoxing"></canvas></div><div class="h-title">拳击 ${bc}/3</div><div class="h-sub">本周</div></div>
     <div class="habit-card"><div class="ring"><canvas id="ringFasting"></canvas></div><div class="h-title">断食 ${fc}/7</div><div class="h-sub">目标5天</div></div>
     <div class="habit-card"><div class="ring"><canvas id="ringVideo"></canvas></div><div class="h-title">睡前刷手机 ${svc}/${td}天</div><div class="h-sub">睡前≤30min</div></div>
     <div class="habit-card"><div class="ring"><canvas id="ringAbstinence"></canvas></div><div class="h-title">内守 ${absDays}/30</div><div class="h-sub">连续天数</div></div>`;
-
   let dhtml='';
-  weekData.slice().reverse().forEach(d=>{const wd=new Date(d.date).getDay();const bx=d.boxing===true?'🥊':d.boxing===false?'❌':'-';const fs=d.fasting===true?'✅':d.fasting?'⚠️':'-';const sv=typeof d.shortVideo=='number'?d.shortVideo+'min':'-';const ab=typeof d.abstinence=='number'?'🔒'+d.abstinence+'天':'-';dhtml+=`<div style="padding:5px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;font-size:12px"><span>${d.date.slice(5)} 周${'日一二三四五六'[wd]}</span><span>${bx}|${fs}|📱${sv}|${ab}</span></div>`});
+  weekData.slice().reverse().forEach(d=>{const wd=new Date(d.date).getDay();const bx=d.boxing===true?'🥊':d.boxing===false?'❌':'-';const fs=d.fasting===true?'✅':d.fasting?'⚠️':'-';const sv=typeof d.shortVideo=='number'?d.shortVideo+'min':'-';const ab=typeof d.abstinence=='number'?'🔒'+d.abstinence+'天':'-';dhtml+=`<div style="padding:6px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;font-size:var(--fs-xs)"><span>${d.date.slice(5)} 周${'日一二三四五六'[wd]}</span><span>${bx}|${fs}|📱${sv}|${ab}</span></div>`});
   document.getElementById('weekDetail').innerHTML=dhtml||'暂无数据';
-
-  setTimeout(()=>{drawRing('ringBoxing',bc,3,'#e0556a');drawRing('ringFasting',fc,7,'#d4953a');drawRing('ringVideo',svc,td,'#5bb98c');drawRing('ringAbstinence',absDays,30,'#7b9fc3')},100);
+  setTimeout(()=>{drawRing('ringBoxing',bc,3,'#f87171');drawRing('ringFasting',fc,7,'#fbbf24');drawRing('ringVideo',svc,td,'#4ade80');drawRing('ringAbstinence',absDays,30,'#94a3b8')},100);
 }
 function drawRing(cid,count,target,color){
   const c=document.getElementById(cid);if(!c||c.width)return;
-  const dpr=window.devicePixelRatio||1;const sz=70*dpr;c.width=sz;c.height=sz;c.style.width='70px';c.style.height='70px';
-  const ctx=c.getContext('2d');ctx.scale(dpr,dpr);const r=28,lw=5;
-  ctx.beginPath();ctx.arc(35,35,r,0,Math.PI*2);ctx.strokeStyle='rgba(139,141,154,.12)';ctx.lineWidth=lw;ctx.stroke();
+  const dpr=window.devicePixelRatio||1;const sz=64*dpr;c.width=sz;c.height=sz;c.style.width='64px';c.style.height='64px';
+  const ctx=c.getContext('2d');ctx.scale(dpr,dpr);const r=25,lw=4;
+  ctx.beginPath();ctx.arc(32,32,r,0,Math.PI*2);ctx.strokeStyle='rgba(148,163,184,.1)';ctx.lineWidth=lw;ctx.stroke();
   const pct=Math.min(count/target,1);
-  ctx.beginPath();ctx.arc(35,35,r,-Math.PI/2,-Math.PI/2+Math.PI*2*pct);ctx.strokeStyle=color;ctx.lineWidth=lw;ctx.lineCap='round';ctx.stroke();
-  ctx.fillStyle='#e2d5c1';ctx.font='bold 15px -apple-system';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(count,35,35);
+  ctx.beginPath();ctx.arc(32,32,r,-Math.PI/2,-Math.PI/2+Math.PI*2*pct);ctx.strokeStyle=color;ctx.lineWidth=lw;ctx.lineCap='round';ctx.stroke();
+  ctx.fillStyle='#e2e8f0';ctx.font='bold 14px Fira Sans,-apple-system,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(count,32,32);
 }
 
-// ── Team prescriptions ──
+// ── Team ──
 function renderTeam(){
   const td=today();const rx=PRESCRIPTIONS[td];
-  if(!rx){document.getElementById('teamRx').innerHTML='<div style="text-align:center;color:var(--muted);padding:30px">今日处方尚未生成<br>等待华佗晨检...</div>';return}
-  function card(name,avatar,color,lines){
-    return`<div class="rx-card"><div class="rx-header"><div class="rx-avatar">${avatar}</div><div class="rx-name" style="color:${color}">${name}</div></div><div class="rx-body">${lines.map(l=>'<div class="rx-line">'+l+'</div>').join('')}</div></div>`;
+  if(!rx){document.getElementById('teamRx').innerHTML='<div style="text-align:center;color:var(--muted);padding:32px;font-size:var(--fs-sm);line-height:1.8">今日处方尚未生成<br>等待华佗晨检同步...</div>';return}
+  function card(name,emoji,color,lines){
+    return`<div class="rx-card"><div class="rx-header"><div class="rx-avatar">${emoji}</div><div class="rx-name" style="color:${color}">${name}</div></div><div class="rx-body">${lines.map(l=>'<div class="rx-line">'+l+'</div>').join('')}</div></div>`;
   }
   const h=rx.huatuo,z=rx.zhang,r=rx.ruyi;
   document.getElementById('teamRx').innerHTML=
-    card('华佗 · 健康总管','🏥','#c9a96e',[
-      '① 身体：'+h.body,'② 饮食：'+h.diet,'③ 精力防守：'+h.energy,'④ 情绪：'+h.mood,'⚡ '+h.top1
-    ])+
-    card('张教练 · 体能','🥊','#5bb98c',[
-      '🎯 '+z.train,'🔧 课前：'+z.pre,'📅 '+z.plan
-    ])+
-    card('如意 · 营养师','🍽️','#d4953a',[
-      '🥩 蛋白质：'+r.protein,'🧂 钠：'+r.sodium,'⏰ 断食：'+r.fasting,'⚡ '+r.top1
-    ]);
+    card('华佗 · 健康总管','🏥','#c9a96e',['① 身体: '+h.body,'② 饮食: '+h.diet,'③ 精力防守: '+h.energy,'④ 情绪: '+h.mood,'⚡ '+h.top1])+
+    card('张教练 · 运动体能','🥊','#4ade80',['🎯 '+z.train,'🔧 课前: '+z.pre,'📅 '+z.plan])+
+    card('如意 · 营养师','🍽️','#fbbf24',['🥩 蛋白质: '+r.protein,'🧂 钠: '+r.sodium,'⏰ 断食: '+r.fasting,'⚡ '+r.top1]);
 }
 
 // ── Tabs ──
@@ -427,8 +516,9 @@ function switchTab(tab,el){
   if(tab==='team')renderTeam();
 }
 
+// ── Toast ──
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000);}
-function resetData(){if(confirm('确定清空所有数据？')){localStorage.removeItem(STORAGE_KEY);location.reload()}}
+function resetData(){if(confirm('确定清空所有数据？')){localStorage.removeItem(STORAGE_KEY);localStorage.removeItem(SUPP_STORAGE);location.reload()}}
 init();
 </script>
 </body>
