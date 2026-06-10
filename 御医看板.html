@@ -211,40 +211,40 @@ nav .nav-item.active .nav-emoji{transform:scale(1.1)}
   <div class="section-label" onclick="toggleSection('sec-morning')">☀️ 晨检数据 <span class="arrow">▾</span></div>
   <div class="section-body" id="sec-morning">
     <div class="form-row">
-      <div class="form-group"><label>清醒时间 (min)</label><input type="number" id="awakeTime" placeholder="33" inputmode="numeric"></div>
-      <div class="form-group"><label>快速动眼 REM (min)</label><input type="number" id="remSleep" placeholder="66" inputmode="numeric"></div>
+      <div class="form-group"><label>😳 清醒时间 (min)</label><input type="number" id="awakeTime" placeholder="33" inputmode="numeric"></div>
+      <div class="form-group"><label>👁️ 快速动眼 REM (min)</label><input type="number" id="remSleep" placeholder="66" inputmode="numeric"></div>
     </div>
     <div class="form-row">
-      <div class="form-group"><label>核心睡眠 (min)</label><input type="number" id="coreSleep" placeholder="351" inputmode="numeric"></div>
-      <div class="form-group"><label>深度睡眠 (min)</label><input type="number" id="deepSleep" placeholder="44" inputmode="numeric"></div>
+      <div class="form-group"><label>🌙 核心睡眠 (min)</label><input type="number" id="coreSleep" placeholder="351" inputmode="numeric"></div>
+      <div class="form-group"><label>💤 深度睡眠 (min)</label><input type="number" id="deepSleep" placeholder="44" inputmode="numeric"></div>
     </div>
     <div class="form-row">
-      <div class="form-group"><label>入睡时间</label><input type="time" id="bedtime"></div>
-      <div class="form-group"><label>起床时间</label><input type="time" id="wakeTime"></div>
+      <div class="form-group"><label>🛏️ 入睡时间</label><input type="time" id="bedtime"></div>
+      <div class="form-group"><label>⏰ 起床时间</label><input type="time" id="wakeTime"></div>
     </div>
     <div class="form-row">
-      <div class="form-group"><label>心率 (bpm)</label><input type="number" id="heartRate" placeholder="74" inputmode="numeric"></div>
-      <div class="form-group"><label>HRV (ms)</label><input type="number" id="hrv" placeholder="可选" inputmode="numeric"></div>
-      <div class="form-group"><label>体重 (kg)</label><input type="number" id="weight" placeholder="84.0" step="0.1" inputmode="decimal"></div>
+      <div class="form-group"><label>❤️ 心率 (bpm)</label><input type="number" id="heartRate" placeholder="74" inputmode="numeric"></div>
+      <div class="form-group"><label>📈 HRV (ms)</label><input type="number" id="hrv" placeholder="可选" inputmode="numeric"></div>
+      <div class="form-group"><label>⚖️ 体重 (kg)</label><input type="number" id="weight" placeholder="84.0" step="0.1" inputmode="decimal"></div>
     </div>
     <div class="form-row">
-      <div class="form-group"><label>睡前刷手机 (min)</label><input type="number" id="shortVideo" placeholder="30" inputmode="numeric"></div>
-      <div class="form-group"><label>内守 第</label><input type="number" id="abstinence" placeholder="天" inputmode="numeric"></div>
+      <div class="form-group"><label>📱 睡前刷手机 (min)</label><input type="number" id="shortVideo" placeholder="30" inputmode="numeric"></div>
+      <div class="form-group"><label>🔒 内守 第</label><input type="number" id="abstinence" placeholder="天" inputmode="numeric"></div>
     </div>
-    <div class="form-group"><label>焦虑 (1-10)</label><input type="number" id="anxiety" placeholder="5" min="0" max="10" inputmode="numeric"></div>
-    <div class="form-group"><label>感受</label><input type="text" id="feeling" placeholder="一句话概括今天的状态..."></div>
+    <div class="form-group"><label>😰 焦虑 (1-10)</label><input type="number" id="anxiety" placeholder="5" min="0" max="10" inputmode="numeric"></div>
+    <div class="form-group"><label>💬 感受</label><input type="text" id="feeling" placeholder="一句话概括今天的状态..."></div>
     <div style="font-size:var(--fs-xs);color:var(--muted);padding:4px 0">自动计算: 总睡眠 = (核心+深睡+REM) ÷ 60</div>
     <button class="save-btn small" onclick="saveSection('morning')">保存晨检</button>
   </div>
 
   <div class="section-label" onclick="toggleSection('sec-diet')">🍽️ 饮食记录 <span class="arrow">▾</span></div>
   <div class="section-body" id="sec-diet">
-    <div class="form-group"><label>拳击前（如有）</label><input type="text" id="preBoxingFood" placeholder="半根香蕉 + 黑咖啡"></div>
-    <div class="form-group"><label>午餐</label><textarea id="lunch" placeholder="牛丸牛杂粿条 ~570kcal 34g蛋白" rows="2"></textarea></div>
-    <div class="form-group"><label>晚餐</label><textarea id="dinner" placeholder="沙姜鸡套餐 ~620kcal 60g蛋白" rows="2"></textarea></div>
+    <div class="form-group"><label>🍌 拳击前（如有）</label><input type="text" id="preBoxingFood" placeholder="半根香蕉 + 黑咖啡"></div>
+    <div class="form-group"><label>🍱 午餐</label><textarea id="lunch" placeholder="牛丸牛杂粿条 ~570kcal 34g蛋白" rows="2"></textarea></div>
+    <div class="form-group"><label>🍲 晚餐</label><textarea id="dinner" placeholder="沙姜鸡套餐 ~620kcal 60g蛋白" rows="2"></textarea></div>
     <div style="display:flex;gap:8px">
-      <div class="form-group" style="flex:1"><label>开窗</label><input type="time" id="fastingStart"></div>
-      <div class="form-group" style="flex:1"><label>关窗</label><input type="time" id="fastingEnd"></div>
+      <div class="form-group" style="flex:1"><label>🕐 开窗</label><input type="time" id="fastingStart"></div>
+      <div class="form-group" style="flex:1"><label>🔒 关窗</label><input type="time" id="fastingEnd"></div>
     </div>
     <button class="save-btn small" onclick="saveSection('diet')">保存饮食</button>
   </div>
