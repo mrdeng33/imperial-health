@@ -64,7 +64,7 @@ select{-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg x
 .tl-check.done{color:var(--green);border-color:var(--green);background:rgba(91,185,140,.1)}
 
 /* Habits */
-.habit-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.habit-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px}
 .habit-card{background:var(--card);border-radius:13px;padding:14px 8px;text-align:center;border:1px solid var(--border)}
 .habit-card .ring{width:65px;height:65px;margin:0 auto 6px;position:relative}
 .habit-card .ring canvas{width:100%!important;height:100%!important}
@@ -127,8 +127,9 @@ nav .nav-item.active{color:var(--gold)}
     </div>
     <div class="form-row">
       <div class="form-group"><label>📱 睡前刷手机 (min)</label><input type="number" id="shortVideo" placeholder="30" inputmode="numeric"></div>
-      <div class="form-group"><label>😰 焦虑 (1-10)</label><input type="number" id="anxiety" placeholder="5" min="0" max="10" inputmode="numeric"></div>
+      <div class="form-group"><label>🔒 内守 第</label><input type="number" id="abstinence" placeholder="天" inputmode="numeric"></div>
     </div>
+    <div class="form-group"><label>😰 焦虑 (1-10)</label><input type="number" id="anxiety" placeholder="5" min="0" max="10" inputmode="numeric"></div>
     <div class="form-group"><label>💬 感受</label><input type="text" id="feeling" placeholder="一句话..."></div>
     <button class="save-btn small" onclick="saveSection('morning')">💾 保存晨检</button>
   </div>
@@ -241,7 +242,7 @@ function updateWeekday(){
 function loadDayData(){
   const date=document.getElementById('entryDate').value;
   const data=getData();const e=data.find(d=>d.date===date);
-  const fields=['awakeTime','coreSleep','deepSleep','remSleep','heartRate','hrv','weight','shortVideo','anxiety','feeling','bedtime','wakeTime','lunch','dinner','preBoxingFood','fastingStart','fastingEnd','trainingDur','trainingCal','trainingMaxHR','trainingAvgHR'];
+  const fields=['awakeTime','coreSleep','deepSleep','remSleep','heartRate','hrv','weight','shortVideo','abstinence','anxiety','feeling','bedtime','wakeTime','lunch','dinner','preBoxingFood','fastingStart','fastingEnd','trainingDur','trainingCal','trainingMaxHR','trainingAvgHR'];
   fields.forEach(f=>{const el=document.getElementById(f);if(el){el.value=e&&e[f]!==undefined?e[f]:'';if(f==='lunch'||f==='dinner')el.value=e&&e[f]||''}});
   boxingVal=e&&e.boxing!==undefined?e.boxing:null;updateToggleUI('btnBoxing',boxingVal);
   fastingVal=e&&e.fasting!==undefined?e.fasting:null;updateToggleUI('btnFasting',fastingVal);
@@ -270,7 +271,7 @@ function saveSection(section){
   if(!entry){entry={date};data.push(entry)}
 
   if(section==='morning'){
-    const f=['awakeTime','coreSleep','deepSleep','remSleep','heartRate','hrv','weight','shortVideo','anxiety','feeling','bedtime','wakeTime'];
+    const f=['awakeTime','coreSleep','deepSleep','remSleep','heartRate','hrv','weight','shortVideo','abstinence','anxiety','feeling','bedtime','wakeTime'];
     f.forEach(k=>{const v=document.getElementById(k)?.value;if(v!==''&&v!==undefined){entry[k]=k==='feeling'||k==='bedtime'||k==='wakeTime'?v:parseFloat(v)||parseInt(v)||v}else delete entry[k]});
     // Auto-calculate total sleep from components
     const core=parseInt(document.getElementById('coreSleep')?.value)||0;
@@ -369,17 +370,20 @@ function renderHabits(){
   const fc=weekData.filter(d=>d.fasting===true).length;
   const svc=weekData.filter(d=>typeof d.shortVideo=='number'&&d.shortVideo<=30).length;
   const td=Math.max(1,Math.ceil((now-monday)/86400000)+1);
+  // 内守: find latest abstinence day count
+  let absDays=0;for(let i=data.length-1;i>=0;i--){if(typeof data[i].abstinence=='number'){absDays=data[i].abstinence;break}}
 
   document.getElementById('habitRings').innerHTML=`
     <div class="habit-card"><div class="ring"><canvas id="ringBoxing"></canvas></div><div class="h-title">拳击 ${bc}/3</div><div class="h-sub">本周</div></div>
     <div class="habit-card"><div class="ring"><canvas id="ringFasting"></canvas></div><div class="h-title">断食 ${fc}/7</div><div class="h-sub">目标5天</div></div>
-    <div class="habit-card"><div class="ring"><canvas id="ringVideo"></canvas></div><div class="h-title">睡前刷手机 ${svc}/${td}天</div><div class="h-sub">睡前≤30min</div></div>`;
+    <div class="habit-card"><div class="ring"><canvas id="ringVideo"></canvas></div><div class="h-title">睡前刷手机 ${svc}/${td}天</div><div class="h-sub">睡前≤30min</div></div>
+    <div class="habit-card"><div class="ring"><canvas id="ringAbstinence"></canvas></div><div class="h-title">内守 ${absDays}/30</div><div class="h-sub">连续天数</div></div>`;
 
   let dhtml='';
-  weekData.slice().reverse().forEach(d=>{const wd=new Date(d.date).getDay();const bx=d.boxing===true?'🥊':d.boxing===false?'❌':'-';const fs=d.fasting===true?'✅':d.fasting?'⚠️':'-';const sv=typeof d.shortVideo=='number'?d.shortVideo+'min':'-';dhtml+=`<div style="padding:5px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;font-size:12px"><span>${d.date.slice(5)} 周${'日一二三四五六'[wd]}</span><span>${bx} | ${fs} | 📱${sv}</span></div>`});
+  weekData.slice().reverse().forEach(d=>{const wd=new Date(d.date).getDay();const bx=d.boxing===true?'🥊':d.boxing===false?'❌':'-';const fs=d.fasting===true?'✅':d.fasting?'⚠️':'-';const sv=typeof d.shortVideo=='number'?d.shortVideo+'min':'-';const ab=typeof d.abstinence=='number'?'🔒'+d.abstinence+'天':'-';dhtml+=`<div style="padding:5px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;font-size:12px"><span>${d.date.slice(5)} 周${'日一二三四五六'[wd]}</span><span>${bx}|${fs}|📱${sv}|${ab}</span></div>`});
   document.getElementById('weekDetail').innerHTML=dhtml||'暂无数据';
 
-  setTimeout(()=>{drawRing('ringBoxing',bc,3,'#e0556a');drawRing('ringFasting',fc,7,'#d4953a');drawRing('ringVideo',svc,td,'#5bb98c')},100);
+  setTimeout(()=>{drawRing('ringBoxing',bc,3,'#e0556a');drawRing('ringFasting',fc,7,'#d4953a');drawRing('ringVideo',svc,td,'#5bb98c');drawRing('ringAbstinence',absDays,30,'#7b9fc3')},100);
 }
 function drawRing(cid,count,target,color){
   const c=document.getElementById(cid);if(!c||c.width)return;
