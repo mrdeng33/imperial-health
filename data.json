@@ -2,7 +2,7 @@
   {
     "date": "2026-06-04",
     "weight": 86,
-    "feeling": "建档初始化",
+    "feeling": "å»ºæ¡£åå§å",
     "abstinence": 0
   },
   {
@@ -12,7 +12,7 @@
     "fasting": false,
     "shortVideo": 180,
     "abstinence": 1,
-    "feeling": "3点睡9点醒，没午睡疲惫"
+    "feeling": "3ç¹ç¡9ç¹éï¼æ²¡åç¡ç²æ«"
   },
   {
     "date": "2026-06-06",
@@ -23,9 +23,9 @@
     "fasting": true,
     "shortVideo": 15,
     "abstinence": 3,
-    "lunch": "麦当劳板烧鸡腿堡+薯条+麦乐鸡 ~1090kcal",
-    "dinner": "沙县鸡腿饭+双倍青菜 ~710kcal",
-    "feeling": "深睡仅9min，甘氨酸镁首服"
+    "lunch": "éº¦å½å³æ¿ç§é¸¡è¿å ¡+è¯æ¡+éº¦ä¹é¸¡ ~1090kcal",
+    "dinner": "æ²å¿é¸¡è¿é¥­+ååéè ~710kcal",
+    "feeling": "æ·±ç¡ä»9minï¼çæ°¨é¸éé¦æ"
   },
   {
     "date": "2026-06-07",
@@ -35,7 +35,7 @@
     "fasting": true,
     "shortVideo": 14,
     "weight": 84.1,
-    "feeling": "甘氨酸镁首夜见效！深睡9→33min"
+    "feeling": "çæ°¨é¸éé¦å¤è§æï¼æ·±ç¡9â33min"
   },
   {
     "date": "2026-06-08",
@@ -45,9 +45,9 @@
     "fasting": "half",
     "shortVideo": 120,
     "weight": 84.2,
-    "lunch": "包子×10 ~760kcal",
-    "dinner": "潮汕菜+西瓜 ~1040kcal",
-    "feeling": "入睡2:00太晚，醒后刷短视频2h",
+    "lunch": "åå­Ã10 ~760kcal",
+    "dinner": "æ½®æ±è+è¥¿ç ~1040kcal",
+    "feeling": "å¥ç¡2:00å¤ªæï¼éåå·ç­è§é¢2h",
     "bedtime": "02:00"
   },
   {
@@ -63,10 +63,10 @@
     "abstinence": 6,
     "weight": 84.2,
     "anxiety": 6,
-    "lunch": "牛丸牛杂粿条 ~570kcal 34g",
-    "dinner": "沙姜鸡套餐 ~620kcal 60g",
+    "lunch": "çä¸¸çæç²¿æ¡ ~570kcal 34g",
+    "dinner": "æ²å§é¸¡å¥é¤ ~620kcal 60g",
     "bedtime": "03:00",
-    "feeling": "入睡3:00崩溃，有希望但也焦虑"
+    "feeling": "å¥ç¡3:00å´©æºï¼æå¸æä½ä¹ç¦è"
   },
   {
     "date": "2026-06-10",
@@ -86,7 +86,12 @@
     "trainingCal": 600,
     "trainingMaxHR": 171,
     "trainingAvgHR": 118,
-    "feeling": "翻盘！拳击日600kcal，焦虑降到5",
-    "test": true
+    "feeling": "ç¿»çï¼æ³å»æ¥600kcalï¼ç¦èéå°5",
+    "test": true,
+    "aw": 33,
+    "rs": 66,
+    "cs": 351,
+    "ds": 44,
+    "fasting": null
   }
 ]
