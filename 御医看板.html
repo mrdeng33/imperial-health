@@ -542,13 +542,18 @@ async function submitToImperial(){
   entry.boxing=boxingVal;entry.fasting=fastingVal;
   const st=document.getElementById('submitStatus');
   st.textContent='⏳ 正在提交...';st.style.color='var(--amber)';
+  const ctrl=new AbortController();
+  const t=setTimeout(()=>ctrl.abort(),15000);
   try{
-    const res=await fetch(WORKER_URL+'/update',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(entry)});
+    const res=await fetch(WORKER_URL+'/update',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(entry),signal:ctrl.signal});
+    clearTimeout(t);
     const j=await res.json();
-    if(j.ok){st.textContent='✅ 已提交！华佗团队将收到数据';st.style.color='var(--green)';showToast('✅ 已提交到御医团队')}
-    else{st.textContent='❌ 提交失败: '+(j.error||'未知');st.style.color='var(--red)'}
+    if(j.ok){st.textContent='✅ 已提交！刷新看板查看结果';st.style.color='var(--green)';showToast('✅ 已提交到御医团队')}
+    else{st.textContent='❌ 失败: '+(j.error||'未知');st.style.color='var(--red)'}
   }catch(e){
-    st.textContent='❌ 网络错误，请重试';st.style.color='var(--red)';
+    clearTimeout(t);
+    if(e.name==='AbortError'){st.textContent='❌ 请求超时，检查网络后重试';st.style.color='var(--red)'}
+    else{st.textContent='❌ 网络不通: '+e.message;st.style.color='var(--red)'}
   }
 }
 
