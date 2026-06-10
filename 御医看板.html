@@ -112,11 +112,11 @@ select{
   backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)
 }
 .chart-box .chart-title{font-size:var(--fs-xs);color:var(--gold);margin-bottom:var(--space-sm);letter-spacing:.03em;font-weight:500;text-transform:uppercase}
-.chart-box canvas{width:100%!important;height:160px!important}
+.chart-box canvas{width:100%!important;height:200px!important}
 
 /* Timeline */
 .timeline{position:relative;padding-left:28px}
-.timeline::before{content:'';position:absolute;left:9px;top:6px;bottom:6px;width:1.5px;background:linear-gradient(to bottom,var(--gold),transparent)}
+.timeline::before{content:'';position:absolute;left:9px;top:6px;bottom:6px;width:1.5px;background:rgba(201,169,110,.3)}
 .tl-item{position:relative;margin-bottom:var(--space-xl);padding-left:12px}
 .tl-item::before{content:'';position:absolute;left:-22px;top:6px;width:10px;height:10px;border-radius:50%;background:var(--gold);border:2px solid var(--bg)}
 .tl-item .tl-time{font-size:var(--fs-xs);color:var(--gold);margin-bottom:2px;font-weight:500;letter-spacing:.03em;text-transform:uppercase}
@@ -211,16 +211,16 @@ nav .nav-item.active .nav-emoji{transform:scale(1.1)}
   <div class="section-label" onclick="toggleSection('sec-morning')">☀️ 晨检数据 <span class="arrow">▾</span></div>
   <div class="section-body" id="sec-morning">
     <div class="form-row">
-      <div class="form-group"><label>😳 清醒时间 (min)</label><input type="number" id="awakeTime" placeholder="33" inputmode="numeric"></div>
-      <div class="form-group"><label>👁️ 快速动眼 REM (min)</label><input type="number" id="remSleep" placeholder="66" inputmode="numeric"></div>
+      <div class="form-group"><label>清醒时间 (min)</label><input type="number" id="awakeTime" placeholder="33" inputmode="numeric"></div>
+      <div class="form-group"><label>快速动眼 REM (min)</label><input type="number" id="remSleep" placeholder="66" inputmode="numeric"></div>
     </div>
     <div class="form-row">
-      <div class="form-group"><label>🌙 核心睡眠 (min)</label><input type="number" id="coreSleep" placeholder="351" inputmode="numeric"></div>
-      <div class="form-group"><label>💤 深度睡眠 (min)</label><input type="number" id="deepSleep" placeholder="44" inputmode="numeric"></div>
+      <div class="form-group"><label>核心睡眠 (min)</label><input type="number" id="coreSleep" placeholder="351" inputmode="numeric"></div>
+      <div class="form-group"><label>深度睡眠 (min)</label><input type="number" id="deepSleep" placeholder="44" inputmode="numeric"></div>
     </div>
     <div class="form-row">
-      <div class="form-group"><label>🛏️ 入睡时间</label><input type="time" id="bedtime"></div>
-      <div class="form-group"><label>⏰ 起床时间</label><input type="time" id="wakeTime"></div>
+      <div class="form-group"><label>入睡时间</label><input type="time" id="bedtime"></div>
+      <div class="form-group"><label>起床时间</label><input type="time" id="wakeTime"></div>
     </div>
     <div class="form-row">
       <div class="form-group"><label>❤️ 心率 (bpm)</label><input type="number" id="heartRate" placeholder="74" inputmode="numeric"></div>
@@ -412,7 +412,7 @@ function renderDashboard(){
 function renderChart(id,pts,opts,unit){
   const ctx=document.getElementById(id);if(!ctx)return;if(charts[id])charts[id].destroy();
   if(!pts.length){ctx.parentElement.innerHTML=ctx.parentElement.innerHTML;return}
-  charts[id]=new Chart(ctx,{type:'line',data:{labels:pts.map(p=>p.x.slice(5)),datasets:[{data:pts.map(p=>p.y),borderColor:'#c9a96e',backgroundColor:'rgba(201,169,110,.08)',fill:true,tension:.4,pointRadius:3,pointBackgroundColor:'#c9a96e',borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#94a3b8',font:{size:9},maxTicksLimit:7},grid:{color:'rgba(148,163,184,.06)'}},y:{...opts,ticks:{color:'#94a3b8',font:{size:9},callback:v=>v+unit},grid:{color:'rgba(148,163,184,.06)'}}}}});
+  charts[id]=new Chart(ctx,{type:'line',data:{labels:pts.map(p=>p.x.slice(5)),datasets:[{data:pts.map(p=>p.y),borderColor:'#c9a96e',backgroundColor:'rgba(201,169,110,.08)',fill:true,tension:.4,pointRadius:3,pointBackgroundColor:'#c9a96e',borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#94a3b8',font:{size:9},maxTicksLimit:5,autoSkip:true},grid:{color:'rgba(148,163,184,.06)'}},y:{...opts,ticks:{color:'#94a3b8',font:{size:9},callback:v=>v+unit},grid:{color:'rgba(148,163,184,.06)'}}}}});
 }
 
 // ── Supplements ──
