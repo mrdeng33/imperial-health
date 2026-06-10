@@ -56,7 +56,12 @@ textarea{resize:vertical;min-height:50px}
 .sr.d .sb2::after{content:'✓';font-size:10px;color:var(--green);font-weight:700}
 .sr.d .sl2{text-decoration:line-through;color:var(--muted)}
 .sr .sl2{font-size:13px}
-.hg{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px}
+.hg{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.wk{background:var(--card);border-radius:var(--r);padding:14px;margin:12px 0;border:1px solid var(--border)}
+.wk .wkrow{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:13px}
+.wk .wkrow:last-child{border-bottom:none}
+.wk .wkl{color:var(--muted)}.wk .wkv{font-weight:500}
+.wkv.g{color:var(--green)}.wkv.w{color:var(--amber)}.wkv.r{color:var(--red)}
 .hc{background:var(--card);border-radius:var(--r);padding:14px 8px;text-align:center;border:1px solid var(--border)}
 .hc .ri{width:60px;height:60px;margin:0 auto 6px}
 .hc .ri canvas{width:100%!important;height:100%!important}
@@ -149,7 +154,11 @@ nav .ni.ac{color:var(--gold)}
 <div class="tab-panel" id="tab-supplements"><div class="tl" id="suppT"></div></div>
 
 <!-- Tab: 习惯 -->
-<div class="tab-panel" id="tab-habits"><div class="hg" id="rings"></div><div style="margin-top:12px;font-size:12px;color:var(--muted)" id="wd"></div></div>
+<div class="tab-panel" id="tab-habits">
+  <div class="hg" id="rings"></div>
+  <div class="wk" id="wk"></div>
+  <div style="margin-top:8px;font-size:12px;color:var(--muted)" id="wd"></div>
+</div>
 
 <!-- Tab: 团队 -->
 <div class="tab-panel" id="tab-team">
@@ -297,20 +306,51 @@ function rh(){
   var data=ld2(),now=new Date(),day=now.getDay(),mon=new Date(now);mon.setDate(now.getDate()-(day===0?6:day-1));mon.setHours(0,0,0,0);
   var wd2=data.filter(function(d){return d.date>=mon.toISOString().split('T')[0]&&d.date<=td()});
   var bc=wd2.filter(function(d){return d.boxing===true}).length;
-  var fc=wd2.filter(function(d){return d.fasting===true}).length;
-  var svc=wd2.filter(function(d){return typeof d.shortVideo=='number'&&d.shortVideo<=30}).length;
-  var td3=Math.max(1,Math.ceil((now-mon)/86400000)+1);
   var ac=wd2.filter(function(d){return d.calm===true}).length;
   var pc=wd2.filter(function(d){return d.practice===true}).length;
+
+  // Rings: 3 only
   document.getElementById('rings').innerHTML=
     '<div class="hc"><div class="ri"><canvas id="rBx"></canvas></div><div class="ht">拳击 '+bc+'/3</div><div class="hs">本周</div></div>'+
-    '<div class="hc"><div class="ri"><canvas id="rFs"></canvas></div><div class="ht">断食 '+fc+'/7</div><div class="hs">目标5天</div></div>'+
-    '<div class="hc"><div class="ri"><canvas id="rSv"></canvas></div><div class="ht">刷手机 '+svc+'/'+td3+'天</div><div class="hs">睡前≤30min</div></div>'+
     '<div class="hc"><div class="ri"><canvas id="rAb"></canvas></div><div class="ht">静心 '+ac+'/7</div><div class="hs">本周</div></div>'+
     '<div class="hc"><div class="ri"><canvas id="rPc"></canvas></div><div class="ht">练习 '+pc+'/7</div><div class="hs">本周</div></div>';
-  var dh='';wd2.slice().reverse().forEach(function(d){var wd3=new Date(d.date).getDay(),bx2=d.boxing===true?'🥊':d.boxing===false?'❌':'-',fs2=d.fasting===true?'✅':d.fasting?'⚠️':'-',sv2=typeof d.shortVideo=='number'?d.shortVideo+'min':'-',ac2=d.calm===true?'🧘':d.calm===false?'❌':'-',pc2=d.practice===true?'🎯':d.practice===false?'❌':'-';dh+='<div style="padding:5px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;font-size:12px"><span>'+d.date.slice(5)+' 周'+'日一二三四五六'[wd3]+'</span><span>'+bx2+'|'+fs2+'|📱'+sv2+'|'+ac2+'|'+pc2+'</span></div>'});
+
+  // Week summary card
+  var fastingTimes=wd2.filter(function(d){return d.fastingEnd}).map(function(d){return d.fastingEnd});
+  var avgFast='--';if(fastingTimes.length){
+    var ms=0;fastingTimes.forEach(function(t){var p=t.split(':');ms+=parseInt(p[0])*60+parseInt(p[1])});ms/=fastingTimes.length;
+    avgFast=Math.floor(ms/60)+':'+('0'+(ms%60)).slice(-2);
+  }
+  var svTotal=0,svOver=0;wd2.forEach(function(d){if(typeof d.shortVideo=='number'){svTotal+=d.shortVideo;if(d.shortVideo>30)svOver++}});
+  var svDays=wd2.filter(function(d){return typeof d.shortVideo=='number'}).length;
+  var svAvg=svDays?Math.round(svTotal/svDays):'--';
+  var bedTimes=wd2.filter(function(d){return d.bedtime}).map(function(d){return d.bedtime});
+  var avgBed='--',bedLate=0;if(bedTimes.length){
+    var bm=0;bedTimes.forEach(function(t){var p=t.split(':');var m=parseInt(p[0])*60+parseInt(p[1]);if(m>1440-60)m-=1440;bm+=m;if(m>30)bedLate++});
+    bm/=bedTimes.length;if(bm<0)bm+=1440;avgBed=Math.floor(bm/60)+':'+('0'+(bm%60)).slice(-2);if(bm>=30)avgBed+=' ⚠️';
+  }
+  var deeps=wd2.filter(function(d){return typeof d.deepSleep=='number'}).map(function(d){return d.deepSleep});
+  var avgDeep=deeps.length?Math.round(deeps.reduce(function(a,b){return a+b})/deeps.length):'--';
+  var hrs=wd2.filter(function(d){return typeof d.heartRate=='number'}).map(function(d){return d.heartRate});
+  var avgHr=hrs.length?Math.round(hrs.reduce(function(a,b){return a+b})/hrs.length):'--';
+
+  var dc=typeof avgDeep=='number'?(avgDeep<30?'r':avgDeep<45?'w':'g'):'';
+  var hc=typeof avgHr=='number'?(avgHr>80?'r':avgHr<55?'w':'g'):'';
+  var bc2=typeof avgBed=='string'&&avgBed.indexOf('⚠️')>=0?'w':'g';
+
+  document.getElementById('wk').innerHTML=
+    '<div style="font-size:11px;color:var(--gold);margin-bottom:8px;font-weight:500">📊 本周关键数字</div>'+
+    '<div class="wkrow"><span class="wkl">🕐 断食 · 平均关窗</span><span class="wkv">'+avgFast+'</span></div>'+
+    '<div class="wkrow"><span class="wkl">📱 刷手机 · 日均 / 超标</span><span class="wkv'+(svOver?' w':'')+'">'+svAvg+'min / '+svOver+'天</span></div>'+
+    '<div class="wkrow"><span class="wkl">🌙 入睡 · 平均时间</span><span class="wkv '+bc2+'">'+avgBed+'</span></div>'+
+    '<div class="wkrow"><span class="wkl">💤 深睡 · 平均</span><span class="wkv '+dc+'">'+avgDeep+'min</span></div>'+
+    '<div class="wkrow"><span class="wkl">❤️ 心率 · 平均</span><span class="wkv '+hc+'">'+avgHr+' bpm</span></div>';
+
+  // Week detail
+  var dh='';wd2.slice().reverse().forEach(function(d){var wd3=new Date(d.date).getDay(),bx2=d.boxing===true?'🥊':'-',ac2=d.calm===true?'🧘':d.calm===false?'❌':'-',pc2=d.practice===true?'🎯':'-',sv2=typeof d.shortVideo=='number'?d.shortVideo+'min':'-';dh+='<div style="padding:5px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;font-size:12px"><span>'+d.date.slice(5)+' 周'+'日一二三四五六'[wd3]+'</span><span>'+bx2+' '+ac2+' '+pc2+' 📱'+sv2+'</span></div>'});
   document.getElementById('wd').innerHTML=dh||'暂无数据';
-  setTimeout(function(){dr('rBx',bc,3,'#f87171');dr('rFs',fc,7,'#fbbf24');dr('rSv',svc,td3,'#4ade80');dr('rAb',ac,7,'#94a3b8');dr('rPc',pc,7,'#c9a96e')},100);
+
+  setTimeout(function(){dr('rBx',bc,3,'#f87171');dr('rAb',ac,7,'#94a3b8');dr('rPc',pc,7,'#c9a96e')},100);
 }
 function dr(cid,cnt,tgt,color){
   var c=document.getElementById(cid);if(!c||c.width)return;var dpr=window.devicePixelRatio||1,sz=64*dpr;c.width=sz;c.height=sz;c.style.width='64px';c.style.height='64px';
