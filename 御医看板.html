@@ -108,13 +108,18 @@ nav .nav-item.active{color:var(--gold)}
   <div class="section-label" onclick="toggleSection('sec-morning')">☀️ 晨检数据 <span class="arrow">▼</span></div>
   <div class="section-body" id="sec-morning">
     <div class="form-row">
-      <div class="form-group"><label>总睡眠 (h)</label><input type="number" id="sleepTotal" placeholder="7.68" step="0.01" inputmode="decimal"></div>
-      <div class="form-group"><label>深睡 (min)</label><input type="number" id="deepSleep" placeholder="44" inputmode="numeric"></div>
+      <div class="form-group"><label>清醒时间 (min)</label><input type="number" id="awakeTime" placeholder="33" inputmode="numeric"></div>
+      <div class="form-group"><label>快速动眼 REM (min)</label><input type="number" id="remSleep" placeholder="66" inputmode="numeric"></div>
     </div>
     <div class="form-row">
-      <div class="form-group"><label>REM (min)</label><input type="number" id="remSleep" placeholder="66" inputmode="numeric"></div>
-      <div class="form-group"><label>入睡时间</label><input type="time" id="bedtime"></div>
+      <div class="form-group"><label>核心睡眠 (min)</label><input type="number" id="coreSleep" placeholder="351" inputmode="numeric"></div>
+      <div class="form-group"><label>深度睡眠 (min)</label><input type="number" id="deepSleep" placeholder="44" inputmode="numeric"></div>
     </div>
+    <div class="form-row">
+      <div class="form-group"><label>入睡时间</label><input type="time" id="bedtime"></div>
+      <div class="form-group"><label>起床时间</label><input type="time" id="wakeTime"></div>
+    </div>
+    <div class="form-group" style="font-size:12px;color:var(--muted)">总睡眠自动算：（核心+深睡+REM）÷60</div>
     <div class="form-row">
       <div class="form-group"><label>心率 (bpm)</label><input type="number" id="heartRate" placeholder="74" inputmode="numeric"></div>
       <div class="form-group"><label>HRV (ms)</label><input type="number" id="hrv" placeholder="可选" inputmode="numeric"></div>
@@ -236,7 +241,7 @@ function updateWeekday(){
 function loadDayData(){
   const date=document.getElementById('entryDate').value;
   const data=getData();const e=data.find(d=>d.date===date);
-  const fields=['sleepTotal','deepSleep','remSleep','heartRate','hrv','weight','shortVideo','anxiety','feeling','bedtime','lunch','dinner','preBoxingFood','fastingStart','fastingEnd','trainingDur','trainingCal','trainingMaxHR','trainingAvgHR'];
+  const fields=['awakeTime','coreSleep','deepSleep','remSleep','heartRate','hrv','weight','shortVideo','anxiety','feeling','bedtime','wakeTime','lunch','dinner','preBoxingFood','fastingStart','fastingEnd','trainingDur','trainingCal','trainingMaxHR','trainingAvgHR'];
   fields.forEach(f=>{const el=document.getElementById(f);if(el){el.value=e&&e[f]!==undefined?e[f]:'';if(f==='lunch'||f==='dinner')el.value=e&&e[f]||''}});
   boxingVal=e&&e.boxing!==undefined?e.boxing:null;updateToggleUI('btnBoxing',boxingVal);
   fastingVal=e&&e.fasting!==undefined?e.fasting:null;updateToggleUI('btnFasting',fastingVal);
@@ -265,8 +270,13 @@ function saveSection(section){
   if(!entry){entry={date};data.push(entry)}
 
   if(section==='morning'){
-    const f=['sleepTotal','deepSleep','remSleep','heartRate','hrv','weight','shortVideo','anxiety','feeling','bedtime'];
-    f.forEach(k=>{const v=document.getElementById(k)?.value;if(v!==''&&v!==undefined){entry[k]=k==='feeling'||k==='bedtime'?v:parseFloat(v)||parseInt(v)||v}else delete entry[k]});
+    const f=['awakeTime','coreSleep','deepSleep','remSleep','heartRate','hrv','weight','shortVideo','anxiety','feeling','bedtime','wakeTime'];
+    f.forEach(k=>{const v=document.getElementById(k)?.value;if(v!==''&&v!==undefined){entry[k]=k==='feeling'||k==='bedtime'||k==='wakeTime'?v:parseFloat(v)||parseInt(v)||v}else delete entry[k]});
+    // Auto-calculate total sleep from components
+    const core=parseInt(document.getElementById('coreSleep')?.value)||0;
+    const deep=parseInt(document.getElementById('deepSleep')?.value)||0;
+    const rem=parseInt(document.getElementById('remSleep')?.value)||0;
+    if(core+deep+rem>0)entry.sleepTotal=Math.round((core+deep+rem)/0.6)/100;
   }
   if(section==='diet'){
     ['lunch','dinner','preBoxingFood','fastingStart','fastingEnd'].forEach(k=>{const v=document.getElementById(k)?.value;if(v!==''&&v!==undefined)entry[k]=v;else delete entry[k]});
