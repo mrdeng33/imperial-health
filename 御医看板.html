@@ -311,18 +311,43 @@ function renderChart(id,pts,opts){
 }
 
 // ── Supplements ──
+const SUPP_STORAGE='imperial_supp_checks';
+function getSuppChecks(){try{return JSON.parse(localStorage.getItem(SUPP_STORAGE)||'{}')}catch(e){return{}}}
+function setSuppCheck(date,idx,val){const c=getSuppChecks();if(!c[date])c[date]={};c[date][idx]=val;localStorage.setItem(SUPP_STORAGE,JSON.stringify(c))}
 function renderSupplements(){
   const supps=[
     {time:'☀️ 起床空腹',items:['☕ 黑咖啡 1杯']},
-    {time:'🕐 午餐后',items:['🧠 Neuriva Ultra ×2','🐟 Omega Mini ×3','☀️ D3+K2 ×1','🔩 锌 ×1','💊 Men\'s Multi ×1']},
-    {time:'🥊 拳击后30min',items:['💪 ON乳清蛋白 1勺'],boxing:true},
+    {time:'🕐 午餐后 (12-13点)',items:['🧠 Neuriva Ultra ×2','🐟 Omega Mini ×3','☀️ D3+K2 ×1','🔩 锌 ×1','💊 Men\'s Multi ×1']},
+    {time:'🥊 拳击后30分钟',items:['💪 ON乳清蛋白 1勺'],boxing:true},
     {time:'🌙 晚餐后',items:['🫁 Liver Detox']},
-    {time:'🌙 睡前30min',items:['🌙 甘氨酸镁 200-400mg']}
+    {time:'🌙 睡前30分钟',items:['🌙 甘氨酸镁 200-400mg']}
   ];
-  const todayData=getData().find(d=>d.date===today());const isBoxing=todayData&&todayData.boxing===true;
-  let html='';
-  supps.forEach(s=>{if(s.boxing&&!isBoxing)return;html+=`<div class="tl-item"><div class="tl-time">${s.time}</div><div class="tl-content">${s.items.map(i=>'<div>'+i+'</div>').join('')}<span class="tl-check" onclick="this.classList.toggle(\'done\')">✓ 已吃</span></div></div>`});
+  const td=today();const todayData=getData().find(d=>d.date===td);const isBoxing=todayData&&todayData.boxing===true;
+  const checks=getSuppChecks();const tc=checks[td]||{};
+  let gi=0,html='';
+  supps.forEach(s=>{if(s.boxing&&!isBoxing)return;
+    html+=`<div class="tl-item"><div class="tl-time">${s.time}</div><div class="tl-content">`;
+    s.items.forEach(it=>{
+      const cid='supp_'+gi;const checked=tc[gi]===true;
+      html+=`<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;cursor:pointer" onclick="toggleSupp('${cid}',${gi})">
+        <span id="${cid}" style="font-size:18px;width:24px;text-align:center">${checked?'✅':'⬜'}</span>
+        <span style="font-size:13px;${checked?'text-decoration:line-through;color:var(--muted)':''}">${it}</span>
+      </div>`;
+      gi++;
+    });
+    html+=`</div></div>`;
+  });
   document.getElementById('suppTimeline').innerHTML=html||'<div style="text-align:center;color:var(--muted);padding:20px">加载中...</div>';
+}
+function toggleSupp(cid,idx){
+  const td=today();const c=getSuppChecks();if(!c[td])c[td]={};
+  c[td][idx]=!c[td][idx];localStorage.setItem(SUPP_STORAGE,JSON.stringify(c));
+  const el=document.getElementById(cid);if(!el)return;
+  const checked=c[td][idx];
+  el.textContent=checked?'✅':'⬜';
+  const txt=el.nextElementSibling;if(txt)txt.style.textDecoration=checked?'line-through':'';
+  txt.style.color=checked?'var(--muted)':'var(--text)';
+  renderSupplements();
 }
 
 // ── Habits ──
