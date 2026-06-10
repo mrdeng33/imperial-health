@@ -286,6 +286,14 @@ nav .nav-item.active .nav-emoji{transform:scale(1.1)}
     </div>
     <button class="save-btn small" onclick="saveSection('training')">保存训练</button>
   </div>
+
+  <!-- 提交按钮 -->
+  <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border);text-align:center">
+    <button class="save-btn" onclick="submitToImperial()" style="background:linear-gradient(135deg,#c9a96e,#e0556a);font-size:16px">
+      📡 提交到御医团队
+    </button>
+    <div style="font-size:10px;color:var(--muted);margin-top:8px" id="submitStatus">提交后华佗/如意/张教练将收到数据</div>
+  </div>
 </div>
 
 <!-- ── Tab 2: Dashboard ── -->
@@ -521,6 +529,27 @@ function switchTab(tab,el){
   if(tab==='supplements')renderSupplements();
   if(tab==='habits')renderHabits();
   if(tab==='team')renderTeam();
+}
+
+// ── Submit to Worker ──
+const WORKER_URL='https://imperial-worker.dengyuhang.workers.dev';
+async function submitToImperial(){
+  const date=document.getElementById('entryDate').value;
+  const entry={date};
+  'awakeTime,coreSleep,deepSleep,remSleep,heartRate,hrv,weight,shortVideo,abstinence,anxiety,feeling,bedtime,wakeTime,lunch,dinner,preBoxingFood,fastingStart,fastingEnd,trainingDur,trainingCal,trainingMaxHR,trainingAvgHR'.split(',').forEach(f=>{
+    const el=document.getElementById(f);if(el&&el.value!=='')entry[f]=isNaN(el.value)?el.value:parseFloat(el.value)||parseInt(el.value)||el.value;
+  });
+  entry.boxing=boxingVal;entry.fasting=fastingVal;
+  const st=document.getElementById('submitStatus');
+  st.textContent='⏳ 正在提交...';st.style.color='var(--amber)';
+  try{
+    const res=await fetch(WORKER_URL+'/update',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(entry)});
+    const j=await res.json();
+    if(j.ok){st.textContent='✅ 已提交！华佗团队将收到数据';st.style.color='var(--green)';showToast('✅ 已提交到御医团队')}
+    else{st.textContent='❌ 提交失败: '+(j.error||'未知');st.style.color='var(--red)'}
+  }catch(e){
+    st.textContent='❌ 网络错误，请重试';st.style.color='var(--red)';
+  }
 }
 
 // ── Toast ──
