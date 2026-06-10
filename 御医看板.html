@@ -23,7 +23,20 @@ body{
   font-family:'Fira Sans',-apple-system,BlinkMacSystemFont,'SF Pro Display','PingFang SC',sans-serif;
   background:var(--bg);color:var(--text);max-width:430px;margin:0 auto;
   min-height:100dvh;padding-bottom:96px;-webkit-tap-highlight-color:transparent;
-  -webkit-font-smoothing:antialiased;user-select:none;
+  -webkit-font-smoothing:antialiased;user-select:none
+}
+
+/* Foldable / unfolded */
+@media(min-width:500px){
+  body{max-width:720px;padding-bottom:72px}
+  .stat-grid{grid-template-columns:repeat(6,1fr)}
+  .habit-grid{grid-template-columns:repeat(4,1fr);max-width:480px;margin:0 auto}
+  .chart-box canvas{height:220px!important}
+  .tab-panel{padding:20px}
+  .form-row{gap:12px}
+  nav{max-width:720px}
+  nav .nav-item{font-size:12px}
+  nav .nav-emoji{font-size:22px}
 }
 
 /* Header */
