@@ -200,33 +200,25 @@ nav .nav-item.active{color:var(--gold)}
 // ── State ──
 const STORAGE_KEY='imperial_health_data';
 let boxingVal=null,fastingVal=null;
-const PRESET=[
-  {date:'2026-06-04',weight:86,feeling:'建档初始化'},
-  {date:'2026-06-05',sleepTotal:6,boxing:false,fasting:false,shortVideo:180,feeling:'3点睡9点醒，没午睡疲惫'},
-  {date:'2026-06-06',sleepTotal:5.92,deepSleep:9,heartRate:83,boxing:false,fasting:true,shortVideo:15,lunch:'麦当劳板烧鸡腿堡+薯条+麦乐鸡 ~1090kcal',dinner:'沙县鸡腿饭+双倍青菜 ~710kcal',feeling:'深睡仅9min，甘氨酸镁首服'},
-  {date:'2026-06-07',sleepTotal:7.05,deepSleep:33,heartRate:84,fasting:true,shortVideo:14,weight:84.1,feeling:'甘氨酸镁首夜见效！深睡9→33min'},
-  {date:'2026-06-08',sleepTotal:6.4,deepSleep:46,boxing:false,fasting:'half',shortVideo:120,weight:84.2,lunch:'包子×10 ~760kcal',dinner:'潮汕菜+西瓜 ~1040kcal',feeling:'入睡2:00太晚，醒后刷短视频2h'},
-  {date:'2026-06-09',sleepTotal:6.85,deepSleep:30,boxing:false,fasting:'late',shortVideo:30,weight:84.2,anxiety:6,lunch:'牛丸牛杂粿条 ~570kcal 34g',dinner:'沙姜鸡套餐 ~620kcal 60g',bedtime:'03:00',feeling:'入睡3:00崩溃，有希望但也焦虑'},
-  {date:'2026-06-10',sleepTotal:7.68,deepSleep:44,remSleep:66,heartRate:74,boxing:true,shortVideo:0,weight:84.0,anxiety:5,bedtime:'00:30',trainingDur:60,trainingCal:600,trainingMaxHR:171,trainingAvgHR:118,feeling:'翻盘！拳击日600kcal，焦虑降到5'}
-];
-
-// ── Prescriptions (team tab) ──
-const PRESCRIPTIONS={
-  '2026-06-10':{
-    huatuo:{body:'今晚0:00前上床。连续两天稳住入睡，这周翻盘。',diet:'拳击日+150kcal。断食窗口从正餐开始。',energy:'深睡44min回来了，不用打七折。心率74，训练别推太狠。',mood:'焦虑5是最近最低。保持稳定向好。',top1:'连续两天0:30前上床，今晚23:30更好。'},
-    zhang:{train:'🥊 4天没练后首堂恢复。RPE 7，打靶2min×2轮。600kcal达标。','pre':'弹力带肩外旋2×15，半根香蕉+黑咖啡出门。',plan:'周三🥊+🏋️ | 周四零食 | 周五🥊+🏋️ | 周六Z2 | 周七休'},
-    ruyi:{protein:'101g/140g(72%)，翻盘！晚餐沙姜鸡立大功。',sodium:'🟡中等，甘氨酸镁200mg即可。',fasting:'13:30-20:00，晚关1h。明天锁回19:00。',top1:'明天14:00开窗，蛋白50g午餐起步。'}
-  }
-};
 
 // ── Data ──
-function loadData(){try{const d=localStorage.getItem(STORAGE_KEY);return d?JSON.parse(d):[...PRESET]}catch(e){return[...PRESET]}}
+let BASE_DATA=[],PRESCRIPTIONS={};
+async function loadBaseData(){
+  try{const r=await fetch('data.json');if(r.ok)BASE_DATA=await r.json()}catch(e){}
+  try{const r=await fetch('prescriptions.json');if(r.ok)PRESCRIPTIONS=await r.json()}catch(e){}
+}
+function loadData(){
+  const local=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');
+  const merged={};BASE_DATA.forEach(d=>merged[d.date]={...d});local.forEach(d=>merged[d.date]={...merged[d.date],...d});
+  return Object.values(merged).sort((a,b)=>a.date.localeCompare(b.date));
+}
 function saveData(data){localStorage.setItem(STORAGE_KEY,JSON.stringify(data))}
 function getData(){return loadData()}
 function today(){return new Date().toISOString().split('T')[0]}
 
 // ── Init ──
-function init(){
+async function init(){
+  await loadBaseData();
   document.getElementById('headerDate').textContent=new Date().toLocaleDateString('zh-CN',{year:'numeric',month:'long',day:'numeric',weekday:'long'});
   document.getElementById('entryDate').value=today();
   updateWeekday();

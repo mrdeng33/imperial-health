@@ -1,0 +1,9 @@
+[
+  {"date":"2026-06-04","weight":86,"feeling":"建档初始化"},
+  {"date":"2026-06-05","sleepTotal":6,"boxing":false,"fasting":false,"shortVideo":180,"feeling":"3点睡9点醒，没午睡疲惫"},
+  {"date":"2026-06-06","sleepTotal":5.92,"deepSleep":9,"heartRate":83,"boxing":false,"fasting":true,"shortVideo":15,"lunch":"麦当劳板烧鸡腿堡+薯条+麦乐鸡 ~1090kcal","dinner":"沙县鸡腿饭+双倍青菜 ~710kcal","feeling":"深睡仅9min，甘氨酸镁首服"},
+  {"date":"2026-06-07","sleepTotal":7.05,"deepSleep":33,"heartRate":84,"fasting":true,"shortVideo":14,"weight":84.1,"feeling":"甘氨酸镁首夜见效！深睡9→33min"},
+  {"date":"2026-06-08","sleepTotal":6.4,"deepSleep":46,"boxing":false,"fasting":"half","shortVideo":120,"weight":84.2,"lunch":"包子×10 ~760kcal","dinner":"潮汕菜+西瓜 ~1040kcal","feeling":"入睡2:00太晚，醒后刷短视频2h"},
+  {"date":"2026-06-09","sleepTotal":6.85,"deepSleep":30,"boxing":false,"fasting":"late","shortVideo":30,"weight":84.2,"anxiety":6,"lunch":"牛丸牛杂粿条 ~570kcal 34g","dinner":"沙姜鸡套餐 ~620kcal 60g","bedtime":"03:00","feeling":"入睡3:00崩溃，有希望但也焦虑"},
+  {"date":"2026-06-10","sleepTotal":7.68,"deepSleep":44,"remSleep":66,"heartRate":74,"boxing":true,"shortVideo":0,"weight":84.0,"anxiety":5,"bedtime":"00:30","trainingDur":60,"trainingCal":600,"trainingMaxHR":171,"trainingAvgHR":118,"feeling":"翻盘！拳击日600kcal，焦虑降到5"}
+]
