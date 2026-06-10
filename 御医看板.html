@@ -290,9 +290,9 @@ nav .nav-item.active .nav-emoji{transform:scale(1.1)}
   <!-- 提交按钮 -->
   <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border);text-align:center">
     <button class="save-btn" onclick="submitToImperial()" style="background:linear-gradient(135deg,#c9a96e,#e0556a);font-size:16px">
-      📡 提交到御医团队
+      📋 复制并贴给御医团队
     </button>
-    <div style="font-size:10px;color:var(--muted);margin-top:8px" id="submitStatus">提交后华佗/如意/张教练将收到数据</div>
+    <div style="font-size:10px;color:var(--muted);margin-top:8px" id="submitStatus">复制后切回 Claude Code 对话粘贴发送</div>
   </div>
 </div>
 
@@ -531,8 +531,7 @@ function switchTab(tab,el){
   if(tab==='team')renderTeam();
 }
 
-// ── Submit to Worker ──
-const WORKER_URL='https://imperial-worker.dengyuhang.workers.dev';
+// ── Submit: copy to clipboard ──
 async function submitToImperial(){
   const date=document.getElementById('entryDate').value;
   const entry={date};
@@ -540,20 +539,36 @@ async function submitToImperial(){
     const el=document.getElementById(f);if(el&&el.value!=='')entry[f]=isNaN(el.value)?el.value:parseFloat(el.value)||parseInt(el.value)||el.value;
   });
   entry.boxing=boxingVal;entry.fasting=fastingVal;
+
+  // 生成摘要文本
+  const wd='日一二三四五六'[new Date(date).getDay()];
+  let lines=[`华佗晨检 ${date.slice(5)} 周${wd}`];
+  if(entry.awakeTime||entry.coreSleep||entry.deepSleep||entry.remSleep||entry.bedtime||entry.wakeTime){
+    lines.push(`睡眠：清醒${entry.awakeTime||'?'}min REM${entry.remSleep||'?'}min 核心${entry.coreSleep||'?'}min 深睡${entry.deepSleep||'?'}min${entry.bedtime?' 入睡'+entry.bedtime:''}${entry.wakeTime?' 起床'+entry.wakeTime:''}`);
+  }
+  if(entry.heartRate||entry.weight)lines.push(`${entry.heartRate?'心率'+entry.heartRate+'bpm ':''}${entry.weight?'体重'+entry.weight+'kg':''}`.trim());
+  lines.push(`拳击${entry.boxing===true?'✅':entry.boxing===false?'❌':'?'} 断食${entry.fasting===true?'✅':entry.fasting===false?'❌':'?'}`);
+  if(entry.shortVideo!==undefined)lines.push(`睡前刷手机${entry.shortVideo}min`);
+  if(entry.abstinence!==undefined)lines.push(`内守第${entry.abstinence}天`);
+  if(entry.anxiety!==undefined)lines.push(`焦虑${entry.anxiety}/10`);
+  if(entry.trainingDur||entry.trainingCal)lines.push(`训练：${entry.trainingDur||'?'}min ${entry.trainingCal||'?'}kcal 最高${entry.trainingMaxHR||'?'}bpm`);
+  if(entry.lunch)lines.push(`午餐：${entry.lunch}`);
+  if(entry.dinner)lines.push(`晚餐：${entry.dinner}`);
+  if(entry.feeling)lines.push(`感受：${entry.feeling}`);
+
+  const text=lines.join('\n');
   const st=document.getElementById('submitStatus');
-  st.textContent='⏳ 正在提交...';st.style.color='var(--amber)';
-  const ctrl=new AbortController();
-  const t=setTimeout(()=>ctrl.abort(),15000);
   try{
-    const res=await fetch(WORKER_URL+'/update',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(entry),signal:ctrl.signal});
-    clearTimeout(t);
-    const j=await res.json();
-    if(j.ok){st.textContent='✅ 已提交！刷新看板查看结果';st.style.color='var(--green)';showToast('✅ 已提交到御医团队')}
-    else{st.textContent='❌ 失败: '+(j.error||'未知');st.style.color='var(--red)'}
+    await navigator.clipboard.writeText(text);
+    st.textContent='✅ 已复制！贴到 Claude Code 对话即可';st.style.color='var(--green)';
+    showToast('✅ 已复制，贴过来吧');
   }catch(e){
-    clearTimeout(t);
-    if(e.name==='AbortError'){st.textContent='❌ 请求超时，检查网络后重试';st.style.color='var(--red)'}
-    else{st.textContent='❌ 网络不通: '+e.message;st.style.color='var(--red)'}
+    // Fallback for browsers without clipboard API
+    const ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';
+    document.body.appendChild(ta);ta.select();
+    try{document.execCommand('copy');st.textContent='✅ 已复制！';st.style.color='var(--green)'}
+    catch(e2){st.textContent='❌ 复制失败，请手动截图';st.style.color='var(--red)'}
+    document.body.removeChild(ta);
   }
 }
 
