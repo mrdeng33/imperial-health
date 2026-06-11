@@ -388,7 +388,7 @@ function rt(){
 }
 
 // Token
-function stk(){var v=document.getElementById('ti').value.trim();if(v.slice(0,4)==='ghp_'){localStorage.setItem('gt',v);document.getElementById('ts2').textContent='✅';document.getElementById('ts2').style.display='inline';document.getElementById('tokInput').style.display='none';document.getElementById('tokLabel2').textContent='🔑';st2('✅ Token 已保存')}else if(v){alert('Token 格式不对，应以 ghp_ 开头')}}
+function stk(){var v=document.getElementById('ti').value.trim();if((v.slice(0,4)==='ghp_'||v.slice(0,4)==='gho_')){localStorage.setItem('gt',v);document.getElementById('ts2').textContent='✅';document.getElementById('ts2').style.display='inline';document.getElementById('tokInput').style.display='none';document.getElementById('tokLabel2').textContent='🔑';st2('✅ Token 已保存')}else if(v){alert('Token 格式不对，应以 ghp_ 开头')}}
 function showTok(){var el=document.getElementById('ti');el.style.display='block';document.getElementById('stkb').style.display='block';el.focus()}
 function toggleTok(){var d=document.getElementById('tokInput');d.style.display=d.style.display==='none'?'block':'none'}
 
@@ -398,8 +398,9 @@ async function subm(){
   // 展开所有折叠区防止部分浏览器读取不到值
   ['sm','sd','st'].forEach(function(id){document.getElementById(id).classList.remove('hidden')});
   var date=document.getElementById('ed').value,entry={date:date};
-  var fmap={hr:'heartRate',hv:'hrv',bw:'weight',sv:'shortVideo',ax:'anxiety',fl:'feeling',bt:'bedtime',wt:'wakeTime',lu:'lunch',di:'dinner',pb:'preBoxingFood',fs:'fastingStart',fe:'fastingEnd'};
-  Object.keys(fmap).forEach(function(f){var el=document.getElementById(f);if(el&&el.value!=='')entry[fmap[f]]=isNaN(el.value)?el.value:parseFloat(el.value)||parseInt(el.value)||el.value});
+  var fkeys=['hr','hv','bw','sv','ax','fl','bt','wt','lu','di','pb','fs','fe'];
+  var fvals=['heartRate','hrv','weight','shortVideo','anxiety','feeling','bedtime','wakeTime','lunch','dinner','preBoxingFood','fastingStart','fastingEnd'];
+  for(var i=0;i<fkeys.length;i++){var el=document.getElementById(fkeys[i]);if(el&&el.value!==''){var v=el.value;fvals[i]==='feeling'||fvals[i]==='bedtime'||fvals[i]==='wakeTime'?entry[fvals[i]]=v:entry[fvals[i]]=parseFloat(v)||parseInt(v)||v}}
   // 睡眠（始终提交）
   var gm2=function(h,m){return(parseInt(document.getElementById(h).value)||0)*60+(parseInt(document.getElementById(m).value)||0)};
   var aw2=gm2('awh','awm'),rs2=gm2('rsh','rsm'),cs2=gm2('csh','csm'),ds2=gm2('dsh','dsm');
