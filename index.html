@@ -394,6 +394,7 @@ async function subm(){
   var gm2=function(h,m){return(parseInt(document.getElementById(h).value)||0)*60+(parseInt(document.getElementById(m).value)||0)};
   var aw2=gm2('awh','awm'),rs2=gm2('rsh','rsm'),cs2=gm2('csh','csm'),ds2=gm2('dsh','dsm');
   if(aw2>0)entry.awakeTime=aw2;if(rs2>0)entry.remSleep=rs2;if(cs2>0)entry.coreSleep=cs2;if(ds2>0)entry.deepSleep=ds2;
+  if(cs2+ds2+rs2>0)entry.sleepTotal=Math.round((cs2+ds2+rs2)/0.6)/100;
   entry.boxing=bv;entry.fasting=fv;entry.practice=pv;entry.calm=av;if(av===false)entry.calmTrigger=document.getElementById('ct').value;
   var st=document.getElementById('ss');st.textContent='⏳ 正在提交...';st.style.color='var(--amber)';
   var H={Authorization:'token '+token,'Content-Type':'application/json',Accept:'application/vnd.github+json'};
