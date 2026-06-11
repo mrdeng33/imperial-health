@@ -391,7 +391,9 @@ async function subm(){
   try{
     var r1=await fetch(GH+'/contents/data.json',{headers:H,cache:'no-store'});
     if(!r1.ok)throw new Error('读取失败 HTTP '+r1.status);
-    var f=await r1.json(),data=JSON.parse(atob(f.content));
+    var t1=await r1.text(),f;try{f=JSON.parse(t1)}catch(e){throw new Error("API异常: "+t1.slice(0,300))}
+    if(!f.content)throw new Error("data.json 返回空内容")
+    var data=JSON.parse(atob(f.content));
     var idx=data.findIndex(function(d){return d.date===date});
     if(idx>=0)data[idx]=Object.assign(data[idx],entry);else data.push(entry);
     data.sort(function(a,b){return a.date.localeCompare(b.date)});
