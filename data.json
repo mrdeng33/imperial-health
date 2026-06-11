@@ -102,10 +102,10 @@
   },
   {
     "date": "2026-06-11",
-    "anxiety": 4,
-    "feeling": "还行",
+    "anxiety": 5,
+    "feeling": "还行 昨晚吃了鱼生早上8点起来拉肚子 又回去睡到九点",
     "boxing": true,
-    "fasting": false,
+    "fasting": true,
     "practice": true,
     "calm": false,
     "calmTrigger": "主动",
@@ -118,14 +118,14 @@
     "shortVideo": 90,
     "bedtime": "01:30",
     "wakeTime": "09:00",
-    "lunch": "粤菜",
-    "preBoxingFood": "一个香蕉+黑咖啡",
-    "fastingStart": 11,
+    "lunch": "粤菜 豉汁焗鳝鱼 一碗米饭 半只红烧乳鸽 一碗汤 豆豉鲮鱼炒油麦菜 炒牛肉",
+    "preBoxingFood": "一个香蕉+热美式",
+    "fastingStart": "11:30",
     "fastingEnd": 23,
-    "trainingDur": 50,
-    "trainingCal": 428,
+    "trainingDur": 54,
+    "trainingCal": 480,
     "trainingMaxHR": 169,
-    "trainingAvgHR": 20,
-    "boxingNote": "三次打教练靶，前两次后段有点累，第三次有点手脚发软，饿"
+    "trainingAvgHR": 120,
+    "boxingNote": "打了三轮教练靶，每轮2分钟，前两轮后段不足。第三轮手脚有点发软，分析一下。这个是不是昨晚打飞机的原因"
   }
 ]
