@@ -121,7 +121,7 @@
     "lunch": "粤菜 豉汁焗鳝鱼 一碗米饭 半只红烧乳鸽 一碗汤 豆豉鲮鱼炒油麦菜 炒牛肉",
     "preBoxingFood": "一个香蕉+热美式",
     "fastingStart": "11:30",
-    "fastingEnd": 23,
+    "fastingEnd": "23:00",
     "trainingDur": 54,
     "trainingCal": 480,
     "trainingMaxHR": 169,
