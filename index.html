@@ -337,7 +337,7 @@ document.getElementById('rings').innerHTML=
   // Week summary card
   var fastingTimes=wd2.filter(function(d){return d.fastingEnd}).map(function(d){return d.fastingEnd});
   var avgFast='--';if(fastingTimes.length){
-    var ms=0;fastingTimes.forEach(function(t){var p=t.split(':');ms+=parseInt(p[0])*60+parseInt(p[1])});ms/=fastingTimes.length;
+    var ms=0;fastingTimes.forEach(function(t){var s=typeof t==='number'?Math.floor(t)+':00':t;var p=s.split(':');ms+=parseInt(p[0])*60+parseInt(p[1])});ms/=fastingTimes.length;
     avgFast=Math.floor(ms/60)+':'+('0'+(ms%60)).slice(-2);
   }
   var svTotal=0,svOver=0;wd2.forEach(function(d){if(typeof d.shortVideo=='number'){svTotal+=d.shortVideo;if(d.shortVideo>30)svOver++}});
@@ -345,7 +345,7 @@ document.getElementById('rings').innerHTML=
   var svAvg=svDays?Math.round(svTotal/svDays):'--';
   var bedTimes=wd2.filter(function(d){return d.bedtime}).map(function(d){return d.bedtime});
   var avgBed='--';if(bedTimes.length){
-    var bm=0;bedTimes.forEach(function(t){var p=t.split(':');var m=parseInt(p[0])*60+parseInt(p[1]);if(m<720)m+=1440;bm+=m;});
+    var bm=0;bedTimes.forEach(function(t){var s=typeof t==='number'?Math.floor(t)+':00':t;var p=s.split(':');var m=parseInt(p[0])*60+parseInt(p[1]);if(m<720)m+=1440;bm+=m;});
     bm/=bedTimes.length;var dh=Math.floor(bm/60);var dm=Math.floor(bm%60);if(dh>=24)dh-=24;avgBed=dh+':'+('0'+dm).slice(-2);if(bm>=1470)avgBed+=' ⚠️';
   }
   var deeps=wd2.filter(function(d){return typeof d.deepSleep=='number'}).map(function(d){return d.deepSleep});
