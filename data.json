@@ -103,9 +103,9 @@
   {
     "date": "2026-06-11",
     "anxiety": 6,
-    "feeling": "测试v4版本",
+    "feeling": "测试v5版本",
     "boxing": true,
-    "fasting": null,
+    "fasting": false,
     "practice": true,
     "calm": false,
     "calmTrigger": "主动",
