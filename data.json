@@ -102,10 +102,10 @@
   },
   {
     "date": "2026-06-11",
-    "anxiety": 6,
-    "feeling": "测试v5版本",
+    "anxiety": 4,
+    "feeling": "还行",
     "boxing": true,
-    "fasting": null,
+    "fasting": false,
     "practice": true,
     "calm": false,
     "calmTrigger": "主动",
@@ -114,6 +114,18 @@
     "coreSleep": 284,
     "deepSleep": 45,
     "sleepTotal": 6.53,
-    "boxingNote": "测试最新的谷歌浏览器"
+    "weight": 84,
+    "shortVideo": 90,
+    "bedtime": "01:30",
+    "wakeTime": "09:00",
+    "lunch": "粤菜",
+    "preBoxingFood": "一个香蕉+黑咖啡",
+    "fastingStart": 11,
+    "fastingEnd": 23,
+    "trainingDur": 50,
+    "trainingCal": 428,
+    "trainingMaxHR": 169,
+    "trainingAvgHR": 20,
+    "boxingNote": "三次打教练靶，前两次后段有点累，第三次有点手脚发软，饿"
   }
 ]
