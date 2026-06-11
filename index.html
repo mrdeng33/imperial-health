@@ -389,17 +389,17 @@ async function subm(){
   var st=document.getElementById('ss');st.textContent='⏳ 正在提交...';st.style.color='var(--amber)';
   var H={Authorization:'token '+token,'Content-Type':'application/json',Accept:'application/vnd.github+json'};
   try{
-    var r1=await fetch(GH+'/contents/data.json',{headers:H,cache:'no-store'});
-    if(!r1.ok)throw new Error('读取失败 HTTP '+r1.status);
-    var t1=await r1.text(),f;try{f=JSON.parse(t1)}catch(e){throw new Error("API异常: "+t1.slice(0,300))}
-    if(!f.content)throw new Error("data.json 返回空内容")
-    var data=JSON.parse(atob(f.content));
+	    var r1=await fetch(GH+"/contents/data.json",{headers:H,cache:"no-store"});
+	    if(!r1.ok)throw new Error("读取失败 HTTP "+r1.status);
+	    var meta=await r1.json(),sha=meta.sha;
+	    var rd=await fetch(meta.download_url);if(!rd.ok)throw new Error("下载失败 HTTP "+rd.status);
+	    var data=JSON.parse(await rd.text());
     var idx=data.findIndex(function(d){return d.date===date});
     if(idx>=0)data[idx]=Object.assign(data[idx],entry);else data.push(entry);
     data.sort(function(a,b){return a.date.localeCompare(b.date)});
     var json=JSON.stringify(data,null,2);
-    var b64=await new Promise(function(ok){var r=new FileReader();r.onload=function(){ok(r.result.split(',')[1])};r.readAsDataURL(new Blob([json],{type:'text/plain;charset=UTF-8'}))});
-    var r2=await fetch(GH+'/contents/data.json',{method:'PUT',headers:H,body:JSON.stringify({message:'📱 '+date,content:b64,sha:f.sha})});
+    var b64=btoa(unescape(encodeURIComponent(json)));
+    var r2=await fetch(GH+'/contents/data.json',{method:'PUT',headers:H,body:JSON.stringify({message:'📱 '+date,content:b64,sha:sha})});
     if(r2.ok){st.textContent='✅ 已提交！';st.style.color='var(--green)';st2('✅ 已提交到御医')}
     else{var e2=await r2.json();st.textContent='❌ '+(e2.message||'失败');st.style.color='var(--red)'}
   }catch(e){st.textContent='❌ '+e.message;st.style.color='var(--red)'}
