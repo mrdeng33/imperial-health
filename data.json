@@ -105,7 +105,7 @@
     "anxiety": 6,
     "feeling": "测试v5版本",
     "boxing": true,
-    "fasting": false,
+    "fasting": null,
     "practice": true,
     "calm": false,
     "calmTrigger": "主动",
