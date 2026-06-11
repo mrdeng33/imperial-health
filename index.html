@@ -126,6 +126,7 @@ nav .ni.ac{color:var(--gold)}
     <div class="tr"><div class="tb" id="bb" onclick="tg('boxing')">拳击</div><div class="tb" id="bf" onclick="tg('fasting')">断食</div></div>
     <div class="fr" style="margin-top:10px"><div class="fg"><label>时长 (min)</label><input type="number" id="td" placeholder="60"></div><div class="fg"><label>热量 (kcal)</label><input type="number" id="tc" placeholder="600"></div></div>
     <div class="fr"><div class="fg"><label>最高心率</label><input type="number" id="th" placeholder="171"></div><div class="fg"><label>平均心率</label><input type="number" id="ta" placeholder="118"></div></div>
+    <div class="fg"><label>🥊 打拳状况</label><textarea id="bn" placeholder="状态、对手、感受…" rows="2"></textarea></div>
     <button class="btn sm" onclick="sv('training')">💾 保存训练</button>
   </div>
 
@@ -206,7 +207,7 @@ async function init(){
 function uw(){var d=new Date(document.getElementById('ed').value);document.getElementById('ew').textContent='星期'+['日','一','二','三','四','五','六'][d.getDay()]}
 function ld3(){
   var e=ld2().find(function(d){return d.date===document.getElementById('ed').value});
-  'hr,hv,bw,sv,ax,fl,bt,wt,lu,di,pb,fs,fe,td,tc,th,ta'.split(',').forEach(function(f){
+  'hr,hv,bw,sv,ax,fl,bt,wt,lu,di,pb,fs,fe,td,tc,th,ta,bn'.split(',').forEach(function(f){
     var el=document.getElementById(f);if(el)el.value=(e&&e[f]!==undefined)?e[f]:'';
   });
   bv=(e&&e.boxing!==undefined)?e.boxing:null;tui('bb',bv);fv=(e&&e.fasting!==undefined)?e.fasting:null;tui('bf',fv);pv=(e&&e.practice!==undefined)?e.practice:null;tui('bp',pv);av=(e&&e.calm!==undefined)?e.calm:null;tui('ba',av);document.getElementById('ctg').style.display=av===false?'block':'none';var ctVal=(e&&e.calmTrigger)||'';document.getElementById('ct').value=ctVal;
@@ -242,7 +243,7 @@ function sv(s){
     if(cs2+ds2+rs2>0)e.sleepTotal=Math.round((cs2+ds2+rs2)/0.6)/100;
   }
   if(s==='diet'){var dm={lu:'lunch',di:'dinner',pb:'preBoxingFood',fs:'fastingStart',fe:'fastingEnd'};Object.keys(dm).forEach(function(k){var v=document.getElementById(k).value;if(v!==''&&v!==undefined)e[dm[k]]=v;else delete e[dm[k]]})}
-  if(s==='training'){e.boxing=bv;e.fasting=fv;var tm={td:'trainingDur',tc:'trainingCal',th:'trainingMaxHR',ta:'trainingAvgHR'};Object.keys(tm).forEach(function(k){var v=document.getElementById(k).value;if(v!==''&&v!==undefined)e[tm[k]]=parseInt(v)||0;else delete e[tm[k]]})}
+  if(s==='training'){e.boxing=bv;e.fasting=fv;var tm={td:'trainingDur',tc:'trainingCal',th:'trainingMaxHR',ta:'trainingAvgHR'};Object.keys(tm).forEach(function(k){var v=document.getElementById(k).value;if(v!==''&&v!==undefined)e[tm[k]]=parseInt(v)||0;else delete e[tm[k]]});var bnv=document.getElementById('bn').value;if(bnv!=='')e.boxingNote=bnv;else delete e.boxingNote}
   data.sort(function(a,b){return a.date.localeCompare(b.date)});sd(data);
   st2('✅ 已保存');rd();rh();rs2();rt();
 }
@@ -389,7 +390,7 @@ function showTok(){var el=document.getElementById('ti');el.style.display='block'
 async function subm(){
   var token=tk();if(!token){document.getElementById('ss').textContent='⚠️ 请先在上方输入 GitHub Token';document.getElementById('ss').style.color='var(--amber)';return}
   var date=document.getElementById('ed').value,entry={date:date};
-  var fmap={hr:'heartRate',hv:'hrv',bw:'weight',sv:'shortVideo',ax:'anxiety',fl:'feeling',bt:'bedtime',wt:'wakeTime',lu:'lunch',di:'dinner',pb:'preBoxingFood',fs:'fastingStart',fe:'fastingEnd',td:'trainingDur',tc:'trainingCal',th:'trainingMaxHR',ta:'trainingAvgHR'};
+  var fmap={hr:'heartRate',hv:'hrv',bw:'weight',sv:'shortVideo',ax:'anxiety',fl:'feeling',bt:'bedtime',wt:'wakeTime',lu:'lunch',di:'dinner',pb:'preBoxingFood',fs:'fastingStart',fe:'fastingEnd',td:'trainingDur',tc:'trainingCal',th:'trainingMaxHR',ta:'trainingAvgHR',bn:'boxingNote'};
   Object.keys(fmap).forEach(function(f){var el=document.getElementById(f);if(el&&el.value!=='')entry[fmap[f]]=isNaN(el.value)?el.value:parseFloat(el.value)||parseInt(el.value)||el.value});
   var gm2=function(h,m){return(parseInt(document.getElementById(h).value)||0)*60+(parseInt(document.getElementById(m).value)||0)};
   var aw2=gm2('awh','awm'),rs2=gm2('rsh','rsm'),cs2=gm2('csh','csm'),ds2=gm2('dsh','dsm');
