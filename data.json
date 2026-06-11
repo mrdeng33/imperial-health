@@ -103,6 +103,7 @@
   {
     "date": "2026-06-11",
     "anxiety": 6,
+    "feeling": "测试",
     "boxing": true,
     "fasting": false,
     "practice": true,
