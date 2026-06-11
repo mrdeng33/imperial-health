@@ -240,7 +240,7 @@ function sv(s){
   if(s==='morning'){
     e.practice=pv;e.calm=av;if(av===false)e.calmTrigger=document.getElementById('ct').value;else delete e.calmTrigger;
     var fm2={hr:'heartRate',hv:'hrv',bw:'weight',sv:'shortVideo',ax:'anxiety',fl:'feeling',bt:'bedtime',wt:'wakeTime'};
-    Object.keys(fm2).forEach(function(k){var v=document.getElementById(k).value;if(v!==''&&v!==undefined){var n=fm2[k];e[n]=(n==='feeling'||n==='bedtime'||n==='wakeTime')?v:parseFloat(v)||parseInt(v)||v}else delete e[fm2[k]]});
+    Object.keys(fm2).forEach(function(k){var v=document.getElementById(k).value;if(v!==''&&v!==undefined){var n=fm2[k];e[n]=(n==='feeling'||n==='bedtime'||n==='wakeTime'||n==='fastingStart'||n==='fastingEnd')?v:parseFloat(v)||parseInt(v)||v}else delete e[fm2[k]]});
     // 睡眠时分→总分钟
     var gm=function(h,m){return(parseInt(document.getElementById(h).value)||0)*60+(parseInt(document.getElementById(m).value)||0)};
     var aw2=gm('awh','awm'),rs2=gm('rsh','rsm'),cs2=gm('csh','csm'),ds2=gm('dsh','dsm');
@@ -400,7 +400,7 @@ async function subm(){
   var date=document.getElementById('ed').value,entry={date:date};
   var fkeys=['hr','hv','bw','sv','ax','fl','bt','wt','lu','di','pb','fs','fe'];
   var fvals=['heartRate','hrv','weight','shortVideo','anxiety','feeling','bedtime','wakeTime','lunch','dinner','preBoxingFood','fastingStart','fastingEnd'];
-  for(var i=0;i<fkeys.length;i++){var el=document.getElementById(fkeys[i]);if(el&&el.value!==''){var v=el.value;fvals[i]==='feeling'||fvals[i]==='bedtime'||fvals[i]==='wakeTime'?entry[fvals[i]]=v:entry[fvals[i]]=parseFloat(v)||parseInt(v)||v}}
+  for(var i=0;i<fkeys.length;i++){var el=document.getElementById(fkeys[i]);if(el&&el.value!==''){var v=el.value;fvals[i]==='feeling'||fvals[i]==='bedtime'||fvals[i]==='wakeTime'||fvals[i]==='fastingStart'||fvals[i]==='fastingEnd'?entry[fvals[i]]=v:entry[fvals[i]]=parseFloat(v)||parseInt(v)||v}}
   // 睡眠（始终提交）
   var gm2=function(h,m){return(parseInt(document.getElementById(h).value)||0)*60+(parseInt(document.getElementById(m).value)||0)};
   var aw2=gm2('awh','awm'),rs2=gm2('rsh','rsm'),cs2=gm2('csh','csm'),ds2=gm2('dsh','dsm');
