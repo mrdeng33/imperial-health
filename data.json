@@ -126,6 +126,17 @@
     "trainingCal": 480,
     "trainingMaxHR": 169,
     "trainingAvgHR": 120,
-    "boxingNote": "打了三轮教练靶，每轮2分钟，前两轮后段不足。第三轮手脚有点发软，分析一下。这个是不是昨晚打飞机的原因"
+    "boxingNote": "打了三轮教练靶，每轮2分钟，前两轮后段不足。第三轮手脚有点发软，分析一下。这个是不是昨晚打飞机的原因",
+    "supplements": {
+      "0": true,
+      "1": true,
+      "2": true,
+      "3": true,
+      "4": true,
+      "5": true,
+      "6": true,
+      "7": false,
+      "8": false
+    }
   }
 ]
