@@ -219,6 +219,8 @@ function ld3(){
   // 睡眠分→时分
   var smap={awakeTime:['awh','awm'],remSleep:['rsh','rsm'],coreSleep:['csh','csm'],deepSleep:['dsh','dsm']};
   Object.keys(smap).forEach(function(k){var v=e&&e[k];var ids=smap[k];document.getElementById(ids[0]).value=v?Math.floor(v/60):'';document.getElementById(ids[1]).value=v?v%60:''});
+  // 恢复补剂打卡
+  if(e&&e.supplements){var sc=getsc();sc[document.getElementById('ed').value]=e.supplements;localStorage.setItem(SK,JSON.stringify(sc))}
 }
 function tg(t){
   if(t==='boxing'){bv=bv===true?false:bv===false?null:true;tui('bb',bv);document.getElementById('bxDetail').style.display=bv===true?'block':'none'}
@@ -414,6 +416,8 @@ async function subm(){
     delete entry.trainingDur;delete entry.trainingCal;delete entry.trainingMaxHR;delete entry.trainingAvgHR;delete entry.boxingNote;
   }
   entry.boxing=bv;entry.fasting=fv;entry.practice=pv;entry.calm=av;if(av===false)entry.calmTrigger=document.getElementById('ct').value;
+  // 同步补剂打卡
+  var sc=getsc();if(sc[date])entry.supplements=sc[date];
   var st=document.getElementById('ss');st.textContent='⏳ 正在提交...';st.style.color='var(--amber)';console.log('SUBMIT ENTRY:',JSON.stringify(entry));
   var H={Authorization:'token '+token,'Content-Type':'application/json',Accept:'application/vnd.github+json'};
   try{
