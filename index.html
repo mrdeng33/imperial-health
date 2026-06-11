@@ -396,12 +396,20 @@ function toggleTok(){var d=document.getElementById('tokInput');d.style.display=d
 async function subm(){
   var token=tk();if(!token){document.getElementById('ss').textContent='⚠️ 请先在上方输入 GitHub Token';document.getElementById('ss').style.color='var(--amber)';return}
   var date=document.getElementById('ed').value,entry={date:date};
-  var fmap={hr:'heartRate',hv:'hrv',bw:'weight',sv:'shortVideo',ax:'anxiety',fl:'feeling',bt:'bedtime',wt:'wakeTime',lu:'lunch',di:'dinner',pb:'preBoxingFood',fs:'fastingStart',fe:'fastingEnd',td:'trainingDur',tc:'trainingCal',th:'trainingMaxHR',ta:'trainingAvgHR',bn:'boxingNote'};
+  var fmap={hr:'heartRate',hv:'hrv',bw:'weight',sv:'shortVideo',ax:'anxiety',fl:'feeling',bt:'bedtime',wt:'wakeTime',lu:'lunch',di:'dinner',pb:'preBoxingFood',fs:'fastingStart',fe:'fastingEnd'};
   Object.keys(fmap).forEach(function(f){var el=document.getElementById(f);if(el&&el.value!=='')entry[fmap[f]]=isNaN(el.value)?el.value:parseFloat(el.value)||parseInt(el.value)||el.value});
+  // 睡眠（始终提交）
   var gm2=function(h,m){return(parseInt(document.getElementById(h).value)||0)*60+(parseInt(document.getElementById(m).value)||0)};
   var aw2=gm2('awh','awm'),rs2=gm2('rsh','rsm'),cs2=gm2('csh','csm'),ds2=gm2('dsh','dsm');
   if(aw2>0)entry.awakeTime=aw2;if(rs2>0)entry.remSleep=rs2;if(cs2>0)entry.coreSleep=cs2;if(ds2>0)entry.deepSleep=ds2;
   if(cs2+ds2+rs2>0)entry.sleepTotal=Math.round((cs2+ds2+rs2)/0.6)/100;
+  // 训练（仅拳击✅时提交，否则清除）
+  if(bv===true){
+    var tm2={td:'trainingDur',tc:'trainingCal',th:'trainingMaxHR',ta:'trainingAvgHR',bn:'boxingNote'};
+    Object.keys(tm2).forEach(function(f){var el=document.getElementById(f);if(el&&el.value!=='')entry[tm2[f]]=isNaN(el.value)?el.value:parseInt(el.value)||el.value;else delete entry[tm2[f]]});
+  } else {
+    delete entry.trainingDur;delete entry.trainingCal;delete entry.trainingMaxHR;delete entry.trainingAvgHR;delete entry.boxingNote;
+  }
   entry.boxing=bv;entry.fasting=fv;entry.practice=pv;entry.calm=av;if(av===false)entry.calmTrigger=document.getElementById('ct').value;
   var st=document.getElementById('ss');st.textContent='⏳ 正在提交...';st.style.color='var(--amber)';
   var H={Authorization:'token '+token,'Content-Type':'application/json',Accept:'application/vnd.github+json'};
