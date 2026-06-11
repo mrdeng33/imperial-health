@@ -118,16 +118,19 @@ nav .ni.ac{color:var(--gold)}
     <div class="fg"><label>🍱 午餐</label><textarea id="lu" placeholder="牛丸牛杂粿条 ~570kcal 34g蛋白" rows="2"></textarea></div>
     <div class="fg"><label>🍲 晚餐</label><textarea id="di" placeholder="沙姜鸡套餐 ~620kcal 60g蛋白" rows="2"></textarea></div>
     <div style="display:flex;gap:8px"><div class="fg" style="flex:1"><label>🕐 开窗</label><input type="time" id="fs"></div><div class="fg" style="flex:1"><label>🔒 关窗</label><input type="time" id="fe"></div></div>
+    <div class="tr" style="margin-top:8px"><div class="tb" id="bf" onclick="tg('fasting')">断食</div></div>
     <button class="btn sm" onclick="sv('diet')">💾 保存饮食</button>
   </div>
 
   <div class="sl" onclick="ts('st')">🥊 训练记录 <span class="ar">▾</span></div>
   <div class="sb" id="st">
-    <div class="tr"><div class="tb" id="bb" onclick="tg('boxing')">拳击</div><div class="tb" id="bf" onclick="tg('fasting')">断食</div></div>
-    <div class="fr" style="margin-top:10px"><div class="fg"><label>时长 (min)</label><input type="number" id="td" placeholder="60"></div><div class="fg"><label>热量 (kcal)</label><input type="number" id="tc" placeholder="600"></div></div>
-    <div class="fr"><div class="fg"><label>最高心率</label><input type="number" id="th" placeholder="171"></div><div class="fg"><label>平均心率</label><input type="number" id="ta" placeholder="118"></div></div>
-    <div class="fg"><label>🥊 打拳状况</label><textarea id="bn" placeholder="状态、对手、感受…" rows="2"></textarea></div>
-    <button class="btn sm" onclick="sv('training')">💾 保存训练</button>
+    <div class="tr"><div class="tb" id="bb" onclick="tg('boxing')">拳击</div></div>
+    <div id="bxDetail" style="display:none">
+      <div class="fr" style="margin-top:10px"><div class="fg"><label>时长 (min)</label><input type="number" id="td" placeholder="60"></div><div class="fg"><label>热量 (kcal)</label><input type="number" id="tc" placeholder="600"></div></div>
+      <div class="fr"><div class="fg"><label>最高心率</label><input type="number" id="th" placeholder="171"></div><div class="fg"><label>平均心率</label><input type="number" id="ta" placeholder="118"></div></div>
+      <div class="fg"><label>🥊 打拳状况</label><textarea id="bn" placeholder="状态、对手、感受…" rows="2"></textarea></div>
+      <button class="btn sm" onclick="sv('training')">💾 保存训练</button>
+    </div>
   </div>
 
   <div style="margin-top:20px;padding:10px 12px;background:var(--card);border-radius:var(--r);cursor:pointer" id="tokBox" onclick="if(document.getElementById('ti').style.display==='none'){document.getElementById('ti').style.display='block';document.getElementById('stkb').style.display='block'}">
@@ -210,13 +213,13 @@ function ld3(){
   'hr,hv,bw,sv,ax,fl,bt,wt,lu,di,pb,fs,fe,td,tc,th,ta,bn'.split(',').forEach(function(f){
     var el=document.getElementById(f);if(el)el.value=(e&&e[f]!==undefined)?e[f]:'';
   });
-  bv=(e&&e.boxing!==undefined)?e.boxing:null;tui('bb',bv);fv=(e&&e.fasting!==undefined)?e.fasting:null;tui('bf',fv);pv=(e&&e.practice!==undefined)?e.practice:null;tui('bp',pv);av=(e&&e.calm!==undefined)?e.calm:null;tui('ba',av);document.getElementById('ctg').style.display=av===false?'block':'none';var ctVal=(e&&e.calmTrigger)||'';document.getElementById('ct').value=ctVal;
+  bv=(e&&e.boxing!==undefined)?e.boxing:null;tui('bb',bv);document.getElementById('bxDetail').style.display=bv===true?'block':'none';fv=(e&&e.fasting!==undefined)?e.fasting:null;tui('bf',fv);pv=(e&&e.practice!==undefined)?e.practice:null;tui('bp',pv);av=(e&&e.calm!==undefined)?e.calm:null;tui('ba',av);document.getElementById('ctg').style.display=av===false?'block':'none';var ctVal=(e&&e.calmTrigger)||'';document.getElementById('ct').value=ctVal;
   // 睡眠分→时分
   var smap={awakeTime:['awh','awm'],remSleep:['rsh','rsm'],coreSleep:['csh','csm'],deepSleep:['dsh','dsm']};
   Object.keys(smap).forEach(function(k){var v=e&&e[k];var ids=smap[k];document.getElementById(ids[0]).value=v?Math.floor(v/60):'';document.getElementById(ids[1]).value=v?v%60:''});
 }
 function tg(t){
-  if(t==='boxing'){bv=bv===true?false:bv===false?null:true;tui('bb',bv)}
+  if(t==='boxing'){bv=bv===true?false:bv===false?null:true;tui('bb',bv);document.getElementById('bxDetail').style.display=bv===true?'block':'none'}
   else{fv=fv===true?false:fv===false?null:true;tui('bf',fv)}
 }
 function tg2(t){if(t==='practice'){pv=pv===true?false:pv===false?null:true;tui('bp',pv)}else{av=av===true?false:av===false?null:true;tui('ba',av);document.getElementById('ctg').style.display=av===false?'block':'none'}}
