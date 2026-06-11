@@ -184,7 +184,9 @@ async function lbd(){
   try{var r2=await fetch('prescriptions.json');if(r2.ok)P=await r2.json()}catch(e){}
 }
 function ld2(){
-  var l=JSON.parse(localStorage.getItem(K)||'[]'),m={};
+  var raw=localStorage.getItem(K);var l=[];
+  if(raw){try{l=JSON.parse(raw)}catch(e){console.error('localStorage ihd 损坏，已清除',e);localStorage.removeItem(K);st2('⚠️ 本地缓存已重置，请重新录入')}}
+  var m={};
   D.forEach(function(d){m[d.date]=Object.assign({},d)});
   l.forEach(function(d){m[d.date]=Object.assign(m[d.date]||{},d)});
   return Object.values(m).sort(function(a,b){return a.date.localeCompare(b.date)});
