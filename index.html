@@ -136,11 +136,13 @@ nav .ni.ac{color:var(--gold)}
   <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);text-align:center">
     <button id="bs" class="btn" style="background:linear-gradient(135deg,#c9a96e,#e0556a);font-size:16px">📡 提交到御医团队</button>
     <div style="font-size:10px;color:var(--muted);margin-top:8px" id="ss">提交后华佗/如意/张教练将收到数据</div>
-    <div style="margin-top:14px;padding:6px 0;border-top:1px solid var(--border);text-align:center;cursor:pointer" id="tokBox" onclick="var e=document.getElementById('ti');var b=document.getElementById('stkb');if(e.style.display==='none'){e.style.display='block';b.style.display='block'}else{e.style.display='none';b.style.display='none'}">
+    <div style="margin-top:14px;padding:6px 0;border-top:1px solid var(--border);text-align:center;cursor:pointer" id="tokBox" onclick="toggleTok()">
       <span style="font-size:10px;color:var(--muted)" id="tokLabel2">🔑 点击设置 Token</span>
       <span style="font-size:9px;color:var(--green);margin-left:4px;display:none" id="ts2"></span>
-      <input type="password" id="ti" placeholder="ghp_..." style="display:none;margin-top:4px;font-size:11px;width:200px;text-align:center">
-      <button class="btn sm" id="stkb" onclick="event.stopPropagation();stk()" style="display:none;font-size:11px;padding:6px;margin-top:4px">保存</button>
+      <div id="tokInput" style="display:none">
+        <input type="password" id="ti" placeholder="ghp_..." style="margin-top:4px;font-size:11px;width:200px;text-align:center">
+        <button class="btn sm" id="stkb" onclick="event.stopPropagation();stk()" style="font-size:11px;padding:6px;margin-top:4px">保存</button>
+      </div>
     </div>
   </div>
 </div>
@@ -205,7 +207,7 @@ async function init(){
   document.getElementById('hd').textContent=new Date().toLocaleDateString('zh-CN',{year:'numeric',month:'long',day:'numeric',weekday:'long'});
   document.getElementById('ed').value=td();uw();ld3();rd();rs2();rh();rt();
   document.getElementById('tb').style.display=document.getElementById('ed').value===td()?'inline':'none';
-  var t=tk();if(t){document.getElementById('ti').value=t;document.getElementById('ti').style.display='none';document.getElementById('stkb').style.display='none';document.getElementById('ts2').textContent='✅';document.getElementById('ts2').style.display='inline';document.getElementById('tokLabel2').textContent='🔑 Token 已配置'}
+  var t=tk();if(t){document.getElementById('ti').value=t;document.getElementById('tokInput').style.display='none';document.getElementById('ts2').textContent='✅';document.getElementById('ts2').style.display='inline';document.getElementById('tokLabel2').textContent='🔑 Token 已配置'}
 }
 function uw(){var d=new Date(document.getElementById('ed').value);document.getElementById('ew').textContent='星期'+['日','一','二','三','四','五','六'][d.getDay()]}
 function ld3(){
@@ -386,8 +388,9 @@ function rt(){
 }
 
 // Token
-function stk(){var v=document.getElementById('ti').value.trim();if(v.slice(0,4)==='ghp_'){localStorage.setItem('gt',v);document.getElementById('ts2').textContent='✅';document.getElementById('ts2').style.display='inline';document.getElementById('ti').style.display='none';document.getElementById('stkb').style.display='none';document.getElementById('tokLabel2').textContent='🔑';st2('✅ Token 已保存')}else if(v){alert('Token 格式不对，应以 ghp_ 开头')}}
+function stk(){var v=document.getElementById('ti').value.trim();if(v.slice(0,4)==='ghp_'){localStorage.setItem('gt',v);document.getElementById('ts2').textContent='✅';document.getElementById('ts2').style.display='inline';document.getElementById('tokInput').style.display='none';document.getElementById('tokLabel2').textContent='🔑';st2('✅ Token 已保存')}else if(v){alert('Token 格式不对，应以 ghp_ 开头')}}
 function showTok(){var el=document.getElementById('ti');el.style.display='block';document.getElementById('stkb').style.display='block';el.focus()}
+function toggleTok(){var d=document.getElementById('tokInput');d.style.display=d.style.display==='none'?'block':'none'}
 
 // Submit
 async function subm(){
@@ -428,7 +431,7 @@ function sw(tab,el){
 }
 
 // Boot
-(function(){var t=tk();if(t){document.getElementById('ti').value=t;document.getElementById('ti').style.display='none';document.getElementById('stkb').style.display='none';document.getElementById('ts2').textContent='✅';document.getElementById('ts2').style.display='inline';document.getElementById('tokLabel2').textContent='🔑 Token 已配置'}})();
+(function(){var t=tk();if(t){document.getElementById('ti').value=t;document.getElementById('tokInput').style.display='none';document.getElementById('ts2').textContent='✅';document.getElementById('ts2').style.display='inline';document.getElementById('tokLabel2').textContent='🔑 Token 已配置'}})();
 init();
 document.getElementById('bs').addEventListener('click',subm);
 </script>
