@@ -99,5 +99,14 @@
     "preBoxingFood": "ÃÂ¤ÃÂ¸ÃÂÃÂ¦ÃÂ ÃÂ¹ÃÂ©ÃÂ¦ÃÂÃÂ¨ÃÂÃÂ+ÃÂ©ÃÂ»ÃÂÃÂ¥ÃÂÃÂÃÂ¥ÃÂÃÂ¡",
     "fastingStart": "12:30",
     "_test": true
+  },
+  {
+    "date": "2026-06-11",
+    "anxiety": 6,
+    "boxing": true,
+    "fasting": false,
+    "practice": true,
+    "calm": false,
+    "calmTrigger": "主动"
   }
 ]
