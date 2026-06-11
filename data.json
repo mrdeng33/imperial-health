@@ -113,6 +113,7 @@
     "remSleep": 63,
     "coreSleep": 284,
     "deepSleep": 45,
-    "sleepTotal": 6.53
+    "sleepTotal": 6.53,
+    "boxingNote": "测试最新的"
   }
 ]
