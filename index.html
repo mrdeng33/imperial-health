@@ -186,8 +186,8 @@ var D=[],P={},bv=null,fv=null,pv=null,av=null;
 var K='ihd',SK='isc',GH='https://api.github.com/repos/mrdeng33/imperial-health';
 
 async function lbd(){
-  try{var r=await fetch('data.json');if(r.ok)D=await r.json()}catch(e){}
-  try{var r2=await fetch('prescriptions.json');if(r2.ok)P=await r2.json()}catch(e){}
+  try{var r=await fetch('data.json');if(r.ok)D=await r.json()}catch(e){console.error('data.json加载失败',e)}
+  try{var r2=await fetch('prescriptions.json');if(r2.ok)P=await r2.json();else console.error('prescriptions.json HTTP',r2.status)}catch(e){console.error('prescriptions.json加载失败',e)}
 }
 function ld2(){
   var raw=localStorage.getItem(K);var l=[];
@@ -380,7 +380,7 @@ function dr(cid,cnt,tgt,color){
 // Team
 function rt(){
   var t0=td(),rx=P[t0];
-  if(!rx){document.getElementById('teamRx').innerHTML='<div style="text-align:center;color:var(--muted);padding:30px">今日处方尚未生成<br>等待华佗晨检...</div>';return}
+  if(!rx){document.getElementById('teamRx').innerHTML='<div style="text-align:center;color:var(--muted);padding:30px">今日处方尚未生成<br><span style="font-size:10px">日期:'+t0+' 处方数:'+Object.keys(P).length+'</span></div>';return}
   function card(name,emoji,color,lines){return '<div class="rc"><div class="rh"><div class="ra">'+emoji+'</div><div class="rn" style="color:'+color+'">'+name+'</div></div><div class="rb">'+lines.map(function(l){return '<div class="rl">'+l+'</div>'}).join('')+'</div></div>'}
   var h=rx.huatuo,z=rx.zhang,r=rx.ruyi;
   document.getElementById('teamRx').innerHTML=
