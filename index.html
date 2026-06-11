@@ -320,6 +320,7 @@ function ts2(idx){var t0=td(),c=getsc();if(!c[t0])c[t0]={};c[t0][idx]=!c[t0][idx
 
 // Habits
 function rh(){
+  try{
   var data=ld2(),now=new Date(),day=now.getDay(),mon=new Date(now);mon.setDate(now.getDate()-(day===0?6:day-1));mon.setHours(0,0,0,0);
   var wd2=data.filter(function(d){return d.date>=mon.toISOString().split('T')[0]&&d.date<=td()});
   var bc=wd2.filter(function(d){return d.boxing===true}).length;
@@ -368,7 +369,7 @@ function rh(){
   document.getElementById('wd').innerHTML=dh||'暂无数据';
 
   setTimeout(function(){dr('rBx',bc,3,'#f87171');dr('rAb',ac,7,'#94a3b8');dr('rPc',pc,7,'#c9a96e')},100);
-}
+  }catch(e){document.getElementById('rings').innerHTML='<div style="text-align:center;color:var(--red);padding:20px;font-size:12px">习惯加载失败: '+e.message+'</div>';}}
 function dr(cid,cnt,tgt,color){
   var c=document.getElementById(cid);if(!c||c.width)return;var dpr=window.devicePixelRatio||1,sz=64*dpr;c.width=sz;c.height=sz;c.style.width='64px';c.style.height='64px';
   var ctx=c.getContext('2d');ctx.scale(dpr,dpr);var r=25,lw=4;
