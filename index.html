@@ -328,7 +328,8 @@ function rh(){
   var pc=wd2.filter(function(d){return d.practice===true}).length;
 
   // Rings: 3 only
-  document.getElementById('rings').innerHTML=
+  var wd2Count=wd2.length;if(!wd2Count){document.getElementById('rings').innerHTML='<div style="text-align:center;color:var(--muted);padding:20px">本周暂无数据('+mon.toISOString().split("T")[0]+'~'+td()+')</div>';document.getElementById('wk').innerHTML='';document.getElementById('wd').innerHTML='';return}
+document.getElementById('rings').innerHTML=
     '<div class="hc"><div class="ri"><canvas id="rBx"></canvas></div><div class="ht">拳击 '+bc+'/3</div><div class="hs">本周</div></div>'+
     '<div class="hc"><div class="ri"><canvas id="rAb"></canvas></div><div class="ht">静心 '+ac+'/7</div><div class="hs">本周</div></div>'+
     '<div class="hc"><div class="ri"><canvas id="rPc"></canvas></div><div class="ht">练习 '+pc+'/7</div><div class="hs">本周</div></div>';
@@ -369,7 +370,7 @@ function rh(){
   document.getElementById('wd').innerHTML=dh||'暂无数据';
 
   setTimeout(function(){dr('rBx',bc,3,'#f87171');dr('rAb',ac,7,'#94a3b8');dr('rPc',pc,7,'#c9a96e')},100);
-  }catch(e){document.getElementById('rings').innerHTML='<div style="text-align:center;color:var(--red);padding:20px;font-size:12px">习惯加载失败: '+e.message+'</div>';}}
+  }catch(e){document.getElementById('rings').innerHTML='<div style="text-align:center;color:var(--red);padding:20px;font-size:12px">习惯错误:'+e.message+'</div>';document.getElementById('wk').innerHTML='';document.getElementById('wd').innerHTML='';}}
 function dr(cid,cnt,tgt,color){
   var c=document.getElementById(cid);if(!c||c.width)return;var dpr=window.devicePixelRatio||1,sz=64*dpr;c.width=sz;c.height=sz;c.style.width='64px';c.style.height='64px';
   var ctx=c.getContext('2d');ctx.scale(dpr,dpr);var r=25,lw=4;
