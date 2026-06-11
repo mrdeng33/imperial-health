@@ -380,7 +380,7 @@ function dr(cid,cnt,tgt,color){
 // Team
 function rt(){
   var t0=td(),rx=P[t0];
-  if(!rx){document.getElementById('teamRx').innerHTML='<div style="text-align:center;color:var(--muted);padding:30px">今日处方尚未生成<br><span style="font-size:10px">日期:'+t0+' 处方数:'+Object.keys(P).length+'</span></div>';return}
+  if(!rx){var ks=Object.keys(P);document.getElementById('teamRx').innerHTML='<div style="text-align:center;color:var(--muted);padding:30px">今日处方尚未生成<br><span style="font-size:10px">日期:'+t0+'('+t0.length+') 处方数:'+ks.length+' 第1个key:'+(ks[0]||'无')+'('+(ks[0]||'').length+')</span></div>';return}
   function card(name,emoji,color,lines){return '<div class="rc"><div class="rh"><div class="ra">'+emoji+'</div><div class="rn" style="color:'+color+'">'+name+'</div></div><div class="rb">'+lines.map(function(l){return '<div class="rl">'+l+'</div>'}).join('')+'</div></div>'}
   var h=rx.huatuo,z=rx.zhang,r=rx.ruyi;
   document.getElementById('teamRx').innerHTML=
