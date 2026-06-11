@@ -102,12 +102,29 @@
   },
   {
     "date": "2026-06-11",
-    "anxiety": 6,
-    "feeling": "测试",
+    "anxiety": 5,
+    "feeling": "起来还行",
     "boxing": true,
-    "fasting": false,
+    "fasting": null,
     "practice": true,
     "calm": false,
-    "calmTrigger": "主动"
+    "calmTrigger": "主动",
+    "weight": 84,
+    "shortVideo": 60,
+    "bedtime": "01:30",
+    "wakeTime": "09:00",
+    "lunch": "下馆子粤菜 ，豉汁焗白鳝，一碗米饭 ，炒牛肉，半只红烧乳鸽，豆豉鲮鱼油麦菜。",
+    "preBoxingFood": "一根香蕉+500m黑咖啡",
+    "fastingStart": "11:30",
+    "awakeTime": 53,
+    "remSleep": 63,
+    "coreSleep": 284,
+    "deepSleep": 45,
+    "sleepTotal": 6.53,
+    "trainingDur": 55,
+    "trainingCal": 446,
+    "trainingMaxHR": 169,
+    "trainingAvgHR": 120,
+    "boxingNote": "打教练靶三轮，每轮2分钟，前两轮的后段心肺跟不上，第三段有点饿着发软。是我昨晚打飞机的原因吗？"
   }
 ]
