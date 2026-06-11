@@ -395,6 +395,8 @@ function toggleTok(){var d=document.getElementById('tokInput');d.style.display=d
 // Submit
 async function subm(){
   var token=tk();if(!token){document.getElementById('ss').textContent='⚠️ 请先在上方输入 GitHub Token';document.getElementById('ss').style.color='var(--amber)';return}
+  // 展开所有折叠区防止部分浏览器读取不到值
+  ['sm','sd','st'].forEach(function(id){document.getElementById(id).classList.remove('hidden')});
   var date=document.getElementById('ed').value,entry={date:date};
   var fmap={hr:'heartRate',hv:'hrv',bw:'weight',sv:'shortVideo',ax:'anxiety',fl:'feeling',bt:'bedtime',wt:'wakeTime',lu:'lunch',di:'dinner',pb:'preBoxingFood',fs:'fastingStart',fe:'fastingEnd'};
   Object.keys(fmap).forEach(function(f){var el=document.getElementById(f);if(el&&el.value!=='')entry[fmap[f]]=isNaN(el.value)?el.value:parseFloat(el.value)||parseInt(el.value)||el.value});
@@ -411,7 +413,7 @@ async function subm(){
     delete entry.trainingDur;delete entry.trainingCal;delete entry.trainingMaxHR;delete entry.trainingAvgHR;delete entry.boxingNote;
   }
   entry.boxing=bv;entry.fasting=fv;entry.practice=pv;entry.calm=av;if(av===false)entry.calmTrigger=document.getElementById('ct').value;
-  var st=document.getElementById('ss');st.textContent='⏳ 正在提交...';st.style.color='var(--amber)';
+  var st=document.getElementById('ss');st.textContent='⏳ 正在提交...';st.style.color='var(--amber)';console.log('SUBMIT ENTRY:',JSON.stringify(entry));
   var H={Authorization:'token '+token,'Content-Type':'application/json',Accept:'application/vnd.github+json'};
   try{
 	    var r1=await fetch(GH+"/contents/data.json",{headers:H,cache:"no-store"});
