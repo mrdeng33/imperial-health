@@ -138,5 +138,25 @@
       "7": false,
       "8": false
     }
+  },
+  {
+    "date": "2026-06-12",
+    "weight": 85,
+    "shortVideo": 90,
+    "anxiety": 5,
+    "feeling": "体重反弹了不开心 昨晚熬夜",
+    "bedtime": "02:00",
+    "wakeTime": "09:00",
+    "fastingStart": "11:30",
+    "fastingEnd": "01:02",
+    "awakeTime": 10,
+    "remSleep": 74,
+    "coreSleep": 279,
+    "deepSleep": 46,
+    "sleepTotal": 6.65,
+    "boxing": false,
+    "fasting": false,
+    "practice": false,
+    "calm": true
   }
 ]
