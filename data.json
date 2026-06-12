@@ -103,7 +103,7 @@
   {
     "date": "2026-06-11",
     "anxiety": 5,
-    "feeling": "还行 昨晚吃了鱼生早上8点起来拉肚子 又回去睡到九点",
+    "feeling": "体重反弹了不开心 昨晚熬夜",
     "boxing": true,
     "fasting": true,
     "practice": true,
@@ -114,7 +114,7 @@
     "coreSleep": 284,
     "deepSleep": 45,
     "sleepTotal": 6.53,
-    "weight": 84,
+    "weight": 85,
     "shortVideo": 90,
     "bedtime": "01:30",
     "wakeTime": "09:00",
@@ -137,37 +137,7 @@
       "6": true,
       "7": false,
       "8": false
-    }
-  },
-  {
-    "date": "2026-06-12",
-    "weight": 85,
-    "shortVideo": 90,
-    "anxiety": 5,
-    "feeling": "体重反弹了不开心 昨晚熬夜",
-    "bedtime": "02:00",
-    "wakeTime": "09:00",
-    "dinner": "潮发的湿炒牛肉粿条",
-    "fastingStart": "11:30",
-    "fastingEnd": "01:02",
-    "awakeTime": 10,
-    "remSleep": 74,
-    "coreSleep": 279,
-    "deepSleep": 46,
-    "sleepTotal": 6.65,
-    "boxing": false,
-    "fasting": false,
-    "practice": false,
-    "calm": true,
-    "supplements": {
-      "0": true,
-      "1": true,
-      "2": true,
-      "3": true,
-      "4": true,
-      "5": true,
-      "6": true,
-      "7": true
-    }
+    },
+    "dinner": "潮发的湿炒牛肉粿条"
   }
 ]
