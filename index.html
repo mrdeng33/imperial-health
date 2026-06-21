@@ -198,7 +198,8 @@ function ld2(){
   return Object.values(m).sort(function(a,b){return a.date.localeCompare(b.date)});
 }
 function sd(d){localStorage.setItem(K,JSON.stringify(d))}
-function td(){return new Date().toISOString().split('T')[0]}
+function fd(d){return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2)}
+function td(){return fd(new Date())}
 function tk(){return localStorage.getItem('gt')||''}
 function st2(m){var t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(function(){t.classList.remove('show')},2000)}
 
@@ -245,9 +246,9 @@ function sv(s){
     Object.keys(fm2).forEach(function(k){var v=document.getElementById(k).value;if(v!==''&&v!==undefined){var n=fm2[k];e[n]=(n==='feeling'||n==='bedtime'||n==='wakeTime'||n==='fastingStart'||n==='fastingEnd')?v:parseFloat(v)||parseInt(v)||v}else delete e[fm2[k]]});
     // 睡眠时分→总分钟
     var gm=function(h,m){return(parseInt(document.getElementById(h).value)||0)*60+(parseInt(document.getElementById(m).value)||0)};
-    var aw2=gm('awh','awm'),rs2=gm('rsh','rsm'),cs2=gm('csh','csm'),ds2=gm('dsh','dsm');
-    if(aw2>0)e.awakeTime=aw2;if(rs2>0)e.remSleep=rs2;if(cs2>0)e.coreSleep=cs2;if(ds2>0)e.deepSleep=ds2;
-    if(cs2+ds2+rs2>0)e.sleepTotal=Math.round((cs2+ds2+rs2)/0.6)/100;
+    var aw2=gm('awh','awm'),rem2=gm('rsh','rsm'),cs2=gm('csh','csm'),ds2=gm('dsh','dsm');
+    if(aw2>0)e.awakeTime=aw2;if(rem2>0)e.remSleep=rem2;if(cs2>0)e.coreSleep=cs2;if(ds2>0)e.deepSleep=ds2;
+    if(cs2+ds2+rem2>0)e.sleepTotal=Math.round((cs2+ds2+rem2)/0.6)/100;
   }
   if(s==='diet'){var dm={lu:'lunch',di:'dinner',pb:'preBoxingFood',fs:'fastingStart',fe:'fastingEnd'};Object.keys(dm).forEach(function(k){var v=document.getElementById(k).value;if(v!==''&&v!==undefined)e[dm[k]]=v;else delete e[dm[k]]})}
   if(s==='training'){e.boxing=bv;e.fasting=fv;var tm={td:'trainingDur',tc:'trainingCal',th:'trainingMaxHR',ta:'trainingAvgHR'};Object.keys(tm).forEach(function(k){var v=document.getElementById(k).value;if(v!==''&&v!==undefined)e[tm[k]]=parseInt(v)||0;else delete e[tm[k]]});var bnv=document.getElementById('bn').value;if(bnv!=='')e.boxingNote=bnv;else delete e.boxingNote}
@@ -322,13 +323,13 @@ function ts2(idx){var t0=td(),c=getsc();if(!c[t0])c[t0]={};c[t0][idx]=!c[t0][idx
 function rh(){
   try{
   var data=ld2(),now=new Date(),day=now.getDay(),mon=new Date(now);mon.setDate(now.getDate()-(day===0?6:day-1));mon.setHours(0,0,0,0);
-  var wd2=data.filter(function(d){return d.date>=mon.toISOString().split('T')[0]&&d.date<=td()});
+  var wd2=data.filter(function(d){return d.date>=fd(mon)&&d.date<=td()});
   var bc=wd2.filter(function(d){return d.boxing===true}).length;
   var ac=wd2.filter(function(d){return d.calm===true}).length;
   var pc=wd2.filter(function(d){return d.practice===true}).length;
 
   // Rings: 3 only
-  var wd2Count=wd2.length;if(!wd2Count){document.getElementById('rings').innerHTML='<div style="text-align:center;color:var(--muted);padding:20px">本周暂无数据('+mon.toISOString().split("T")[0]+'~'+td()+')</div>';document.getElementById('wk').innerHTML='';document.getElementById('wd').innerHTML='';return}
+  var wd2Count=wd2.length;if(!wd2Count){document.getElementById('rings').innerHTML='<div style="text-align:center;color:var(--muted);padding:20px">本周暂无数据('+fd(mon)+'~'+td()+')</div>';document.getElementById('wk').innerHTML='';document.getElementById('wd').innerHTML='';return}
 document.getElementById('rings').innerHTML=
     '<div class="hc"><div class="ri"><canvas id="rBx"></canvas></div><div class="ht">拳击 '+bc+'/3</div><div class="hs">本周</div></div>'+
     '<div class="hc"><div class="ri"><canvas id="rAb"></canvas></div><div class="ht">静心 '+ac+'/7</div><div class="hs">本周</div></div>'+
@@ -407,9 +408,9 @@ async function subm(){
   for(var i=0;i<fkeys.length;i++){var el=document.getElementById(fkeys[i]);if(el&&el.value!==''){var v=el.value;fvals[i]==='feeling'||fvals[i]==='bedtime'||fvals[i]==='wakeTime'||fvals[i]==='fastingStart'||fvals[i]==='fastingEnd'?entry[fvals[i]]=v:entry[fvals[i]]=parseFloat(v)||parseInt(v)||v}}
   // 睡眠（始终提交）
   var gm2=function(h,m){return(parseInt(document.getElementById(h).value)||0)*60+(parseInt(document.getElementById(m).value)||0)};
-  var aw2=gm2('awh','awm'),rs2=gm2('rsh','rsm'),cs2=gm2('csh','csm'),ds2=gm2('dsh','dsm');
-  if(aw2>0)entry.awakeTime=aw2;if(rs2>0)entry.remSleep=rs2;if(cs2>0)entry.coreSleep=cs2;if(ds2>0)entry.deepSleep=ds2;
-  if(cs2+ds2+rs2>0)entry.sleepTotal=Math.round((cs2+ds2+rs2)/0.6)/100;
+  var aw2=gm2('awh','awm'),rem2=gm2('rsh','rsm'),cs2=gm2('csh','csm'),ds2=gm2('dsh','dsm');
+  if(aw2>0)entry.awakeTime=aw2;if(rem2>0)entry.remSleep=rem2;if(cs2>0)entry.coreSleep=cs2;if(ds2>0)entry.deepSleep=ds2;
+  if(cs2+ds2+rem2>0)entry.sleepTotal=Math.round((cs2+ds2+rem2)/0.6)/100;
   // 训练（仅拳击✅时提交，否则清除）
   if(bv===true){
     var tm2={td:'trainingDur',tc:'trainingCal',th:'trainingMaxHR',ta:'trainingAvgHR',bn:'boxingNote'};

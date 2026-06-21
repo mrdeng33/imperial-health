@@ -1,6 +1,10 @@
 const REPO = 'mrdeng33/imperial-health';
 const DATA_PATH = 'data.json';
 
+type WorkerEnv = Env & {
+  GITHUB_TOKEN: string;
+};
+
 const HTML = `<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -88,7 +92,8 @@ textarea{resize:vertical;min-height:50px}
 <script>
 document.getElementById('hd').textContent=new Date().toLocaleDateString('zh-CN',{year:'numeric',month:'long',day:'numeric',weekday:'long'});
 var dt=document.getElementById('ed');
-dt.value=new Date().toISOString().split('T')[0];
+function fd(d){return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2)}
+dt.value=fd(new Date());
 dt.onchange=function(){var d=new Date(dt.value);document.getElementById('ew').textContent='星期'+['日','一','二','三','四','五','六'][d.getDay()]};
 dt.onchange();
 function ts(id){document.getElementById(id).classList.toggle('collapsed')}
@@ -110,8 +115,8 @@ btn.disabled=true;st.textContent='⏳ 正在提交...';st.className='st ing';
 var date=dt.value,entry={date:date};
 var map={aw:'awakeTime',rs:'remSleep',cs:'coreSleep',ds:'deepSleep',hr:'heartRate',hv:'hrv',bw:'weight',sv:'shortVideo',ab:'abstinence',ax:'anxiety',fl:'feeling',bt:'bedtime',wt:'wakeTime',lu:'lunch',di:'dinner',pb:'preBoxingFood',fs:'fastingStart',fe:'fastingEnd',td:'trainingDur',tc:'trainingCal',th:'trainingMaxHR',ta:'trainingAvgHR'};
 Object.keys(map).forEach(function(k){var el=document.getElementById(k);if(el&&el.value!==''&&el.value!==undefined){var v=el.value;entry[map[k]]=isNaN(v)?v:parseFloat(v)||parseInt(v)||v}});
-var cs2=parseInt(document.getElementById('cs').value)||0,ds2=parseInt(document.getElementById('ds').value)||0,rs2=parseInt(document.getElementById('rs').value)||0;
-if(cs2+ds2+rs2>0)entry.sleepTotal=Math.round((cs2+ds2+rs2)/0.6)/100;
+var cs2=parseInt(document.getElementById('cs').value)||0,ds2=parseInt(document.getElementById('ds').value)||0,rem2=parseInt(document.getElementById('rs').value)||0;
+if(cs2+ds2+rem2>0)entry.sleepTotal=Math.round((cs2+ds2+rem2)/0.6)/100;
 entry.boxing=bv;entry.fasting=fv;
 Object.keys(entry).forEach(function(k){if(entry[k]===null||entry[k]===undefined)delete entry[k]});
 try{
@@ -196,7 +201,7 @@ async function handleUpdate(token: string, body: any): Promise<Response> {
 }
 
 export default {
-  async fetch(request, env): Promise<Response> {
+  async fetch(request: Request, env: WorkerEnv): Promise<Response> {
     const url = new URL(request.url);
 
     if (request.method === 'OPTIONS') {
